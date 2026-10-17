@@ -13,7 +13,48 @@
   --pri:#D9560B;--priInk:#FFFDF8;--ok:#2F6B2F;--bad:#B3261E;--god:#D9560B;--bead:#E9D3AE;
   --r:14px;--bw:2px;--sh:3px 3px 0 var(--line);
 }
-body.dark{--bg:#110E1B;--card:#1C182D;--tint:#2A2442;--ink:#F7EEDC;--muted:#A69EC2;--line:#3A3360;--pri:#F2B544;--priInk:#1A1406;--bead:#3A335F;--sh:none}
+body[data-theme=sandhya]{--bg:#110E1B;--card:#1C182D;--tint:#2A2442;--ink:#F7EEDC;--muted:#A69EC2;--line:#3A3360;--pri:#F2B544;--priInk:#1A1406;--bead:#3A335F;--sh:none}
+body[data-theme=kumkum]{--bg:#EFE7DA;--card:#FAF6EE;--tint:#E4D8C4;--ink:#1E1914;--muted:#6B6153;--line:#1E1914;--pri:#A8231B;--priInk:#FFF6EA;--bead:#CDBFA8;--r:4px;--bw:1.5px;--sh:none}
+body[data-theme=peacock]{--bg:#0D3B42;--card:#124A52;--tint:#1A5C64;--ink:#F4EBD9;--muted:#A9C7C4;--line:#2B6E76;--pri:#E9B949;--priInk:#1A1406;--bead:#24666E;--sh:none}
+body[data-theme=tulsi]{--bg:#F2F5E8;--card:#FFFFFF;--tint:#DCE7C6;--ink:#1D2A15;--muted:#5E6E50;--line:#1D2A15;--pri:#3D7A2C;--priInk:#fff;--bead:#CBDDB0}
+body[data-theme=swarna]{--bg:#0B0907;--card:#17130E;--tint:#241D14;--ink:#F6EBD3;--muted:#B5A587;--line:#3A2E1E;--pri:#E8B04B;--priInk:#1A1206;--bead:#3A2E1E;--sh:none;--r:18px}
+body[data-theme=swarna] .btn{background:linear-gradient(180deg,#F2C46A,#D99A2B)}
+body[data-font=anek]{--ui:'Anek Latin','Anek Devanagari','Anek Tamil','Anek Telugu','Anek Kannada','Anek Malayalam','Anek Bangla','Anek Gujarati','Anek Gurmukhi',system-ui,sans-serif}
+body[data-font=noto]{--ui:'Noto Sans','Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Telugu','Noto Sans Kannada','Noto Sans Malayalam','Noto Sans Bengali','Noto Sans Gujarati','Noto Sans Gurmukhi',system-ui,sans-serif}
+body[data-font=tiro] h1{font-family:var(--scr);font-weight:400;font-size:31px}
+body[data-font=tiro] .btn{font-family:var(--scr);font-weight:400}
+/* images */
+.av{position:relative;overflow:hidden}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero{position:relative;margin:calc(-1*(env(safe-area-inset-top) + 14px)) -22px 0;height:300px;flex:none;background:var(--god) center/cover no-repeat}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,var(--bg) 100%)}
+.hero.short{height:240px}
+.hero.dim{filter:grayscale(.6) brightness(.75)}
+.big-n{font-size:72px;font-weight:800;line-height:1;color:var(--god);font-variant-numeric:tabular-nums}
+.chk-row{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;margin:10px 0;opacity:.25;transition:opacity .4s}
+.chk-row.on{opacity:1}
+.chk-row i{width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-style:normal;display:grid;place-items:center;font-size:12px}
+.env-grid{position:relative;height:330px;margin:10px 0}
+.env{position:absolute;width:118px;height:150px;cursor:pointer;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .4s;perspective:600px}
+.env .in{position:absolute;inset:0;transition:transform .6s;transform-style:preserve-3d}
+.env.open .in{transform:rotateY(180deg)}
+.env .f,.env .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.env .f{background:linear-gradient(160deg,#B3261E,#7A1410);border:3px solid #E8B04B;box-shadow:0 8px 18px rgba(0,0,0,.25);color:#F8D57E;font-family:var(--scr);font-size:26px}
+.env .f::before{content:"";position:absolute;left:0;right:0;top:0;height:46%;background:linear-gradient(160deg,#C9362C,#8E1A13);clip-path:polygon(0 0,100% 0,50% 100%);border-bottom:2px solid #E8B04B}
+.env .f span{position:relative;margin-top:40px}
+.env .b{transform:rotateY(180deg);background:#FFF8E7;border:3px solid #E8B04B;color:#7A1410;font-weight:800;font-size:34px;line-height:1}
+.env .b small{font-size:14px;font-weight:800;letter-spacing:.1em}
+.env.dimmed{opacity:.35;pointer-events:none}
+.env.shake{animation:shk .5s}
+@keyframes shk{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.petal{position:fixed;top:-20px;width:12px;height:16px;border-radius:60% 60% 50% 50%;z-index:70;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--r2))}}
+.vsbar{display:flex;gap:22px;justify-content:center;align-items:flex-end;height:250px;margin:16px 0}
+.vsbar div{width:96px;border-radius:12px 12px 4px 4px;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding-top:10px;font-weight:800;color:#fff;text-align:center;font-size:15px}
+.vsbar p{font-size:13px;color:var(--muted);text-align:center;margin-top:6px;width:96px}
+.ticket{border:2px dashed var(--god);border-radius:16px;padding:18px;text-align:center;background:var(--card);position:relative}
+.ticket .pct{font-size:58px;font-weight:800;color:var(--god);line-height:1}
+.plan svg{display:block;margin:6px auto}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--ui);overscroll-behavior:none}
 body{user-select:none;-webkit-user-select:none}
@@ -51,7 +92,7 @@ body.dark .opt.on{outline:2px solid var(--pri);outline-offset:-2px}
 .langs .opt{margin:0;justify-content:center;font-size:21px;padding:14px 6px}
 .gods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .god{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;border:var(--bw) solid transparent;border-radius:var(--r);background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:700;line-height:1.15;cursor:pointer;text-align:center}
-.god .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--scr);font-size:26px;color:#fff;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--scr);font-size:26px;color:#fff;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15);flex:none}
 .god.on{border-color:var(--line);background:var(--card);box-shadow:var(--sh)}
 .seg{display:flex;gap:8px;margin:4px 0 8px}
 .seg button{flex:1;padding:10px 0;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);font:inherit;font-weight:700;font-size:18px;cursor:pointer}
@@ -191,7 +232,7 @@ const vib=(ms=12)=>{try{PL.haptic('tap',ms)}catch(e){}};
 
 /* ============ state ============ */
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
-const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,rem:{am:'06:30',pm:'19:00'}},J(localStorage.getItem('pl'),{}));
+const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,theme:'marigold',font:'baloo',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,rem:{am:'06:30',pm:'19:00'}},J(localStorage.getItem('pl'),{}));
 const save=()=>localStorage.setItem('pl',JSON.stringify(S));
 if(S.japDay!==today()){S.japDay=today();S.japToday=0}
 const q=new URLSearchParams(location.search);
@@ -209,10 +250,21 @@ const hm=m=>m>=60?Math.floor(m/60)+'h '+(m%60)+'m':m+'m';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LEAD={hi:['ram','hanuman','shiva','krishna','radha_krishna','devi'],ta:['murugan','shiva','devi','vishnu','ganesha','venkatesha','ayyappa'],te:['venkatesha','shiva','ram','hanuman','devi','ganesha'],kn:['venkatesha','shiva','ganesha','hanuman','devi','vishnu'],ml:['ayyappa','krishna','devi','shiva','ganesha','murugan'],mr:['ganesha','vishnu','shiva','ram','hanuman','devi'],bn:['devi','krishna','shiva','radha_krishna','ganesha','lakshmi'],gu:['krishna','hanuman','devi','shiva','ganesha','ram'],pa:['devi','shiva','hanuman','ram','krishna','ganesha'],en:['ram','hanuman','shiva','krishna','devi','ganesha']};
 function godOrder(){const base=(C.deityOrder||Object.keys(C.deities)).filter(k=>C.deities[k]);const lead=(LEAD[L()]||[]).filter(k=>C.deities[k]);return [...lead,...base.filter(k=>!lead.includes(k))]}
-function applyGod(){document.documentElement.style.setProperty('--god',god().color||'#D9560B');document.documentElement.lang=L();document.body.classList.toggle('dark',!!S.dark)}
+const DARK=['sandhya','peacock','swarna'];
+const GF={anek:'Anek+Latin:wght@500;700;800&family=Anek+Devanagari:wght@500;700;800&family=Anek+Tamil:wght@500;700;800&family=Anek+Telugu:wght@500;700;800&family=Anek+Kannada:wght@500;700;800&family=Anek+Malayalam:wght@500;700;800&family=Anek+Bangla:wght@500;700;800&family=Anek+Gujarati:wght@500;700;800&family=Anek+Gurmukhi:wght@500;700;800',noto:'Noto+Sans:wght@500;700;800&family=Noto+Sans+Devanagari:wght@500;700;800&family=Noto+Sans+Tamil:wght@500;700;800&family=Noto+Sans+Telugu:wght@500;700;800&family=Noto+Sans+Kannada:wght@500;700;800&family=Noto+Sans+Malayalam:wght@500;700;800&family=Noto+Sans+Bengali:wght@500;700;800&family=Noto+Sans+Gujarati:wght@500;700;800&family=Noto+Sans+Gurmukhi:wght@500;700;800'};
+function applyGod(){if(S.dark&&S.theme==='marigold')S.theme='sandhya';const b=document.body;b.dataset.theme=S.theme;b.dataset.font=S.font;b.classList.toggle('dark',DARK.includes(S.theme));
+ if(GF[S.font]&&!document.getElementById('gf-'+S.font)){const l=document.createElement('link');l.id='gf-'+S.font;l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+GF[S.font]+'&display=swap';document.head.appendChild(l)}
+ document.documentElement.style.setProperty('--god',god().color||'#D9560B');document.documentElement.lang=L()}
+const img=(k,hero)=>`img/deity/${k}${hero?'-hero':''}.webp`;
+const avatar=(k,sz)=>`<span class="av" style="background:${C.deities[k].color};${sz?`width:${sz}px;height:${sz}px;font-size:${sz*.42}px`:''}">${esc(glyph(k))}<img src="${img(k)}" alt="" onerror="this.remove()"></span>`;
+const heroBg=(cls='')=>`<div class="hero ${cls}" style="background-color:var(--god);background-image:url(${img(S.deity,1)}),url(${img(S.deity)})"></div>`;
+const storyBg=n=>`<div class="hero" style="background-image:url(img/story/${n}.webp)"></div>`;
+const HRS=[2,4,6,8];const hrsN=()=>HRS[S.hours]??4;const daysN=()=>Math.round(hrsN()*365/24);
+const planDate=()=>{const d=new Date();d.setDate(d.getDate()+21);return d.toLocaleDateString((L()==='en'?'en':L())+'-IN',{day:'numeric',month:'long'})};
+function petals(n=36){const c=['#F59E0B','#EA580C','#FBBF24','#DC2626','#F97316'];for(let i=0;i<n;i++){const e=document.createElement('i');e.className='petal';e.style.left=Math.random()*100+'vw';e.style.background=c[i%c.length];e.style.setProperty('--dx',(Math.random()*120-60)+'px');e.style.setProperty('--r2',(Math.random()*720)+'deg');e.style.animationDuration=(2.2+Math.random()*1.8)+'s';e.style.animationDelay=(Math.random()*.6)+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),5000)}}
 
 /* ============ pieces ============ */
-const OB=['deity','name','perms','report','apps','prayer','sankalp'];
+const OB=['deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','plan','perms','report','apps','prayer','sankalp'];
 function topBar(){const i=OB.indexOf(cur);return `<div class="top"><button class="back" onclick="back()" aria-label="${t('back')}">‹</button>${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}</div>`}
 function ring(n,done,size){const beads=Math.min(n,36),R=size/2-12,c=size/2,on=Math.round(done/n*beads),r=beads>30?6:beads>18?7.5:9;
  let s=`<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
@@ -228,18 +280,47 @@ V.lang=()=>`<div class="scr"><div style="height:24px"></div>
  <h1>${t('lang_h')}</h1><div style="height:10px"></div>
  <div class="langs">${LANGS.map(l=>`<button class="opt ${L()===l?'on':''}" onclick="S.lang='${l}';save();go('welcome')">${I[l]._name}</button>`).join('')}</div>
  <div class="grow"></div></div>`;
-V.welcome=()=>`<div class="scr c"><div class="grow"></div>${ring(108,40,230)}
+V.welcome=()=>`<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center;align-items:center">${godOrder().slice(0,5).map((k,i)=>`<span style="margin:0 -10px;transform:scale(${[0.8,0.92,1.15,0.92,0.8][i]});z-index:${[1,2,3,2,1][i]};border-radius:50%;box-shadow:0 0 0 4px var(--bg)">${avatar(k,96)}</span>`).join('')}</div><div style="height:26px"></div>
  <h1 style="margin-top:24px">${t('wel_h',{god:'🙏'}).replace('🙏',L()==='en'?'God':pick({hi:'भगवान',mr:'देव',gu:'ભગવાન',bn:'ভগবান',pa:'ਪ੍ਰਭੂ',ta:'இறைவன்',te:'దేవుడు',kn:'ದೇವರು',ml:'ദൈവം'}))}</h1>
  <p class="sub">${t('wel_s')}</p><div class="grow"></div>
  <button class="btn" onclick="track('ob_start');go('deity')">${t('begin')}</button></div>`;
 V.deity=()=>`<div class="scr">${topBar()}
  <h1>${t('deity_h')}</h1><p class="sub">${t('deity_s')}</p>
- <div class="gods">${godOrder().map(k=>{const d=C.deities[k];return `<button class="god ${S.deity===k?'on':''}" onclick="S.deity='${k}';save();applyGod();render()"><span class="av" style="background:${d.color}">${esc(glyph(k))}</span>${esc(pick(d.name))}</button>`}).join('')}</div>
+ <div class="gods">${godOrder().map(k=>{const d=C.deities[k];return `<button class="god ${S.deity===k?'on':''}" onclick="S.deity='${k}';save();applyGod();render()">${avatar(k)}${esc(pick(d.name))}</button>`}).join('')}</div>
  <div class="grow"></div><button class="btn" ${S.deity?'':'disabled'} onclick="track('ob_deity');go('name')">${t('cont')}</button></div>`;
 V.name=()=>`<div class="scr">${topBar()}
  <h1>${t('name_h')}</h1><div style="height:10px"></div>
- <input class="input" id="nm" placeholder="${t('name_ph')}" value="${esc(S.name)}" maxlength="24" oninput="S.name=this.value.trim();save()" onkeydown="if(event.key==='Enter')go('perms')" autocomplete="off">
- <div class="grow"></div><button class="btn" onclick="go('perms')">${t('cont')}</button></div>`;
+ <input class="input" id="nm" placeholder="${t('name_ph')}" value="${esc(S.name)}" maxlength="24" oninput="S.name=this.value.trim();save()" onkeydown="if(event.key==='Enter')go('q_role')" autocomplete="off">
+ <div class="grow"></div><button class="btn" onclick="go('q_role')">${t('cont')}</button></div>`;
+const one=(key,opts,next)=>`<div class="scr">${topBar()}<h1>${t(key)}</h1><div style="height:8px"></div>
+ ${opts.map(([v,l])=>`<button class="opt ${S[key.slice(2,-2)]===v?'on':''}" onclick="S['${key.slice(2,-2)}']=${typeof v==='number'?v:`'${v}'`};save();track('${key}');render();setTimeout(()=>go('${next}'),260)">${l}<span class="chk">${S[key.slice(2,-2)]===v?'✓':''}</span></button>`).join('')}<div class="grow"></div></div>`;
+V.q_role=()=>one('q_role_h',['student','college','work','business','home','retired'].map(k=>[k,t('r_'+k)]),'q_want');
+V.q_want=()=>`<div class="scr">${topBar()}<h1>${t('q_want_h')}</h1><p class="sub">${t('q_want_s')}</p>
+ ${['peace','focus','family','sleep','bhakti'].map(k=>`<button class="opt ${S.want.includes(k)?'on':''}" onclick="togWant('${k}')">${t('w_'+k)}<span class="chk">${S.want.includes(k)?'✓':''}</span></button>`).join('')}
+ <div class="grow"></div><button class="btn" ${S.want.length?'':'disabled'} onclick="track('q_want');go('q_hours')">${t('cont')}</button></div>`;
+function togWant(k){const i=S.want.indexOf(k);i<0?S.want.push(k):S.want.splice(i,1);save();vib(8);render()}
+V.q_hours=()=>one('q_hours_h',[[0,t('hrs',{a:1,b:3})],[1,t('hrs',{a:3,b:5})],[2,t('hrs',{a:5,b:7})],[3,t('hrs_plus',{a:7})]],'q_morn');
+V.q_morn=()=>one('q_morn_h',['phone','pray','bath','tea'].map(k=>[k,t('m_'+k)]),'st1');
+V.st1=()=>`<div class="scr">${storyBg('ghat-sunrise')}${topBar().replace('class="top"','class="top" style="position:absolute;top:calc(env(safe-area-inset-top) + 14px);left:22px;right:22px;z-index:2"')}
+ <div class="grow"></div><h1>${t('st1_h')}</h1><p class="sub" style="font-size:18px">${t('st1_s')}</p><div style="height:14px"></div>
+ <button class="btn" onclick="go('st2')">${t('cont')}</button></div>`;
+V.st2=()=>`<div class="scr">${storyBg('scroll-night')}${topBar().replace('class="top"','class="top" style="position:absolute;top:calc(env(safe-area-inset-top) + 14px);left:22px;right:22px;z-index:2"')}
+ <div class="grow"></div><div class="big-n">${t('st2_h',{days:daysN()})}</div><h1 style="font-size:24px">${t('st2_s')}</h1><p class="sub">${t('st2_n',{h:hrsN()})}</p><div style="height:14px"></div>
+ <button class="btn" onclick="go('st3')">${t('cont')}</button></div>`;
+V.st3=()=>`<div class="scr c">${topBar()}<div class="grow"></div>${ring(108,108,200)}
+ <h1 style="margin-top:22px;font-size:34px">${t('st3_h')}</h1><p class="sub" style="font-size:18px">${t('st3_s')}</p><div class="grow"></div>
+ <button class="btn" onclick="go('reading')">${t('cont')}</button></div>`;
+V.reading=()=>{setTimeout(()=>{[0,1,2].forEach(i=>setTimeout(()=>{const e=document.getElementById('cr'+i);if(e)e.classList.add('on');vib(10)},500+i*800));setTimeout(()=>{if(cur==='reading')go('plan')},3200)},50);
+ return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,96)}</div><h1 style="margin-top:18px">${t('rd_h')}</h1>
+ <div style="text-align:left;display:inline-block;margin:10px auto">${[t('rd_1',{h:hrsN()}),t('rd_2',{days:daysN()}),t('rd_3')].map((x,i)=>`<div class="chk-row" id="cr${i}"><i>✓</i>${x}</div>`).join('')}</div><div class="grow"></div></div>`};
+V.plan=()=>{const h=hrsN();return `<div class="scr plan">${topBar()}<h1>${t('plan_h',{date:planDate()})}</h1>
+ <svg viewBox="0 0 300 190" width="100%"><defs><linearGradient id="pg" x1="0" x2="1"><stop offset="0" stop-color="#DC2626"/><stop offset="1" stop-color="#2F6B2F"/></linearGradient></defs>
+ <path d="M20 40 C 110 40, 150 150, 280 150" fill="none" stroke="url(#pg)" stroke-width="5" stroke-linecap="round"/>
+ <circle cx="20" cy="40" r="8" fill="#DC2626"/><circle cx="280" cy="150" r="8" fill="#2F6B2F"/>
+ <text x="20" y="22" font-size="20" font-weight="800" fill="#DC2626">${h}h</text><text x="20" y="66" font-size="12" fill="currentColor" opacity=".6">${t('plan_a')}</text>
+ <text x="280" y="182" text-anchor="end" font-size="20" font-weight="800" fill="#2F6B2F">1h</text><text x="248" y="132" text-anchor="end" font-size="12" fill="currentColor" opacity=".6">${t('plan_b')}</text></svg>
+ <p class="sub c" style="font-size:18px;color:var(--ink);font-weight:600">${t('plan_s',{saved:(h-1)+'h'})}</p>
+ <div class="grow"></div><button class="btn" onclick="track('ob_plan');go('perms')">${t('plan_cta')}</button></div>`};
 function permList(){const p=J(PL.perms(),{});const L=['usage','overlay','battery'];if(['xiaomi','vivo','oppo','realme'].includes(p.brand))L.push('autostart');return{p,L}}
 V.perms=()=>{const {p,L:list}=permList();const first=list.find(k=>!p[k]);const brand=(p.brand||'').replace(/^./,c=>c.toUpperCase());
  return `<div class="scr">${topBar()}
@@ -277,45 +358,68 @@ V.sankalp=()=>`<div class="scr c">${topBar()}
  <p class="mantra" style="font-size:20px;color:var(--god)">${esc(japa())}</p><div class="grow"></div></div>`;
 function pushLock(){PL.setLock(JSON.stringify({pkgs:S.apps,mode:S.mode,unlockMin:S.unlockMin}));PL.reminders(JSON.stringify({am:S.rem.am,pm:S.mode==='sandhya'?S.rem.pm:'',title:godName(),body:japa()}))}
 let titleTaps=0,showCode=false;
-V.pay=()=>{track('paywall_viewed');return `<div class="scr">
- <button class="x" onclick="track('paywall_closed');go(S.spun?'offer2':'guilt')">✕</button>
- <div style="height:40px;flex:none"></div>
- <div style="display:flex;justify-content:center"><span style="width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:34px;box-shadow:inset 0 -5px 0 rgba(0,0,0,.15)">${esc(glyph())}</span></div>
- <h1 onclick="if(++titleTaps>=5){showCode=true;render()}">${t('pay_h',{name:S.name})}</h1>
+function payClose(){track('paywall_closed');const now=Date.now();if(S.o3until>now)return go('offer3');if(!S.envDone)return go('chose');go('guard')}
+V.pay=()=>{track('paywall_viewed');return `<div class="scr">${heroBg()}
+ <button class="x" onclick="payClose()">✕</button>
+ <h1 style="margin-top:-30px;position:relative" onclick="if(++titleTaps>=5){showCode=true;render()}">${t('pay2_h',{name:S.name})}</h1>
+ <p class="sub" style="color:var(--ink);font-weight:600">${t('pay2_s',{h:hrsN(),date:planDate()})}</p>
  <ul class="feat">${['f1','f2','f3','f4'].map(f=>`<li>${t(f)}</li>`).join('')}</ul>
  ${showCode?`<input class="input" id="rc" placeholder="Code" style="font-size:16px;margin-bottom:8px"><button class="btn ghost" onclick="tryCode()">OK</button>`:''}
  <div class="grow"></div>
- <div class="price"><span class="off">${t('off',{p:50})}</span><s>₹999</s> <span class="p">₹499</span> <span class="d">${t('first')}</span><div class="d">${t('perday',{x:'1.4'})}</div></div>
+ <div class="price"><span class="p">₹999</span> <span class="d">${t('year')}</span><div class="d">${t('perday2',{x:'2.7'})}</div></div>
  <p class="fine">${t('fine')}</p><div style="height:12px;flex:none"></div>
- <button class="btn" onclick="buy('499')">${t('cta')}</button>
+ <button class="btn" onclick="buy('999')">${t('cta')}</button>
  <p class="fine">${t('pay_via')} · <u onclick="PL.restore()">${t('restore')}</u></p></div>`};
 function hash(s){let h=5381;for(const ch of s.toUpperCase().replace(/[^A-Z0-9]/g,""))h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h}
 function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();go('home')}else toast('That code didn’t work.')}
-V.guilt=()=>{track('guilt_viewed');return `<div class="scr c"><div class="grow"></div>
- <div style="display:flex;justify-content:center"><span class="av" style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div>
- <h1 style="margin-top:22px">${t('guilt_h')}</h1><p class="sub" style="font-size:20px;color:var(--ink)">${t('guilt_s')}</p>
- <div class="grow"></div><button class="btn" onclick="track('guilt_yes');buy('499')">${t('guilt_yes')}</button>
- <button class="link" onclick="track('guilt_no');go('spin')">${t('guilt_no')}</button></div>`};
-V.spin=()=>{track('wheel_viewed');const seg=[40,50,60,70,40,50,60,70];let p='';
+V.chose=()=>{track('chose_viewed');setTimeout(()=>{const e=document.getElementById('chs');if(e)e.style.opacity=1},900);setTimeout(()=>{if(cur==='chose')go('env')},3000);
+ return `<div class="scr c" onclick="go('env')"><div class="grow"></div><h1>${t('ch_h')}</h1><p class="sub" id="chs" style="opacity:0;transition:opacity .6s;font-size:19px;color:var(--ink)">${t('ch_s')}</p><div class="grow"></div></div>`};
+let envStage=0,envPos=[[0,0],[1,0],[2,0]];
+V.env=()=>{track('gift_viewed');envStage=S.env1?(S.envDone?2:1):0;const W=118,gx=[0,1,2];
+ const pos=i=>{const L=[[ 'calc(50% - 59px)',0],['calc(25% - 59px)',170],['calc(75% - 59px)',170]][i];return `left:${L[0]};top:${L[1]}px`};
+ const card=(i)=>`<div class="env" id="e${i}" style="${pos(i)}" onclick="openEnv(${i})"><div class="in"><div class="f"><span>शुभ</span></div><div class="b" id="eb${i}"></div></div></div>`;
+ return `<div class="scr c"><div style="height:24px;flex:none"></div><h1 id="eh">${envStage?t('env_got'):t('env_h')}</h1><p class="sub" id="es">${envStage?'':t('env_s')}</p>
+ <div class="env-grid">${[0,1,2].map(card).join('')}</div>
+ <div class="grow"></div><div id="eact"></div><p class="fine">${t('env_note')}</p></div>`};
+function openEnv(i){const e=document.getElementById('e'+i);if(!e||e.classList.contains('open'))return;
+ let p;if(!S.env1){p=Math.random()<.5?10:40;S.env1=p}else if(!S.envDone){p=70;S.envDone=true}else return;save();
+ document.getElementById('eb'+i).innerHTML=`${p}%<small>OFF</small>`;e.classList.add('open');vib(30);track('gift_open',{p});
+ [0,1,2].filter(j=>j!==i).forEach(j=>{const o=document.getElementById('e'+j);if(o&&!o.classList.contains('open'))o.classList.add('dimmed')});
+ setTimeout(()=>{petals(p===70?60:24);document.getElementById('eh').textContent=t('env_got');document.getElementById('es').textContent='';
+  const act=document.getElementById('eact');
+  if(p<70)act.innerHTML=`<button class="btn" onclick="envAgain()">${t('env_again')}</button><button class="link" onclick="buy('${p===10?899:599}')">${t('env_claim',{p})}</button>`;
+  else act.innerHTML=`<button class="btn" onclick="buy('299')">${t('env_claim',{p:70})}</button><button class="link" onclick="go('gold')">${t('notnow')}</button>`},700)}
+function envAgain(){[0,1,2].forEach(j=>{const o=document.getElementById('e'+j);if(!o)return;o.classList.remove('dimmed');if(o.classList.contains('open')){o.style.opacity=.25;o.style.pointerEvents='none'}else{o.classList.add('shake')}});
+ document.getElementById('eact').innerHTML='';document.getElementById('eh').textContent=t('env_h');document.getElementById('es').textContent=t('env_s');vib(15)}
+V.gold=()=>{track('gold_viewed');const d=daysN();return `<div class="scr c"><div style="height:20px;flex:none"></div><h1>${t('gold_h')}</h1>
+ <div class="vsbar"><div style="height:230px;background:#B3261E">${t('gold_days',{d})}</div><div style="height:46px;background:var(--god)">₹299</div></div>
+ <div style="display:flex;gap:22px;justify-content:center"><p class="vsp" style="width:96px;font-size:13px;color:var(--muted)">${t('gold_reels')}</p><p style="width:96px;font-size:13px;color:var(--muted)">${t('gold_us')}</p></div>
+ <div class="grow"></div><button class="btn" onclick="buy('299')">${t('gold_keep')}</button><button class="link" onclick="go('guard')">${t('notnow')}</button></div>`};
+V.guard=()=>{track('guard_viewed');const can=!S.spun||S.o3until>Date.now();return `<div class="scr c">${heroBg('dim')}
+ <h1 style="margin-top:-20px;position:relative">${t('guard_h')}</h1><p class="sub" style="font-size:18px;color:var(--ink)">${t('guard_s')}</p>
+ <div class="grow"></div><button class="btn" onclick="buy('${S.envDone?299:999}')">${t('guard_yes')}</button>
+ ${can?`<button class="link" onclick="go(S.spun?'offer3':'last')">${t('guard_no')}</button>`:`<button class="link" onclick="go('pay')">${t('back')}</button>`}</div>`};
+V.last=()=>{track('wheel_viewed');const seg=[40,50,70,80,40,50,70,80];let p='';
  seg.forEach((v,i)=>{const a0=i/8*Math.PI*2-Math.PI/2,a1=(i+1)/8*Math.PI*2-Math.PI/2,am=(a0+a1)/2;
-  p+=`<path d="M100 100L${100+95*Math.cos(a0)} ${100+95*Math.sin(a0)}A95 95 0 0 1 ${100+95*Math.cos(a1)} ${100+95*Math.sin(a1)}Z" fill="${v===70?'var(--god)':i%2?'var(--card)':'var(--tint)'}" stroke="var(--line)" stroke-width="1.5"/><text x="${100+62*Math.cos(am)}" y="${100+62*Math.sin(am)+6}" text-anchor="middle" font-weight="800" font-size="17" fill="${v===70?'#fff':'var(--ink)'}" font-family="Baloo 2">${v}%</text>`});
- return `<div class="scr c"><div style="height:30px;flex:none"></div><h1>${t('spin_h')}</h1>
- <div class="wheel"><svg id="wh" viewBox="0 0 200 200">${p}<circle cx="100" cy="100" r="14" fill="var(--ink)"/></svg></div>
- <p class="fine">${t('spin_note')}</p><div class="grow"></div>
- <button class="btn" id="spb" onclick="spin()">${t('spin_btn')}</button></div>`};
-function spin(){S.spun=true;save();document.getElementById('spb').disabled=true;document.getElementById('wh').style.transform=`rotate(${360*5+202.5}deg)`;vib(20);setTimeout(()=>{vib(60);go('offer2')},3500)}
-V.offer2=()=>{track('offer2_viewed');return `<div class="scr">
+  p+=`<path d="M100 100L${100+95*Math.cos(a0)} ${100+95*Math.sin(a0)}A95 95 0 0 1 ${100+95*Math.cos(a1)} ${100+95*Math.sin(a1)}Z" fill="${v===80?'var(--god)':i%2?'var(--card)':'var(--tint)'}" stroke="var(--line)" stroke-width="1.5"/><text x="${100+62*Math.cos(am)}" y="${100+62*Math.sin(am)+6}" text-anchor="middle" font-weight="800" font-size="17" fill="${v===80?'#fff':'var(--ink)'}">${v}%</text>`});
+ return `<div class="scr c"><div style="height:30px;flex:none"></div><h1>${t('last_h')}</h1>
+ <div class="wheel"><svg id="wh" viewBox="0 0 200 200">${p}<circle cx="100" cy="100" r="16" fill="var(--ink)"/></svg></div>
+ <p class="fine">${t('last_note')}</p><div class="grow"></div><button class="btn" id="spb" onclick="spin()">${t('spin_btn')}</button></div>`};
+function spin(){S.spun=true;save();document.getElementById('spb').disabled=true;document.getElementById('wh').style.transform=`rotate(${360*5+202.5}deg)`;vib(20);
+ setTimeout(()=>{vib(60);petals(60);S.o3until=Date.now()+15*60e3;save();setTimeout(()=>go('offer3'),900)},3400)}
+V.offer3=()=>{track('offer3_viewed');return `<div class="scr">
  <button class="x" onclick="go('pay')">✕</button><div style="height:40px;flex:none"></div>
- <h1>${t('o2_h')}</h1><p class="sub">${t('o2_s')} ${t('ends')} <span class="timer" id="tm">${fmt(S.t2)}</span></p>
- <ul class="feat">${['f1','f2','f3'].map(f=>`<li>${t(f)}</li>`).join('')}</ul><div class="grow"></div>
- <div class="price"><span class="off">${t('off',{p:70})}</span><s>₹999</s> <span class="p">₹299</span> <span class="d">${t('first')}</span><div class="d">${t('perday',{x:'0.8'})}</div></div>
+ <div style="display:flex;justify-content:center">${avatar(S.deity,84)}</div>
+ <h1 class="c" style="margin-top:12px">${t('o3_h')}</h1><p class="sub c">${t('o2_s')} ${t('ends')} <span class="timer" id="tm">${fmt(Math.max(0,Math.round((S.o3until-Date.now())/1000)))}</span></p>
+ <div class="ticket"><div class="pct">80%</div><div style="font-weight:800;letter-spacing:.1em">OFF</div><div style="margin-top:8px"><s style="color:var(--muted)">₹999</s> <b style="font-size:28px">₹199</b> <span class="d">${t('first')}</span></div><div class="d" style="color:var(--muted);font-size:14px">${t('perday',{x:'0.5'})}</div></div>
+ <ul class="feat" style="margin-top:14px">${['f1','f2','f3'].map(f=>`<li>${t(f)}</li>`).join('')}</ul><div class="grow"></div>
  <p class="fine">${t('fine')}</p><div style="height:12px;flex:none"></div>
- <button class="btn" onclick="buy(S.t2>0?'299':'499')">${t('o2_cta')}</button><p class="fine">${t('pay_via')}</p></div>`};
+ <button class="btn" onclick="buy(S.o3until>Date.now()?'199':'999')">${t('o3_cta',{p:199})}</button><p class="fine">${t('pay_via')}</p></div>`};
 const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-setInterval(()=>{if(cur==='offer2'&&S.t2>0){S.t2--;save();const e=document.getElementById('tm');if(e)e.textContent=fmt(S.t2)}},1000);
+setInterval(()=>{if(cur!=='offer3')return;const r=Math.round((S.o3until-Date.now())/1000);const e=document.getElementById('tm');if(e)e.textContent=fmt(Math.max(0,r));if(r<=0)go('pay')},1000);
 function buy(p){PL.buy(p)}
 window.onPurchase=(ok,price,err)=>{if(ok){S.plus=true;save();go('home');toast(t('jai')+' 🙏')}else if(err)toast(err)};
-window.onPlus=owned=>{if(owned&&!S.plus){S.plus=true;save();if(['pay','guilt','spin','offer2'].includes(cur))go('home')}};
+window.onPlus=owned=>{if(owned&&!S.plus){S.plus=true;save();if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))go('home')}};
 window.plPurchased=j=>window.onPurchase(true,(J(j,{})).price||0,'');
 
 /* ---- home ---- */
@@ -400,10 +504,10 @@ function finish(){if(S.prayer==='read')markPrayed();track('unlocked');if(lockPkg
 function leave(){track('lock_left');PL.goHome()}
 
 /* ============ router ============ */
-const FLOW=['lang','welcome','deity','name','perms','report','apps','prayer','sankalp','pay'];
+const FLOW=['lang','welcome','deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','reading','plan','perms','report','apps','prayer','sankalp','pay'];
 function go(s){cur=s;if(FLOW.includes(s)&&!S.done){S.step=s;save()}render();try{document.querySelector('.scr').scrollTop=0}catch(e){}}
-function back(){if(S.done&&['deity','apps','prayer','perms'].includes(cur))return go('settings');const i=FLOW.indexOf(cur);if(i>0)go(FLOW[i-1])}
-window.goBack=()=>{if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa'].includes(cur)){go('home');return true}if(cur==='reader'){go('read');return true}if(['pay','guilt','spin','offer2'].includes(cur))return false;back();return true};
+function back(){if(cur==='plan')return go('st3');if(S.done&&['deity','apps','prayer','perms'].includes(cur))return go('settings');const i=FLOW.indexOf(cur);if(i>0)go(FLOW[i-1])}
+window.goBack=()=>{if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa'].includes(cur)){go('home');return true}if(cur==='reader'){go('read');return true}if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))return false;back();return true};
 function render(){applyGod();document.getElementById('app').innerHTML=V[cur]();bindHold();const n=document.getElementById('nm');if(n&&!S.name)setTimeout(()=>n.focus(),300)}
 function bindHold(){const h=document.getElementById('hold');if(!h)return;let st=0,raf=0;
  const fill=()=>{if(!st)return;const p=Math.min((performance.now()-st)/2000,1);h.querySelector('svg').outerHTML=ring(36,36*p,190);if(p>=1){st=0;try{PL.haptic('done',90)}catch(e){}S.done=true;save();pushLock();try{if(!J(PL.perms(),{}).notif)PL.openPerm('notif')}catch(e){}track('onboarding_completed');setTimeout(()=>go(S.plus?'home':'pay'),350);return}raf=requestAnimationFrame(fill)};
@@ -425,9 +529,9 @@ function mockSheet(k,ok){const old=document.getElementById('mock');if(old)old.re
 
 /* ============ boot ============ */
 (function boot(){
- if(q.get('dark'))S.dark=q.get('dark')==='1';
+ if(q.get('dark'))S.dark=q.get('dark')==='1';if(q.get('theme'))S.theme=q.get('theme');if(q.get('font'))S.font=q.get('font');
  if(q.get('brand')&&PL._mock)PL.setBrand(q.get('brand'));
- if(q.get('reset')){localStorage.removeItem('pl');for(const k of Object.keys(S))delete S[k];Object.assign(S,{lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,japDay:today(),japToday:0,japTotal:0,days:[],t2:600,dark:q.get('dark')==='1',rem:{am:'06:30',pm:'19:00'}})}
+ if(q.get('reset')){localStorage.removeItem('pl');for(const k of Object.keys(S))delete S[k];Object.assign(S,{lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,japDay:today(),japToday:0,japTotal:0,days:[],t2:600,dark:q.get('dark')==='1',theme:q.get('theme')||'marigold',font:q.get('font')||'baloo',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,rem:{am:'06:30',pm:'19:00'}})}
  if(q.get('lang')&&q.get('s'))S.lang=q.get('lang');
  try{S.plus=S.plus||!!PL.isPlus()}catch(e){}
  if(!S.deity&&LOCK)S.deity=Object.keys(C.deities)[0];

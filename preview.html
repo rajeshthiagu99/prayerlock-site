@@ -26,7 +26,8 @@ iframe{width:100%;height:100%;border:0;display:block}
   <div class="g">Language</div><div class="row" id="langs"></div>
   <div class="g">Phone brand (changes the autostart step)</div>
   <select id="brand"><option value="xiaomi">Xiaomi / Redmi / POCO</option><option value="vivo">Vivo / iQOO</option><option value="oppo">Oppo</option><option value="realme">Realme</option><option value="samsung">Samsung</option><option value="google">Pixel</option></select>
-  <div class="g">Look</div><div class="row"><button id="lt" class="on">Marigold</button><button id="dk">Sandhya (dark)</button></div>
+  <div class="g">Look — pick one</div><div class="row" id="themes"></div>
+  <div class="g">Font — pick one</div><div class="row" id="fonts"></div>
   <div class="g">Start</div><div class="row"><button id="restart">Start from the beginning</button></div>
   <div class="jump"><div class="g">Jump to screen</div><div class="row" id="jump"></div></div>
 </div>
@@ -34,16 +35,19 @@ iframe{width:100%;height:100%;border:0;display:block}
 <script>
 const APP='app/index.html';
 const LG=[['hi','हिन्दी'],['ta','தமிழ்'],['te','తెలుగు'],['kn','ಕನ್ನಡ'],['ml','മലയാളം'],['mr','मराठी'],['bn','বাংলা'],['gu','ગુજરાતી'],['pa','ਪੰਜਾਬੀ'],['en','English']];
-const SC=['deity','perms','report','apps','prayer','sankalp','pay','guilt','spin','offer2','home','read','settings','lock'];
-let st={lang:'hi',brand:'xiaomi',dark:0,s:''};
-function load(){const p=new URLSearchParams({lang:st.lang,brand:st.brand,dark:st.dark});if(st.s)p.set('s',st.s);else p.set('reset','1');
+const SC=['welcome','deity','q_role','q_want','q_hours','q_morn','st1','st2','st3','reading','plan','perms','report','apps','prayer','sankalp','pay','chose','env','gold','guard','last','offer3','home','read','settings','lock'];
+const TH=[['marigold','1 Marigold','#FFF5E1','#D9560B'],['sandhya','2 Sandhya','#110E1B','#F2B544'],['kumkum','3 Kumkum','#EFE7DA','#A8231B'],['peacock','4 Peacock','#0D3B42','#E9B949'],['tulsi','5 Tulsi','#F2F5E8','#3D7A2C'],['swarna','6 Swarna','#0B0907','#E8B04B']];
+const FO=[['baloo','A Baloo (friendly)'],['anek','B Anek (modern)'],['tiro','C Tiro (traditional)'],['noto','D Noto (plain)']];
+let st={lang:'hi',brand:'xiaomi',theme:'marigold',font:'baloo',s:''};
+function load(){const p=new URLSearchParams({lang:st.lang,brand:st.brand,theme:st.theme,font:st.font});if(st.s)p.set('s',st.s);else p.set('reset','1');
  document.getElementById('f').src=APP+'?'+p;draw()}
 function draw(){
  langs.innerHTML=LG.map(([k,n])=>`<button class="${st.lang===k?'on':''}" onclick="st.lang='${k}';st.s=st.s||'deity';load()">${n}</button>`).join('');
  jump.innerHTML=SC.map(s=>`<button class="${st.s===s?'on':''}" onclick="st.s='${s}';load()">${s}</button>`).join('');
- lt.className=st.dark?'':'on';dk.className=st.dark?'on':''}
+ themes.innerHTML=TH.map(([k,n,bg,ac])=>`<button class="${st.theme===k?'on':''}" onclick="st.theme='${k}';st.s=st.s||'pay';load()"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${bg};border:3px solid ${ac};vertical-align:-2px;margin-right:4px"></span>${n}</button>`).join('');
+ fonts.innerHTML=FO.map(([k,n])=>`<button class="${st.font===k?'on':''}" onclick="st.font='${k}';st.s=st.s||'pay';load()">${n}</button>`).join('')}
 brand.onchange=()=>{st.brand=brand.value;st.s='perms';load()};
-lt.onclick=()=>{st.dark=0;st.s=st.s||'home';load()};dk.onclick=()=>{st.dark=1;st.s=st.s||'home';load()};
+
 restart.onclick=()=>{st.s='';load()};
 load();
 </script>
