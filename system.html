@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prayer Lock — design system options</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#ece6dc;color:#222;padding:20px 24px 60px}
+h1{font-size:26px}h2{font-size:20px;margin:28px 0 10px}
+p.k{color:#555;margin:6px 0 16px;max-width:900px;line-height:1.45}
+.bar{position:sticky;top:0;z-index:5;background:#ece6dc;padding:10px 0;display:flex;flex-wrap:wrap;gap:18px;align-items:center;border-bottom:1px solid #d6cdbf}
+.bar b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#777;margin-right:6px}
+.bar button{font:inherit;font-size:13px;padding:6px 10px;border:1.5px solid #333;background:#fff;border-radius:8px;cursor:pointer;margin:2px}
+.bar button.on{background:#222;color:#fff}
+.row{display:flex;gap:14px;align-items:flex-start;margin:6px 0 22px;overflow-x:auto;padding-bottom:8px}
+.lab{width:150px;flex:none}
+.lab h3{font-size:18px}.lab small{color:#666;display:block;margin:4px 0 8px;line-height:1.35}
+.sw{display:flex;gap:4px;flex-wrap:wrap}.sw i{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,.15)}
+.ph{width:234px;height:506px;flex:none;border-radius:26px;border:7px solid #111;overflow:hidden;background:#000;position:relative}
+.ph iframe{width:390px;height:844px;border:0;transform:scale(.564);transform-origin:0 0}
+.cap{font-size:12px;color:#666;text-align:center;margin-top:4px}
+table{border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden}
+td,th{padding:8px 12px;border-bottom:1px solid #eee;text-align:left;font-size:14px}
+.spec{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.spec div{background:#fff;border-radius:12px;padding:14px}
+.spec .s1{font-size:30px;font-weight:800;line-height:1.15}
+.spec .s2{font-size:17px;color:#555;margin-top:6px}
+.spec .s3{font-family:'Tiro Devanagari Hindi','Tiro Tamil','Tiro Kannada',serif;font-size:24px;margin-top:10px}
+</style>
+<link rel="stylesheet" href="app/fonts/fonts.css">
+</head>
+<body>
+<h1>Prayer Lock — design system options</h1>
+<p class="k">Every phone below is the real app. Pick <b>one look (1–6)</b>, <b>one font (A–D)</b> and <b>one button style (i–iv)</b>. Change the font, button style or language at the top and every phone updates. Tap inside any phone to try it.</p>
+<div class="bar">
+  <span><b>Font</b><span id="fonts"></span></span>
+  <span><b>Button</b><span id="btns"></span></span>
+  <span><b>Language</b><span id="langs"></span></span>
+  <span><b>God</b><span id="gods"></span></span>
+</div>
+
+<h2>Looks × key screens</h2>
+<div id="grid"></div>
+
+<h2>Tokens</h2>
+<table id="tok"></table>
+
+<h2>Type scale (font specimen in 4 scripts)</h2>
+<div class="spec" id="spec"></div>
+
+<script>
+const APP='app/index.html';
+const TH=[['marigold','1 Marigold','Warm saffron cream. Closest to NoSugar Harvest.',['#FFF5E1','#FFFDF8','#FBE6BF','#26170A','#D9560B','#2F6B2F']],
+ ['sandhya','2 Sandhya','Dusk indigo + temple gold. Calm, premium, night use.',['#110E1B','#1C182D','#2A2442','#F7EEDC','#F2B544','#8BD17C']],
+ ['kumkum','3 Kumkum','Temple stone + kumkum red. Traditional, editorial.',['#EFE7DA','#FAF6EE','#E4D8C4','#1E1914','#A8231B','#3B6B2A']],
+ ['peacock','4 Peacock','Krishna’s peacock teal + gold. Distinctive.',['#0D3B42','#124A52','#1A5C64','#F4EBD9','#E9B949','#8BD17C']],
+ ['tulsi','5 Tulsi','Fresh tulsi green on cream. Gentle, everyday.',['#F2F5E8','#FFFFFF','#DCE7C6','#1D2A15','#3D7A2C','#2F6B2F']],
+ ['swarna','6 Swarna','Black + gold (BrainPal-like). Bold, luxurious.',['#0B0907','#17130E','#241D14','#F6EBD3','#E8B04B','#8BD17C']]];
+const FO=[['baloo','A Baloo','friendly, rounded'],['anek','B Anek','modern, sharp'],['tiro','C Tiro','traditional serif'],['noto','D Noto','plain, neutral']];
+const BT=[['chunky','i Chunky','NoSugar: tall, ink border, hard shadow'],['pill','ii Pill glow','rounded, soft glow'],['d3','iii 3D','Duolingo-style pressable'],['soft','iv Soft','flat, minimal']];
+const LG=[['hi','हिन्दी'],['ta','தமிழ்'],['te','తెలుగు'],['kn','ಕನ್ನಡ'],['ml','മലയാളം'],['mr','मराठी'],['bn','বাংলা'],['gu','ગુજરાતી'],['pa','ਪੰਜਾਬੀ'],['en','English']];
+const GD=[['hanuman','Hanuman'],['shiva','Shiva'],['krishna','Krishna'],['ganesha','Ganesha'],['murugan','Murugan'],['devi','Devi'],['lakshmi','Lakshmi']];
+const SC=[['welcome','Welcome'],['deity','Choose god'],['pay','Paywall'],['env','Shagun gift'],['lock','Lock overlay'],['home','Home']];
+let st={font:'baloo',btn:'chunky',lang:'hi',god:'hanuman'};
+const btns=(arr,key,el)=>document.getElementById(el).innerHTML=arr.map(([k,n,d])=>`<button title="${d||''}" class="${st[key]===k?'on':''}" onclick="st.${key}='${k}';draw()">${n}</button>`).join('');
+function draw(){
+ btns(FO,'font','fonts');btns(BT,'btn','btns');btns(LG,'lang','langs');btns(GD,'god','gods');
+ grid.innerHTML=TH.map(([k,n,d,c])=>`<div class="row"><div class="lab"><h3>${n}</h3><small>${d}</small><div class="sw">${c.map(x=>`<i style="background:${x}"></i>`).join('')}</div></div>
+  ${SC.map(([s,l])=>`<div><div class="ph"><iframe loading="lazy" src="${APP}?s=${s}&lang=${st.lang}&god=${st.god}&theme=${k}&font=${st.font}&btn=${st.btn}"></iframe></div><div class="cap">${l}</div></div>`).join('')}</div>`).join('');
+ tok.innerHTML='<tr><th>Look</th><th>Background</th><th>Card</th><th>Tint</th><th>Ink</th><th>Primary</th><th>Success</th></tr>'+TH.map(([k,n,d,c])=>`<tr><td><b>${n}</b></td>${c.map(x=>`<td><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:${x};border:1px solid #ccc;vertical-align:-2px"></span> ${x}</td>`).join('')}</tr>`).join('')+'<tr><td><b>All</b></td><td colspan="6">Radius 12–18 · border 2–2.5px ink on light looks · hard shadow 3–5px on light looks · buttons 56–64px · headline 30/1.12 800 · body 16/1.35 · deity accent colour per god (ring, japa, avatar)</td></tr>';
+ const fam={baloo:"'Baloo 2','Baloo Thambi 2','Baloo Tamma 2'",anek:"'Anek Devanagari','Anek Tamil','Anek Kannada','Anek Latin'",tiro:"'Tiro Devanagari Hindi','Tiro Tamil','Tiro Kannada'",noto:"'Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Kannada','Noto Sans'"};
+ spec.innerHTML=FO.map(([k,n,d])=>`<div style="font-family:${fam[k]},sans-serif;${st.font===k?'outline:3px solid #222':''}"><small style="font-family:system-ui;color:#888">${n} — ${d}</small><div class="s1">पहले भगवान, फिर फ़ोन।</div><div class="s1" style="font-size:24px">முதலில் கடவுள்</div><div class="s2">ಮೊದಲು ದೇವರು, ನಂತರ ಫೋನ್ · First God, then phone</div><div class="s3">ॐ नमः शिवाय</div></div>`).join('');
+}
+const gf=document.createElement('link');gf.rel='stylesheet';gf.href='https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@500;800&family=Anek+Tamil:wght@500;800&family=Anek+Kannada:wght@500;800&family=Anek+Latin:wght@500;800&family=Noto+Sans:wght@500;800&family=Noto+Sans+Devanagari:wght@500;800&family=Noto+Sans+Tamil:wght@500;800&family=Noto+Sans+Kannada:wght@500;800&display=swap';document.head.appendChild(gf);
+draw();
+</script>
+</body>
+</html>
