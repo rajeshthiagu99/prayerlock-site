@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<title>Prayer Lock</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{
+  --ui:'Baloo 2','Baloo Thambi 2','Baloo Tamma 2','Baloo Tammudu 2','Baloo Chettan 2','Baloo Da 2','Baloo Bhai 2','Baloo Paaji 2',system-ui,sans-serif;
+  --scr:'Tiro Devanagari Hindi','Tiro Tamil','Tiro Kannada','Tiro Telugu','Tiro Bangla','Tiro Gurmukhi','Noto Serif Malayalam','Noto Serif Gujarati',serif;
+  --bg:#FFF5E1;--card:#FFFDF8;--tint:#FBE6BF;--ink:#26170A;--muted:#7A6248;--line:#26170A;
+  --pri:#D9560B;--priInk:#FFFDF8;--ok:#2F6B2F;--bad:#B3261E;--god:#D9560B;--bead:#E9D3AE;
+  --r:14px;--bw:2px;--sh:3px 3px 0 var(--line);
+}
+body.dark{--bg:#110E1B;--card:#1C182D;--tint:#2A2442;--ink:#F7EEDC;--muted:#A69EC2;--line:#3A3360;--pri:#F2B544;--priInk:#1A1406;--bead:#3A335F;--sh:none}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--ui);overscroll-behavior:none}
+body{user-select:none;-webkit-user-select:none}
+input{user-select:text;-webkit-user-select:text}
+#app{position:fixed;inset:0;overflow:hidden}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 14px) 22px calc(env(safe-area-inset-bottom) + 22px);overflow-y:auto;animation:up .28s ease both;scrollbar-width:none}
+.scr::-webkit-scrollbar{display:none}
+.scr.tabbed{padding-bottom:calc(env(safe-area-inset-bottom) + 86px)}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.top{display:flex;align-items:center;gap:10px;height:40px;margin-bottom:8px;flex:none}
+.back{width:40px;height:40px;border:none;background:none;color:var(--ink);font-size:26px;line-height:1;cursor:pointer;margin-left:-10px}
+.bar{flex:1;height:4px;background:var(--tint);border-radius:4px;overflow:hidden}
+.bar b{display:block;height:100%;background:var(--pri);transition:width .3s}
+h1{font-weight:800;font-size:30px;line-height:1.12;letter-spacing:-.01em;margin:4px 0 6px}
+h3{font-weight:700;font-size:18px;margin:16px 0 8px}
+.sub{color:var(--muted);font-size:16px;line-height:1.35;margin-bottom:12px}
+.grow{flex:1;min-height:12px}
+.c{text-align:center}
+.btn{display:block;width:100%;min-height:56px;flex:none;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--pri);color:var(--priInk);font:inherit;font-size:18px;font-weight:700;cursor:pointer;box-shadow:var(--sh);transition:transform .08s,box-shadow .08s;padding:0 16px}
+body.dark .btn{border-color:transparent}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.link{display:block;margin:8px auto 0;background:none;border:none;color:var(--muted);font:inherit;font-size:15px;cursor:pointer;min-height:44px;padding:0 12px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;margin-bottom:9px;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);font:inherit;font-size:17px;font-weight:600;cursor:pointer}
+body.dark .opt{border-width:1px}
+.opt small{display:block;font-weight:500;font-size:13px;color:var(--muted);line-height:1.3}
+.opt.on{background:var(--tint);box-shadow:var(--sh)}
+body.dark .opt.on{outline:2px solid var(--pri);outline-offset:-2px}
+.chk{margin-left:auto;width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);flex:none;display:grid;place-items:center;font-size:13px;color:var(--priInk)}
+.on .chk{background:var(--pri);border-color:var(--pri)}
+.input{width:100%;font:inherit;font-size:22px;font-weight:600;padding:14px;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.langs .opt{margin:0;justify-content:center;font-size:21px;padding:14px 6px}
+.gods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.god{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;border:var(--bw) solid transparent;border-radius:var(--r);background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:700;line-height:1.15;cursor:pointer;text-align:center}
+.god .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--scr);font-size:26px;color:#fff;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.god.on{border-color:var(--line);background:var(--card);box-shadow:var(--sh)}
+.seg{display:flex;gap:8px;margin:4px 0 8px}
+.seg button{flex:1;padding:10px 0;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);font:inherit;font-weight:700;font-size:18px;cursor:pointer}
+.seg button.on{background:var(--pri);color:var(--priInk);border-color:var(--pri)}
+.lbl{font-size:13px;font-weight:700;color:var(--muted);margin:10px 0 4px}
+.perm{display:flex;gap:12px;align-items:center;padding:13px;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);margin-bottom:9px}
+body.dark .perm{border-width:1px}
+.perm .n{width:32px;height:32px;border-radius:50%;background:var(--tint);display:grid;place-items:center;font-weight:800;flex:none}
+.perm.ok .n{background:var(--ok);color:#fff}
+.perm b{display:block;font-size:16px;line-height:1.2}
+.perm span.s{display:block;font-size:13px;color:var(--muted);line-height:1.3}
+.perm .go{margin-left:auto;flex:none;padding:8px 14px;border-radius:999px;border:none;background:var(--pri);color:var(--priInk);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.perm.ok .go{background:none;color:var(--ok);pointer-events:none}
+.perm.wait .go{opacity:.35}
+.trust{display:flex;gap:10px;font-size:13px;color:var(--muted);line-height:1.35;padding:10px 12px;border-radius:var(--r);background:var(--tint);margin-bottom:12px}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 6px}
+.vs div{border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);padding:14px 12px}
+.vs b{display:block;font-size:40px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.vs span{font-size:14px;color:var(--muted);font-weight:600}
+.vs .god-side b{color:var(--god)}
+.applist .row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--tint);cursor:pointer}
+.applist img,.applist .ai{width:40px;height:40px;border-radius:11px;flex:none}
+.ai{display:grid;place-items:center;color:#fff;font-weight:800}
+.applist b{display:block;font-size:16px}
+.applist small{color:var(--muted);font-size:13px}
+.ring{display:block;margin:0 auto}
+.ring .bd{fill:var(--bead);transition:fill .15s}
+.ring .bd.on{fill:var(--god)}
+.ring .meru{fill:var(--god)}
+.mantra{font-family:var(--scr);font-size:30px;line-height:1.3;text-align:center}
+.cnt{font-weight:800;font-size:44px;font-variant-numeric:tabular-nums;text-align:center;line-height:1}
+.pulse{animation:pl .18s}
+@keyframes pl{50%{transform:scale(1.07)}}
+.hold{position:relative;width:190px;height:190px;margin:8px auto;border-radius:50%;display:grid;place-items:center;cursor:pointer;touch-action:none}
+.hold svg{position:absolute;inset:0}
+.hold span{font-weight:700;font-size:15px;color:var(--muted);text-align:center;padding:0 34px}
+.feat{list-style:none;margin:4px 0 10px}
+.feat li{display:flex;gap:10px;align-items:center;font-size:16px;font-weight:600;padding:6px 0;line-height:1.25}
+.feat li::before{content:"✓";width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:12px;flex:none}
+.price{border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);padding:14px 16px;position:relative;box-shadow:var(--sh)}
+.price .off{position:absolute;top:-12px;right:14px;background:var(--bad);color:#fff;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px}
+.price s{color:var(--muted);font-size:17px}
+.price .p{font-size:32px;font-weight:800;line-height:1.1}
+.price .d{font-size:14px;color:var(--muted)}
+.fine{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0;line-height:1.35}
+.x{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:16px;width:36px;height:36px;border-radius:50%;border:none;background:var(--tint);color:var(--muted);font-size:15px;cursor:pointer;z-index:3}
+.wheel{width:240px;height:240px;margin:10px auto;position:relative}
+.wheel svg{width:100%;height:100%;transition:transform 3.2s cubic-bezier(.17,.67,.18,1)}
+.wheel::before{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);border:12px solid transparent;border-top:18px solid var(--ink);z-index:2}
+.timer{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--tint);font-weight:700;font-variant-numeric:tabular-nums}
+.card{border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+body.dark .card{border-width:1px}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.stats div{border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);padding:10px 6px;text-align:center}
+body.dark .stats div{border-width:1px}
+.stats b{display:block;font-size:24px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted);line-height:1.2;display:block}
+.banner{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);background:var(--tint);font-weight:700;font-size:15px;margin-bottom:12px;cursor:pointer}
+.banner.warn{background:var(--bad);color:#fff}
+.week{display:flex;justify-content:space-between;margin-top:12px}
+.week div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.week i{width:24px;height:24px;border-radius:50%;background:var(--tint);display:block}
+.week i.on{background:var(--ok)}
+.week i.today{outline:2px solid var(--pri);outline-offset:2px}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:var(--bw) solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:10}
+body.dark .tabs{border-top-width:1px}
+.tabs button{flex:1;background:none;border:none;font:inherit;font-size:13px;font-weight:700;color:var(--muted);padding:10px 0 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabs button i{font-style:normal;font-size:20px;line-height:1}
+.tabs button.on{color:var(--pri)}
+.li{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--tint);cursor:pointer;font-size:16px;font-weight:600}
+.li small{display:block;color:var(--muted);font-weight:500;font-size:13px}
+.li .r{margin-left:auto;color:var(--muted);font-size:14px;font-weight:600;text-align:right}
+.verse{font-family:var(--scr);font-size:22px;line-height:1.65;text-align:center;margin:14px 0 4px;white-space:pre-line}
+.mean{font-size:15px;line-height:1.45;color:var(--muted);text-align:center;margin-bottom:14px}
+.vdiv{width:40px;height:2px;background:var(--tint);margin:10px auto}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 96px);z-index:50;background:#222;color:#fff;padding:12px 14px;border-radius:12px;font-size:15px;animation:up .2s both;text-align:center}
+.lockapp{display:flex;justify-content:center;align-items:center;gap:10px}
+.lockapp img,.lockapp .ai{width:36px;height:36px;border-radius:10px}
+/* android mocks (browser preview only) */
+.sheet{position:fixed;inset:0;z-index:60;background:#F6F2FA;color:#1C1B1F;font-family:Roboto,system-ui,sans-serif;animation:up .2s both;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.sheet .hd{display:flex;align-items:center;gap:14px;padding:18px 16px;font-size:21px}
+.sheet .row{display:flex;align-items:center;gap:14px;padding:14px 18px;font-size:16px;position:relative}
+.sheet .row small{display:block;color:#625B71;font-size:13px}
+.sheet .ico{width:36px;height:36px;border-radius:10px;flex:none}
+.sheet .hint{margin:4px 16px 8px;padding:10px 12px;border-radius:12px;background:#E8DEF8;font-size:14px;line-height:1.35}
+.tog{margin-left:auto;width:52px;height:32px;border-radius:16px;background:#E7E0EC;border:2px solid #79747E;position:relative;cursor:pointer;flex:none}
+.tog::after{content:"";position:absolute;top:6px;left:6px;width:16px;height:16px;border-radius:50%;background:#79747E;transition:.2s}
+.tog.on{background:#6750A4;border-color:#6750A4}
+.tog.on::after{left:24px;top:2px;width:24px;height:24px;background:#fff}
+.poke{position:absolute;right:30px;top:20px;font-size:28px;animation:pk 1s ease-in-out infinite;pointer-events:none}
+@keyframes pk{50%{transform:translate(-6px,-6px)}}
+.dlg{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:28px;animation:up .2s both}
+.dlg>div{background:#ECE6F0;color:#1C1B1F;font-family:Roboto,system-ui,sans-serif;border-radius:28px;padding:24px;width:100%;max-width:340px}
+.dlg h4{font-size:20px;font-weight:500;margin-bottom:12px;line-height:1.25}
+.dlg p{font-size:14px;color:#49454F;line-height:1.4;margin-bottom:18px}
+.dlg .acts{display:flex;justify-content:flex-end;gap:8px}
+.dlg .acts button{background:none;border:none;color:#6750A4;font-weight:600;font-size:15px;padding:10px 12px;cursor:pointer}
+select.sel{font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:var(--card);border:var(--bw) solid var(--line);border-radius:10px;padding:6px 8px;max-width:170px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="content.js"></script>
+<script src="content-gita.js" onerror="0"></script>
+<script src="i18n.js"></script>
+<script src="i18n-more.js" onerror="0"></script>
+<script>
+"use strict";
+/* ============ content fallback (until content.js exists) ============ */
+if(!window.CONTENT){window.CONTENT={deities:{
+ hanuman:{name:{en:'Hanuman',hi:'हनुमान'},honorific:{en:'Hanuman ji',hi:'हनुमान जी'},japa:{en:'Jai Hanuman',hi:'जय हनुमान'},glyph:'ह',color:'#E0620D',texts:[],regions:['hi']},
+ shiva:{name:{en:'Shiva',hi:'शिव'},honorific:{en:'Shiva',hi:'शिव जी'},japa:{en:'Om Namah Shivaya',hi:'ॐ नमः शिवाय'},glyph:'ॐ',color:'#3F5A8A',texts:[],regions:['hi']},
+ ram:{name:{en:'Ram',hi:'राम'},honorific:{en:'Shri Ram',hi:'श्री राम'},japa:{en:'Ram',hi:'राम'},glyph:'रा',color:'#C2410C',texts:[],regions:['hi']}
+},texts:{},festivals:[]}}
+const C=window.CONTENT,I=window.I18N;
+const LANGS=['hi','ta','te','kn','ml','mr','bn','gu','pa','en'].filter(l=>I[l]);
+const REVIEW_HASH=27246139; // set at build time from keystore/reviewer-code.txt
+
+/* ============ bridge (native PL or browser mock) ============ */
+const NATIVE=!!window.PL;
+const Mock=(()=>{const g={usage:false,overlay:false,battery:false,notif:false,autostart:false};let brand='xiaomi',lock=null,plus=false;
+ const A=[['com.instagram.android','Instagram','#D6249F',126],['com.google.android.youtube','YouTube','#FF0000',98],['com.whatsapp','WhatsApp','#25D366',61],['in.mohalla.sharechat','ShareChat','#F15A24',40],['com.dts.freefireth','Free Fire','#E86A10',35],['com.facebook.katana','Facebook','#1877F2',22],['in.mohalla.video','Moj','#7B2FF7',18],['com.snapchat.android','Snapchat','#E6C700',12],['in.startv.hotstar','JioHotstar','#0B2A6F',9],['com.phonepe.app','PhonePe','#5F259F',7],['com.google.android.apps.maps','Maps','#34A853',5]];
+ const autoNeeded=()=>['xiaomi','vivo','oppo','realme'].includes(brand);
+ return{_mock:true,setBrand(b){brand=b},
+  perms:()=>JSON.stringify({...g,brand,autostart:autoNeeded()?g.autostart:true}),
+  openPerm(n){mockSheet(n,()=>{g[n]=true;setTimeout(()=>window.plResume&&plResume(),50)})},
+  apps:()=>JSON.stringify(A.map(([pkg,label,col,min])=>({pkg,label,icon:'',col,min}))),
+  usage:()=>JSON.stringify({totalMin:A.reduce((s,a)=>s+a[3],0)+40,apps:A.slice(0,8).map(([pkg,label,,min])=>({pkg,label,min}))}),
+  setLock(j){lock=j},getLock:()=>lock||'{}',lockStatus:()=>JSON.stringify({running:!!lock,permsOk:g.usage&&g.overlay}),
+  unlocked(p){go('home');toast(t('unlocked',{app:lockLabel,m:S.unlockMin}))},prayed(){},goHome(){go('home')},
+  track(){},buy(p){setTimeout(()=>{plus=true;window.onPurchase&&onPurchase(true,+p,'')},700)},restore(){toast('No purchase found')},isPlus:()=>plus,
+  haptic(k,ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}},reminders(){},share(){},openUrl(u){window.open(u,'_blank')},version:()=>1}})();
+const PL=window.PL||Mock;
+const J=(s,d)=>{try{return JSON.parse(s)}catch(e){return d}};
+const track=(e,p)=>{try{p?PL.track(e,JSON.stringify(p)):PL.track(e)}catch(x){}};
+const vib=(ms=12)=>{try{PL.haptic('tap',ms)}catch(e){}};
+
+/* ============ state ============ */
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,rem:{am:'06:30',pm:'19:00'}},J(localStorage.getItem('pl'),{}));
+const save=()=>localStorage.setItem('pl',JSON.stringify(S));
+if(S.japDay!==today()){S.japDay=today();S.japToday=0}
+const q=new URLSearchParams(location.search);
+const LOCK=q.get('lock');let lockLabel=q.get('label')||'';
+
+/* ============ text helpers ============ */
+const L=()=>S.lang||'en';
+const pick=(o,l=L())=>o?(o[l]??o.hi??o.en??Object.values(o)[0]):'';
+const god=()=>C.deities[S.deity]||C.deities[Object.keys(C.deities)[0]];
+const godName=()=>pick(god().honorific)||pick(god().name);
+function t(k,v={}){let s=(I[L()]&&I[L()][k])??I.en[k]??k;v={god:godName(),name:S.name||'',...v};for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s.replace(/^,\s*|\s*,\s*$/g,'').replace(/\s+,/g,',')}
+const japa=()=>pick(god().japa);
+function glyph(k){const d=C.deities[k||S.deity]||god();if(k==='murugan'||(!k&&S.deity==='murugan'))return L()==='ta'?'வேல்':L()==='ml'?'വേൽ':'स्कं';return d.glyph||'ॐ'}
+const hm=m=>m>=60?Math.floor(m/60)+'h '+(m%60)+'m':m+'m';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LEAD={hi:['ram','hanuman','shiva','krishna','radha_krishna','devi'],ta:['murugan','shiva','devi','vishnu','ganesha','venkatesha','ayyappa'],te:['venkatesha','shiva','ram','hanuman','devi','ganesha'],kn:['venkatesha','shiva','ganesha','hanuman','devi','vishnu'],ml:['ayyappa','krishna','devi','shiva','ganesha','murugan'],mr:['ganesha','vishnu','shiva','ram','hanuman','devi'],bn:['devi','krishna','shiva','radha_krishna','ganesha','lakshmi'],gu:['krishna','hanuman','devi','shiva','ganesha','ram'],pa:['devi','shiva','hanuman','ram','krishna','ganesha'],en:['ram','hanuman','shiva','krishna','devi','ganesha']};
+function godOrder(){const base=(C.deityOrder||Object.keys(C.deities)).filter(k=>C.deities[k]);const lead=(LEAD[L()]||[]).filter(k=>C.deities[k]);return [...lead,...base.filter(k=>!lead.includes(k))]}
+function applyGod(){document.documentElement.style.setProperty('--god',god().color||'#D9560B');document.documentElement.lang=L();document.body.classList.toggle('dark',!!S.dark)}
+
+/* ============ pieces ============ */
+const OB=['deity','name','perms','report','apps','prayer','sankalp'];
+function topBar(){const i=OB.indexOf(cur);return `<div class="top"><button class="back" onclick="back()" aria-label="${t('back')}">‹</button>${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}</div>`}
+function ring(n,done,size){const beads=Math.min(n,36),R=size/2-12,c=size/2,on=Math.round(done/n*beads),r=beads>30?6:beads>18?7.5:9;
+ let s=`<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+ for(let i=0;i<beads;i++){const a=-Math.PI/2+(i+1)/(beads+1)*Math.PI*2;s+=`<circle class="bd ${i<on?'on':''}" cx="${(c+R*Math.cos(a)).toFixed(1)}" cy="${(c+R*Math.sin(a)).toFixed(1)}" r="${r}"/>`}
+ return s+`<circle class="meru" cx="${c}" cy="${c-R}" r="${r+3}"/></svg>`}
+function appIcon(a,sz=40){return a.icon?`<img src="${a.icon}" width="${sz}" height="${sz}" alt="">`:`<span class="ai" style="background:${a.col||'#888'};width:${sz}px;height:${sz}px">${esc((a.label||'?')[0])}</span>`}
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
+const tabs=a=>`<div class="tabs">${[['home','◎','tab_today'],['read','❁','tab_read'],['settings','≡','tab_me']].map(([k,i,l])=>`<button class="${a===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${t(l)}</button>`).join('')}</div>`;
+
+/* ============ screens ============ */
+const V={};let cur='';
+V.lang=()=>`<div class="scr"><div style="height:24px"></div>
+ <h1>${t('lang_h')}</h1><div style="height:10px"></div>
+ <div class="langs">${LANGS.map(l=>`<button class="opt ${L()===l?'on':''}" onclick="S.lang='${l}';save();go('welcome')">${I[l]._name}</button>`).join('')}</div>
+ <div class="grow"></div></div>`;
+V.welcome=()=>`<div class="scr c"><div class="grow"></div>${ring(108,40,230)}
+ <h1 style="margin-top:24px">${t('wel_h',{god:'🙏'}).replace('🙏',L()==='en'?'God':pick({hi:'भगवान',mr:'देव',gu:'ભગવાન',bn:'ভগবান',pa:'ਪ੍ਰਭੂ',ta:'இறைவன்',te:'దేవుడు',kn:'ದೇವರು',ml:'ദൈവം'}))}</h1>
+ <p class="sub">${t('wel_s')}</p><div class="grow"></div>
+ <button class="btn" onclick="track('ob_start');go('deity')">${t('begin')}</button></div>`;
+V.deity=()=>`<div class="scr">${topBar()}
+ <h1>${t('deity_h')}</h1><p class="sub">${t('deity_s')}</p>
+ <div class="gods">${godOrder().map(k=>{const d=C.deities[k];return `<button class="god ${S.deity===k?'on':''}" onclick="S.deity='${k}';save();applyGod();render()"><span class="av" style="background:${d.color}">${esc(glyph(k))}</span>${esc(pick(d.name))}</button>`}).join('')}</div>
+ <div class="grow"></div><button class="btn" ${S.deity?'':'disabled'} onclick="track('ob_deity');go('name')">${t('cont')}</button></div>`;
+V.name=()=>`<div class="scr">${topBar()}
+ <h1>${t('name_h')}</h1><div style="height:10px"></div>
+ <input class="input" id="nm" placeholder="${t('name_ph')}" value="${esc(S.name)}" maxlength="24" oninput="S.name=this.value.trim();save()" onkeydown="if(event.key==='Enter')go('perms')" autocomplete="off">
+ <div class="grow"></div><button class="btn" onclick="go('perms')">${t('cont')}</button></div>`;
+function permList(){const p=J(PL.perms(),{});const L=['usage','overlay','battery'];if(['xiaomi','vivo','oppo','realme'].includes(p.brand))L.push('autostart');return{p,L}}
+V.perms=()=>{const {p,L:list}=permList();const first=list.find(k=>!p[k]);const brand=(p.brand||'').replace(/^./,c=>c.toUpperCase());
+ return `<div class="scr">${topBar()}
+ <h1>${t('perm_h')}</h1><p class="sub">${t('perm_s')}</p>
+ <div class="trust"><span>🔒</span><span>${t('trust')}</span></div>
+ ${list.map((k,i)=>`<div class="perm ${p[k]?'ok':first===k?'':'wait'}"><span class="n">${p[k]?'✓':i+1}</span><div><b>${t('p_'+k)}</b><span class="s">${t('p_'+k+'_s',{brand})}</span></div>
+  <button class="go" onclick="askPerm('${k}')">${p[k]?t('done'):t('allow')}</button></div>`).join('')}
+ <div class="grow"></div><button class="btn" ${p.usage&&p.overlay?'':'disabled'} onclick="track('ob_perms_done');go('report')">${t('cont')}</button></div>`};
+function askPerm(k){track('perm_'+k);PL.openPerm(k)}
+window.plResume=()=>{Object.assign(S,J(localStorage.getItem('pl'),{}));if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
+V.report=()=>{const u=J(PL.usage(),{totalMin:0,apps:[]});if(!u.totalMin)return `<div class="scr">${topBar()}<div class="grow"></div><div style="display:flex;justify-content:center"><span style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div><h1 class="c" style="margin-top:20px">${esc(japa())}</h1><p class="sub c" style="font-size:18px">${t('rep_s',{days:'0'}).split(/[.।]\s+/).slice(1).join(' ')}</p><div class="grow"></div><button class="btn" onclick="go('apps')">${t('cont')}</button></div>`;const days=Math.round(u.totalMin*365/1440);const g=S.japToday?1:0;
+ return `<div class="scr">${topBar()}
+ <h1>${t('rep_h',{name:S.name})}</h1>
+ <div class="vs"><div><b>${hm(u.totalMin)}</b><span>${t('rep_phone')}</span></div><div class="god-side"><b>${g}m</b><span>${t('rep_god')}</span></div></div>
+ <div class="applist" style="margin-top:6px">${u.apps.slice(0,4).map(a=>{const full=J(PL.apps(),[]).find(x=>x.pkg===a.pkg)||a;return `<div class="row" style="cursor:default">${appIcon(full,32)}<b style="flex:1;font-size:15px">${esc(a.label)}</b><small>${hm(a.min)}</small></div>`}).join('')}</div>
+ <p class="sub" style="margin-top:14px;color:var(--ink);font-size:18px;font-weight:600">${t('rep_s',{days})}</p>
+ <div class="grow"></div><button class="btn" onclick="go('apps')">${t('cont')}</button></div>`};
+const DISTRACT=['com.instagram.android','com.google.android.youtube','com.facebook.katana','com.snapchat.android','in.mohalla.sharechat','in.mohalla.video','com.eterno.shortvideos','com.dts.freefireth','com.pubg.imobile','in.startv.hotstar','com.netflix.mediaclient','com.twitter.android','com.reddit.frontpage','com.zhiliaoapp.musically','com.ludo.king','com.josh.app','com.roposo.android','com.moj.app'];
+let APPS=null;
+V.apps=()=>{APPS=APPS||J(PL.apps(),[]).sort((x,y)=>(DISTRACT.includes(y.pkg)-DISTRACT.includes(x.pkg))||((y.min||0)-(x.min||0)));if(!S.apps.length){S.apps=APPS.filter(a=>DISTRACT.includes(a.pkg)).slice(0,4).map(a=>a.pkg);if(!S.apps.length)S.apps=APPS.slice(0,2).map(a=>a.pkg)}
+ return `<div class="scr">${topBar()}
+ <h1>${t('apps_h')}</h1><p class="sub">${t('apps_s')}</p>
+ <div class="applist">${APPS.slice(0,24).map(a=>`<div class="row ${S.apps.includes(a.pkg)?'on':''}" onclick="togApp('${a.pkg}')">${appIcon(a)}<div style="flex:1"><b>${esc(a.label)}</b><small>${a.min?t('min_y',{m:hm(a.min)}):''}</small></div><span class="chk" style="${S.apps.includes(a.pkg)?'background:var(--pri);border-color:var(--pri)':''}">${S.apps.includes(a.pkg)?'✓':''}</span></div>`).join('')}</div>
+ <div style="height:14px;flex:none"></div><button class="btn" style="position:sticky;bottom:0" ${S.apps.length?'':'disabled'} onclick="track('ob_apps',{n:S.apps.length});go(S.done?'settings':'prayer')">${t(S.done?'done':'cont')}</button></div>`};
+function togApp(p){const i=S.apps.indexOf(p);i<0?S.apps.push(p):S.apps.splice(i,1);const a=(APPS||[]).find(x=>x.pkg===p);if(a)S.labels[p]=a.label;save();vib(8);render();if(S.done)pushLock()}
+V.prayer=()=>`<div class="scr">${topBar()}
+ <h1>${t('pr_h')}</h1><div style="height:6px"></div>
+ ${['jap','read'].map(k=>`<button class="opt ${S.prayer===k?'on':''}" onclick="S.prayer='${k}';save();render()"><span>${t('pr_'+k)}<small>${t('pr_'+k+'_s')}</small></span><span class="chk">${S.prayer===k?'✓':''}</span></button>`).join('')}
+ ${S.prayer==='jap'?`<div class="lbl">${t('count')}</div><div class="seg">${[11,21,108].map(n=>`<button class="${S.count===n?'on':''}" onclick="S.count=${n};save();render()">${n}</button>`).join('')}</div>
+ <p class="mantra" style="margin-top:16px;color:var(--god)">${esc(japa())}</p>`:''}
+ <div class="grow"></div><button class="btn" onclick="track('ob_prayer',{p:S.prayer,n:S.count});go(S.done?'settings':'sankalp')">${t(S.done?'done':'cont')}</button></div>`;
+V.sankalp=()=>`<div class="scr c">${topBar()}
+ <h1>${t('snk_h')}</h1><p class="mantra" style="font-size:24px;margin-top:8px">${t('snk_t')}</p>
+ <div class="grow"></div><div class="hold" id="hold">${ring(36,0,190)}<span>${t('hold')}</span></div>
+ <p class="mantra" style="font-size:20px;color:var(--god)">${esc(japa())}</p><div class="grow"></div></div>`;
+function pushLock(){PL.setLock(JSON.stringify({pkgs:S.apps,mode:S.mode,unlockMin:S.unlockMin}));PL.reminders(JSON.stringify({am:S.rem.am,pm:S.mode==='sandhya'?S.rem.pm:'',title:godName(),body:japa()}))}
+let titleTaps=0,showCode=false;
+V.pay=()=>{track('paywall_viewed');return `<div class="scr">
+ <button class="x" onclick="track('paywall_closed');go(S.spun?'offer2':'guilt')">✕</button>
+ <div style="height:40px;flex:none"></div>
+ <div style="display:flex;justify-content:center"><span style="width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:34px;box-shadow:inset 0 -5px 0 rgba(0,0,0,.15)">${esc(glyph())}</span></div>
+ <h1 onclick="if(++titleTaps>=5){showCode=true;render()}">${t('pay_h',{name:S.name})}</h1>
+ <ul class="feat">${['f1','f2','f3','f4'].map(f=>`<li>${t(f)}</li>`).join('')}</ul>
+ ${showCode?`<input class="input" id="rc" placeholder="Code" style="font-size:16px;margin-bottom:8px"><button class="btn ghost" onclick="tryCode()">OK</button>`:''}
+ <div class="grow"></div>
+ <div class="price"><span class="off">${t('off',{p:50})}</span><s>₹999</s> <span class="p">₹499</span> <span class="d">${t('first')}</span><div class="d">${t('perday',{x:'1.4'})}</div></div>
+ <p class="fine">${t('fine')}</p><div style="height:12px;flex:none"></div>
+ <button class="btn" onclick="buy('499')">${t('cta')}</button>
+ <p class="fine">${t('pay_via')} · <u onclick="PL.restore()">${t('restore')}</u></p></div>`};
+function hash(s){let h=5381;for(const ch of s.toUpperCase().replace(/[^A-Z0-9]/g,""))h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h}
+function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();go('home')}else toast('That code didn’t work.')}
+V.guilt=()=>{track('guilt_viewed');return `<div class="scr c"><div class="grow"></div>
+ <div style="display:flex;justify-content:center"><span class="av" style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div>
+ <h1 style="margin-top:22px">${t('guilt_h')}</h1><p class="sub" style="font-size:20px;color:var(--ink)">${t('guilt_s')}</p>
+ <div class="grow"></div><button class="btn" onclick="track('guilt_yes');buy('499')">${t('guilt_yes')}</button>
+ <button class="link" onclick="track('guilt_no');go('spin')">${t('guilt_no')}</button></div>`};
+V.spin=()=>{track('wheel_viewed');const seg=[40,50,60,70,40,50,60,70];let p='';
+ seg.forEach((v,i)=>{const a0=i/8*Math.PI*2-Math.PI/2,a1=(i+1)/8*Math.PI*2-Math.PI/2,am=(a0+a1)/2;
+  p+=`<path d="M100 100L${100+95*Math.cos(a0)} ${100+95*Math.sin(a0)}A95 95 0 0 1 ${100+95*Math.cos(a1)} ${100+95*Math.sin(a1)}Z" fill="${v===70?'var(--god)':i%2?'var(--card)':'var(--tint)'}" stroke="var(--line)" stroke-width="1.5"/><text x="${100+62*Math.cos(am)}" y="${100+62*Math.sin(am)+6}" text-anchor="middle" font-weight="800" font-size="17" fill="${v===70?'#fff':'var(--ink)'}" font-family="Baloo 2">${v}%</text>`});
+ return `<div class="scr c"><div style="height:30px;flex:none"></div><h1>${t('spin_h')}</h1>
+ <div class="wheel"><svg id="wh" viewBox="0 0 200 200">${p}<circle cx="100" cy="100" r="14" fill="var(--ink)"/></svg></div>
+ <p class="fine">${t('spin_note')}</p><div class="grow"></div>
+ <button class="btn" id="spb" onclick="spin()">${t('spin_btn')}</button></div>`};
+function spin(){S.spun=true;save();document.getElementById('spb').disabled=true;document.getElementById('wh').style.transform=`rotate(${360*5+202.5}deg)`;vib(20);setTimeout(()=>{vib(60);go('offer2')},3500)}
+V.offer2=()=>{track('offer2_viewed');return `<div class="scr">
+ <button class="x" onclick="go('pay')">✕</button><div style="height:40px;flex:none"></div>
+ <h1>${t('o2_h')}</h1><p class="sub">${t('o2_s')} ${t('ends')} <span class="timer" id="tm">${fmt(S.t2)}</span></p>
+ <ul class="feat">${['f1','f2','f3'].map(f=>`<li>${t(f)}</li>`).join('')}</ul><div class="grow"></div>
+ <div class="price"><span class="off">${t('off',{p:70})}</span><s>₹999</s> <span class="p">₹299</span> <span class="d">${t('first')}</span><div class="d">${t('perday',{x:'0.8'})}</div></div>
+ <p class="fine">${t('fine')}</p><div style="height:12px;flex:none"></div>
+ <button class="btn" onclick="buy(S.t2>0?'299':'499')">${t('o2_cta')}</button><p class="fine">${t('pay_via')}</p></div>`};
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+setInterval(()=>{if(cur==='offer2'&&S.t2>0){S.t2--;save();const e=document.getElementById('tm');if(e)e.textContent=fmt(S.t2)}},1000);
+function buy(p){PL.buy(p)}
+window.onPurchase=(ok,price,err)=>{if(ok){S.plus=true;save();go('home');toast(t('jai')+' 🙏')}else if(err)toast(err)};
+window.onPlus=owned=>{if(owned&&!S.plus){S.plus=true;save();if(['pay','guilt','spin','offer2'].includes(cur))go('home')}};
+window.plPurchased=j=>window.onPurchase(true,(J(j,{})).price||0,'');
+
+/* ---- home ---- */
+function streak(){let n=0;const d=new Date();if(!S.days.includes(today()))d.setDate(d.getDate()-1);for(;;){const k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();if(S.days.includes(k)){n++;d.setDate(d.getDate()-1)}else break}return n}
+function nextFest(){const now=new Date();now.setHours(0,0,0,0);let best=null;for(const f of (C.festivals||[])){const d=new Date(f.date);const dd=Math.round((d-now)/864e5);if(dd>=0&&dd<=21&&(!best||dd<best.dd))best={f,dd}}return best}
+V.home=()=>{const h=new Date().getHours(),g=h<12?'gm':h<17?'ga':'ge';const st=J(PL.lockStatus(),{running:true,permsOk:true});const fe=nextFest();
+ const wk=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return{k:d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),l:d.toLocaleDateString(L()==='en'?'en-IN':L()+'-IN',{weekday:'narrow'}),today:i===6}});
+ return `<div class="scr tabbed">
+ <p class="sub" style="margin:6px 0 10px;font-size:17px">${t(g,{name:S.name})}</p>
+ ${!st.running||!st.permsOk?`<div class="banner warn" onclick="go('perms')">⚠ ${t('lock_warn')}</div>`:''}
+ ${fe?`<div class="banner">🪔 ${fe.dd===0?t('fest_today',{f:esc(pick(fe.f.name))}):t('fest',{f:esc(pick(fe.f.name)),d:fe.dd})}</div>`:''}
+ <div class="card c" onclick="startJapa()" style="cursor:pointer">${ring(S.count,Math.min(S.japToday,S.count),170)}
+  <p class="mantra" style="font-size:24px;margin-top:6px;color:var(--god)">${esc(japa())}</p>
+  <div class="week">${wk.map(w=>`<div><i class="${S.days.includes(w.k)?'on':''} ${w.today?'today':''}"></i>${w.l}</div>`).join('')}</div></div>
+ <div class="stats"><div><b>${streak()}</b><span>${t('streak')}</span></div><div><b>${S.japToday}</b><span>${t('japtoday')}</span></div><div><b>${S.japTotal}</b><span>${t('total')}</span></div></div>
+ <div class="li" onclick="go('apps')" style="border:none">🔒 ${t('locked_n',{n:S.apps.length})}<span class="r">›</span></div>
+ <div class="grow"></div><button class="btn" onclick="startJapa()">${t('do_japa')}</button>
+ </div>${tabs('home')}`};
+function startJapa(){mala=0;lockPkg='';go('japa')}
+
+/* ---- read ---- */
+function gitaList(){return (window.GITA||C.gita||Object.entries(C.texts||{}).filter(([k,v])=>v.kind==='shloka').map(([k,v])=>({id:k,...v})))}
+function shlokaOfDay(){const g=gitaList();if(!g.length)return null;const d=Math.floor(Date.now()/864e5);return g[d%g.length]}
+V.read=()=>{const mine=(god().texts||[]).filter(id=>C.texts[id]);const all=Object.keys(C.texts||{}).filter(id=>!mine.includes(id)&&C.texts[id].kind!=='shloka');const sd=shlokaOfDay();
+ const row=id=>{const x=C.texts[id];return `<div class="li" onclick="openText('${id}')"><span>${esc(pick(x.title))}<small>${(x.verses||[]).length} · ${esc(x.kind||'')}</small></span><span class="r">›</span></div>`};
+ return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('read_h')}</h1>
+ ${sd?`<div class="card c" onclick="openText('__sd')" style="cursor:pointer"><div class="lbl" style="margin:0">${t('shloka_day')}</div><p class="verse" style="font-size:19px">${esc(verseText(sd.verses?sd.verses[0]:sd))}</p></div>`:''}
+ ${mine.length?`<h3>${t('read_for')}</h3>${mine.map(row).join('')}`:''}
+ ${all.length?`<h3>${t('read_all')}</h3>${all.map(row).join('')}`:''}
+ </div>${tabs('read')}`};
+function verseText(v){if(!v)return'';const l=L();if(v.tr&&v.tr[l])return v.tr[l];if(['hi','mr'].includes(l)||!v.tr)return v.dev||v.text||'';return v.tr.en||v.dev}
+let openId='';function openText(id){openId=id;go('reader')}
+V.reader=()=>{const x=openId==='__sd'?shlokaOfDay():C.texts[openId];if(!x)return V.read();const vs=x.verses||[x];
+ return `<div class="scr"><div class="top"><button class="back" onclick="go('read')">‹</button></div>
+ <h1 class="c">${esc(pick(x.title)||t('shloka_day'))}</h1>
+ ${vs.map((v,i)=>`${i?'<div class="vdiv"></div>':''}<p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}`).join('')}
+ ${x.meaning?`<div class="lbl c">${t('meaning')}</div><p class="mean">${esc(pick(x.meaning))}</p>`:''}
+ <div style="height:20px;flex:none"></div></div>`};
+
+/* ---- settings ---- */
+V.settings=()=>{const sel=(id,opts,val,on)=>`<select class="sel" onchange="${on}">${opts.map(([v,l])=>`<option value="${v}" ${v==val?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
+ return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('tab_me')}</h1>
+ ${S.plus?`<p class="sub">✓ ${t('plus_on')}</p>`:''}
+ <div class="li">${t('st_lang')}<span class="r">${sel('l',LANGS.map(l=>[l,I[l]._name]),L(),"S.lang=this.value;save();applyGod();render();pushLock()")}</span></div>
+ <div class="li" onclick="go('deity')">${t('st_deity')}<span class="r">${esc(pick(god().name))} ›</span></div>
+ <div class="li" onclick="go('apps')">${t('st_apps')}<span class="r">${S.apps.length} ›</span></div>
+ <div class="li" onclick="go('prayer')">${t('st_prayer')}<span class="r">${S.prayer==='jap'?t('pr_jap')+' · '+S.count:t('pr_read')} ›</span></div>
+ <div class="li">${t('st_mode')}<span class="r">${sel('m',[['every',t('mode_every')],['morning',t('mode_morning')],['sandhya',t('mode_sandhya')]],S.mode,"S.mode=this.value;save();pushLock()")}</span></div>
+ <div class="li">${t('st_unlock')}<span class="r">${sel('u',[5,10,15,30,60].map(m=>[m,t('min',{m})]),S.unlockMin,"S.unlockMin=+this.value;save();pushLock()")}</span></div>
+ <div class="li">${t('st_rem')}<span class="r"><input type="time" class="sel" value="${S.rem.am}" onchange="S.rem.am=this.value;save();pushLock()"></span></div>
+ <div class="li" onclick="go('perms')">🔒 ${t('perm_h')}<span class="r">›</span></div>
+ <div class="li" onclick="lockPkg=S.apps[0]||'';lockLabel=S.labels[lockPkg]||'Instagram';mala=0;go('lock')">${t('st_lockprev')}<span class="r">›</span></div>
+ <div class="li" onclick="PL.restore()">${t('st_restore')}<span class="r">›</span></div>
+ <div class="li" onclick="PL.openUrl('https://rajeshthiagu99.github.io/prayerlock-site/privacy.html')">Privacy<span class="r">›</span></div>
+ </div>${tabs('settings')}`};
+
+/* ---- lock + japa ---- */
+let mala=0,lockPkg=LOCK||'',readWait=0;try{const gl=J(PL.getLock(),{});if(gl.unlockMin)S.unlockMin=gl.unlockMin}catch(e){}
+function lockReading(){const sd=shlokaOfDay();if(sd)return sd.verses?sd.verses[0]:sd;const ids=(god().texts||[]).filter(i=>C.texts[i]);if(!ids.length)return{dev:japa()};const tx=C.texts[ids[Math.floor(Date.now()/864e5)%ids.length]];const vs=tx.verses||[];return vs[Math.floor(Date.now()/36e5)%Math.max(vs.length,1)]||{dev:japa()}}
+function lockHead(){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `<div class="lockapp">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${t('lock_h',{app:esc(lockLabel)})}</h1>`}
+V.lock=()=>{track('lock_shown');if(S.prayer==='read'){const v=lockReading();readWait=8;setTimeout(tickRead,1000);
+ return `<div class="scr c"><div style="height:20px;flex:none"></div>${lockHead()}<p class="sub">${t('lock_read')}</p>
+ <div class="grow"></div><p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}<div class="grow"></div>
+ <button class="btn" id="rd" disabled onclick="finish()">${t('wait_s',{s:readWait})}</button>
+ <button class="link" onclick="leave()">${t('goback')}</button></div>`}
+ return japaView(true)};
+V.japa=()=>japaView(false);
+function japaView(isLock){const done=mala>=S.count;
+ return `<div class="scr c" ${done?'':'onclick="bead()"'}>
+ ${isLock?`<div style="height:12px;flex:none"></div>${lockHead()}<p class="sub">${done?t('unlocked',{app:esc(lockLabel),m:S.unlockMin}):t('lock_s',{n:S.count})}</p>`:`<div class="top"><button class="back" onclick="event.stopPropagation();go('home')">‹</button></div><h1>${done?t('mala_done'):t('pr_jap')}</h1>`}
+ <div class="grow"></div><div id="rg">${ring(S.count,mala,250)}</div>
+ <p class="mantra" style="margin-top:14px;color:var(--god)">${esc(japa())}</p>
+ <p class="cnt" id="ct">${mala} / ${S.count}</p><div class="grow"></div>
+ ${done?(isLock?`<button class="btn" onclick="finish()">${t('open',{app:esc(lockLabel)})}</button>`:`<button class="btn" onclick="go('home')">${t('jai')} 🙏</button>`):`<p class="fine" style="margin-bottom:6px">${t('tap')}</p>`}
+ ${isLock&&!done?`<button class="link" onclick="event.stopPropagation();leave()">${t('goback')}</button>`:''}</div>`}
+function bead(){if(mala>=S.count)return;mala++;S.japToday++;S.japTotal++;save();
+ if(mala>=S.count){try{PL.haptic('done',80)}catch(e){}markPrayed();render();return}
+ vib(12);document.getElementById('rg').innerHTML=ring(S.count,mala,250);const c=document.getElementById('ct');c.textContent=mala+' / '+S.count;c.classList.remove('pulse');void c.offsetWidth;c.classList.add('pulse')}
+function tickRead(){if(cur!=='lock')return;readWait--;const b=document.getElementById('rd');if(!b)return;if(readWait<=0){b.disabled=false;b.textContent=t('read_done')}else{b.textContent=t('wait_s',{s:readWait});setTimeout(tickRead,1000)}}
+function markPrayed(){if(!S.days.includes(today())){S.days.push(today());S.days=S.days.slice(-400)}save();track('prayer_done',{p:S.prayer,n:S.count});if(!lockPkg)PL.prayed()}
+function finish(){if(S.prayer==='read')markPrayed();track('unlocked');if(lockPkg)PL.unlocked(lockPkg);else go('home')}
+function leave(){track('lock_left');PL.goHome()}
+
+/* ============ router ============ */
+const FLOW=['lang','welcome','deity','name','perms','report','apps','prayer','sankalp','pay'];
+function go(s){cur=s;if(FLOW.includes(s)&&!S.done){S.step=s;save()}render();try{document.querySelector('.scr').scrollTop=0}catch(e){}}
+function back(){if(S.done&&['deity','apps','prayer','perms'].includes(cur))return go('settings');const i=FLOW.indexOf(cur);if(i>0)go(FLOW[i-1])}
+window.goBack=()=>{if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa'].includes(cur)){go('home');return true}if(cur==='reader'){go('read');return true}if(['pay','guilt','spin','offer2'].includes(cur))return false;back();return true};
+function render(){applyGod();document.getElementById('app').innerHTML=V[cur]();bindHold();const n=document.getElementById('nm');if(n&&!S.name)setTimeout(()=>n.focus(),300)}
+function bindHold(){const h=document.getElementById('hold');if(!h)return;let st=0,raf=0;
+ const fill=()=>{if(!st)return;const p=Math.min((performance.now()-st)/2000,1);h.querySelector('svg').outerHTML=ring(36,36*p,190);if(p>=1){st=0;try{PL.haptic('done',90)}catch(e){}S.done=true;save();pushLock();try{if(!J(PL.perms(),{}).notif)PL.openPerm('notif')}catch(e){}track('onboarding_completed');setTimeout(()=>go(S.plus?'home':'pay'),350);return}raf=requestAnimationFrame(fill)};
+ h.addEventListener('pointerdown',e=>{e.preventDefault();st=performance.now();vib(10);raf=requestAnimationFrame(fill)});
+ const up=()=>{if(!st)return;st=0;cancelAnimationFrame(raf);const s=h.querySelector('svg');if(s)s.outerHTML=ring(36,0,190)};
+ h.addEventListener('pointerup',up);h.addEventListener('pointerleave',up);h.addEventListener('pointercancel',up)}
+
+/* ============ browser-preview Android mocks ============ */
+function mockSheet(k,ok){const old=document.getElementById('mock');if(old)old.remove();const d=document.createElement('div');d.id='mock';
+ const close=()=>d.remove();
+ if(k==='battery'){d.className='dlg';d.innerHTML=`<div><h4>Let app always run in background?</h4><p>Allowing Prayer Lock to always run in the background may reduce battery life. You can change this later from Settings › Apps.</p><div class="acts"><button id="m0">Deny</button><button id="m1">Allow</button></div></div>`}
+ else if(k==='notif'){d.className='dlg';d.innerHTML=`<div style="text-align:center"><div style="font-size:26px;margin-bottom:8px">🔔</div><h4>Allow <b>Prayer Lock</b> to send you notifications?</h4><div class="acts" style="flex-direction:column"><button id="m1">Allow</button><button id="m0">Don’t allow</button></div></div>`}
+ else{const title={usage:'Usage access',overlay:'Display over other apps',autostart:'Autostart'}[k];d.className='sheet';
+  d.innerHTML=`<div class="hd"><span id="m0" style="cursor:pointer">←</span>${title}</div><div class="hint">${t('set_find')}</div>
+  ${[['Chrome','#4285F4'],['Prayer Lock','#D9560B'],['Truecaller','#0087FF'],['YouTube','#FF0000']].map(([n,c])=>`<div class="row"><span class="ico" style="background:${c}"></span><div>${n}<small>Not allowed</small></div>${n==='Prayer Lock'?`<span class="tog" id="m1"></span><span class="poke">👆</span>`:`<span class="tog"></span>`}</div>`).join('')}`}
+ document.body.appendChild(d);
+ d.querySelector('#m0').onclick=close;
+ d.querySelector('#m1').onclick=e=>{e.target.classList.add('on');setTimeout(()=>{close();ok()},k==='battery'||k==='notif'?50:600)}}
+
+/* ============ boot ============ */
+(function boot(){
+ if(q.get('dark'))S.dark=q.get('dark')==='1';
+ if(q.get('brand')&&PL._mock)PL.setBrand(q.get('brand'));
+ if(q.get('reset')){localStorage.removeItem('pl');for(const k of Object.keys(S))delete S[k];Object.assign(S,{lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,japDay:today(),japToday:0,japTotal:0,days:[],t2:600,dark:q.get('dark')==='1',rem:{am:'06:30',pm:'19:00'}})}
+ if(q.get('lang')&&q.get('s'))S.lang=q.get('lang');
+ try{S.plus=S.plus||!!PL.isPlus()}catch(e){}
+ if(!S.deity&&LOCK)S.deity=Object.keys(C.deities)[0];
+ if(LOCK){lockPkg=LOCK;return go('lock')}
+ const jumpTo=q.get('s');if(jumpTo){if(!S.lang)S.lang=q.get('lang')||'hi';if(!S.deity)S.deity=q.get('god')||godOrder()[0];if(jumpTo==='lock'){lockPkg='com.instagram.android';lockLabel='Instagram'}return go(jumpTo)}
+ if(!S.done)return go(S.step||'lang');
+ go(S.plus?'home':'pay');
+})();
+</script>
+</body>
+</html>

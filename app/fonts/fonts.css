@@ -1,0 +1,37 @@
+/* Bundled Indic fonts, all SIL Open Font License 1.1 (OFL.txt), from github.com/google/fonts.
+ * Link as <link rel=stylesheet href="fonts/fonts.css">. Family names are the Google Fonts names.
+ * Baloo 2 family and Noto Serif are variable (any weight in range); Tiro is 400 only, so use it for
+ * scripture lines and avoid faux bold. Every Baloo/Tiro face also carries Latin. */
+
+/* Latin + Devanagari (Hindi, Marathi, Sanskrit) */
+@font-face{font-family:"Baloo 2";src:url("Baloo2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Tamil */
+@font-face{font-family:"Baloo Thambi 2";src:url("BalooThambi2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Kannada */
+@font-face{font-family:"Baloo Tamma 2";src:url("BalooTamma2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Telugu */
+@font-face{font-family:"Baloo Tammudu 2";src:url("BalooTammudu2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Malayalam */
+@font-face{font-family:"Baloo Chettan 2";src:url("BalooChettan2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Bengali */
+@font-face{font-family:"Baloo Da 2";src:url("BalooDa2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Gujarati */
+@font-face{font-family:"Baloo Bhai 2";src:url("BalooBhai2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Gurmukhi (Punjabi) */
+@font-face{font-family:"Baloo Paaji 2";src:url("BalooPaaji2.ttf") format("truetype");font-weight:400 800;font-style:normal;font-display:block}
+/* Devanagari serif (scripture text) */
+@font-face{font-family:"Tiro Devanagari Hindi";src:url("TiroDevanagariHindi-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:block}
+/* Tamil serif */
+@font-face{font-family:"Tiro Tamil";src:url("TiroTamil-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:block}
+/* Kannada serif */
+@font-face{font-family:"Tiro Kannada";src:url("TiroKannada-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:block}
+/* Telugu serif */
+@font-face{font-family:"Tiro Telugu";src:url("TiroTelugu-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:block}
+/* Bengali serif */
+@font-face{font-family:"Tiro Bangla";src:url("TiroBangla-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:block}
+/* Gurmukhi serif */
+@font-face{font-family:"Tiro Gurmukhi";src:url("TiroGurmukhi-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:block}
+/* Malayalam serif (Tiro has no Malayalam) */
+@font-face{font-family:"Noto Serif Malayalam";src:url("NotoSerifMalayalam.ttf") format("truetype");font-weight:100 900;font-style:normal;font-display:block}
+/* Gujarati serif (Tiro has no Gujarati) */
+@font-face{font-family:"Noto Serif Gujarati";src:url("NotoSerifGujarati.ttf") format("truetype");font-weight:100 900;font-style:normal;font-display:block}
