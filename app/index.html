@@ -232,11 +232,11 @@ const Mock=(()=>{const g={usage:false,overlay:false,popup:false,battery:false,no
  const A=[['com.instagram.android','Instagram','#D6249F',126],['com.google.android.youtube','YouTube','#FF0000',98],['com.whatsapp','WhatsApp','#25D366',61],['in.mohalla.sharechat','ShareChat','#F15A24',40],['com.dts.freefireth','Free Fire','#E86A10',35],['com.facebook.katana','Facebook','#1877F2',22],['in.mohalla.video','Moj','#7B2FF7',18],['com.snapchat.android','Snapchat','#E6C700',12],['in.startv.hotstar','JioHotstar','#0B2A6F',9],['com.phonepe.app','PhonePe','#5F259F',7],['com.google.android.apps.maps','Maps','#34A853',5]];
  const autoNeeded=()=>['xiaomi','vivo','oppo','realme','oneplus'].includes(brand);
  return{_mock:true,setBrand(b){brand=b},
-  perms:()=>JSON.stringify({...g,brand,popupNeeded:['xiaomi','vivo','oppo','realme','oneplus'].includes(brand),autostart:autoNeeded()?g.autostart:true}),
-  openPerm(n){mockSheet(n,()=>{g[n]=true;setTimeout(()=>window.plResume&&plResume(),50)})},
+  perms:()=>JSON.stringify({...g,brand,popupKnown:brand==='xiaomi',autostartKnown:brand==='xiaomi',autostartOk:autoNeeded()?g.autostart:true,popupNeeded:['xiaomi','vivo','oppo','realme','oneplus'].includes(brand),autostart:autoNeeded()?g.autostart:true}),
+  openPerm(n){g.test='untested';mockSheet(n,()=>{g[n]=true;setTimeout(()=>window.plResume&&plResume(),50)})},
   apps:()=>JSON.stringify(A.map(([pkg,label,col,min])=>({pkg,label,icon:'',col,min}))),
   usage:()=>JSON.stringify({totalMin:A.reduce((s,a)=>s+a[3],0)+40,apps:A.slice(0,8).map(([pkg,label,,min])=>({pkg,label,min}))}),
-  setLock(j){lock=j},getLock:()=>lock||'{}',lockStatus:()=>JSON.stringify({running:!!lock,permsOk:g.usage&&g.overlay}),
+  setLock(j){lock=j},getLock:()=>lock||'{}',lockStatus:()=>JSON.stringify({running:!!lock,permsOk:g.usage&&g.overlay,popupOk:g.popup||!['xiaomi','vivo','oppo','realme','oneplus'].includes(brand),selfTest:g.test||'untested'}),confirmPerm(k,v){g[k]=v},testLock(){setTimeout(()=>{g.test='pass';window.plResume&&plResume()},1500)},
   unlocked(p){go('home');toast(t('unlocked',{app:lockLabel,m:S.unlockMin}))},prayed(){},goHome(){go('home')},
   track(){},buy(p){setTimeout(()=>{plus=true;window.onPurchase&&onPurchase(true,+p,'')},700)},restore(){toast(t('no_purchase'))},isPlus:()=>plus,
   haptic(k,ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}},reminders(){},share(){},openUrl(u){window.open(u,'_blank')},version:()=>1}})();
@@ -342,16 +342,27 @@ V.plan=()=>{const h=hrsN();return `<div class="scr plan">${topBar()}<h1>${t('pla
  <p class="sub c" style="font-size:18px;color:var(--ink);font-weight:600">${t('plan_s',{saved:t('u_h',{n:h-1})})}</p>
  <div class="grow"></div><button class="btn" onclick="track('ob_plan');go('ovprev')">${t('plan_cta')}</button></div>`};
 const POPUP_BRANDS=['xiaomi','vivo','oppo','realme','oneplus'];
-function permList(){const p=J(PL.perms(),{});const L=['usage','overlay'];if(p.popupNeeded||POPUP_BRANDS.includes(p.brand))L.push('popup');L.push('battery');if(['xiaomi','vivo','oppo','realme','oneplus'].includes(p.brand))L.push('autostart');p.need=L.filter(k=>k!=='battery'&&k!=='autostart');return{p,L}}
+function permList(){const p=J(PL.perms(),{});const L=['usage','overlay'];if(p.popupNeeded||POPUP_BRANDS.includes(p.brand))L.push('popup');L.push('battery');if(['xiaomi','vivo','oppo','realme','oneplus'].includes(p.brand)){L.push('autostart');if('autostartOk' in p)p.autostart=p.autostartOk}p.need=L.filter(k=>k!=='battery'&&k!=='autostart');return{p,L}}
 V.perms=()=>{const {p,L:list}=permList();const first=list.find(k=>!p[k]);const brand=(p.brand||'').replace(/^./,c=>c.toUpperCase());
  return `<div class="scr">${topBar()}
  <h1>${t('perm_h')}</h1><p class="sub">${t('perm_s')}</p>
  <div class="trust"><span>🔒</span><span>${t('trust')}</span></div>
  ${list.map((k,i)=>`<div class="perm ${p[k]?'ok':first===k?'':'wait'}"><span class="n">${p[k]?'✓':i+1}</span><div><b>${t('p_'+k)}</b><span class="s">${t('p_'+k+'_s',{brand})}</span></div>
   <button class="go" onclick="askPerm('${k}')">${p[k]?t('done'):t('allow')}</button></div>`).join('')}
+ ${(()=>{const unk=lastPerm&&(lastPerm==='popup'&&p.popupKnown===false||lastPerm==='autostart'&&p.autostartKnown===false);
+  if(unk)return `<div class="trust" style="flex-direction:column;background:var(--tint)"><b style="color:var(--ink)">${t('conf_q')} · ${t('p_'+lastPerm)}</b><div style="display:flex;gap:8px;width:100%"><button class="btn ghost" style="min-height:44px;font-size:15px" onclick="confirmPerm(true)">${t('yes_on')}</button><button class="btn ghost" style="min-height:44px;font-size:15px" onclick="confirmPerm(false)">${t('no_again')}</button></div></div>`;
+  const ls=J(PL.lockStatus(),{});const st=ls.selfTest||'untested';
+  if(!p.popupNeeded||!p.need.every(k=>p[k]))return '';
+  if(testing&&st==='untested')return `<div class="trust">⏳ ${t('test_home')}</div>`;
+  if(st==='pass')return `<div class="trust" style="color:var(--ok);font-weight:700">✓ ${t('test_pass')}</div>`;
+  if(st==='fail')return `<div class="banner warn" onclick="askPerm('popup')">⚠ ${t('test_fail')}</div><button class="btn ghost" style="min-height:48px" onclick="testLock()">${t('test_btn')}</button>`;
+  return `<button class="btn ghost" style="min-height:48px;margin-bottom:8px" onclick="testLock()">${t('test_btn')}</button>`})()}
  <div class="grow"></div><button class="btn stick" ${p.need.every(k=>p[k])?'':'disabled'} onclick="track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go('home')}else go('report')">${t('cont')}</button></div>`};
-function askPerm(k){track('perm_'+k);PL.openPerm(k)}
-window.plResume=()=>{Object.assign(S,J(localStorage.getItem('pl'),{}));if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
+let lastPerm='',testing=false;
+function askPerm(k){track('perm_'+k);lastPerm=k;PL.openPerm(k)}
+function confirmPerm(ok){try{PL.confirmPerm(lastPerm,!!ok)}catch(e){}const k=lastPerm;lastPerm='';if(!ok)return askPerm(k);render()}
+function testLock(){testing=true;try{PL.testLock()}catch(e){}render()}
+window.plResume=()=>{if(testing){const st=(J(PL.lockStatus(),{})).selfTest;if(st&&st!=='untested')testing=false}Object.assign(S,J(localStorage.getItem('pl'),{}));if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
 V.report=()=>{const u=J(PL.usage(),{totalMin:0,apps:[]});if(!u.totalMin)return `<div class="scr">${topBar()}<div class="grow"></div><div style="display:flex;justify-content:center"><span style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div><h1 class="c" style="margin-top:20px">${esc(japa())}</h1><p class="sub c" style="font-size:18px">${t('rep_s',{days:'0'}).split(/[.।]\s+/).slice(1).join(' ')}</p><div class="grow"></div><button class="btn" onclick="go('apps')">${t('cont')}</button></div>`;const days=Math.round(u.totalMin*365/1440);const g=S.japToday?1:0;
  return `<div class="scr">${topBar()}
  <h1>${t('rep_h',{name:S.name})}</h1>
@@ -450,7 +461,7 @@ V.home=()=>{const h=new Date().getHours(),g=h<12?'gm':h<17?'ga':'ge';const st=J(
  const wk=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return{k:d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),l:d.toLocaleDateString(L()==='en'?'en-IN':L()+'-IN',{weekday:'narrow'}),today:i===6}});
  return `<div class="scr tabbed">
  <p class="sub" style="margin:6px 0 10px;font-size:17px">${t(g,{name:S.name})}</p>
- ${!st.running||!st.permsOk?`<div class="banner warn" onclick="go('perms')">⚠ ${t('lock_warn')}</div>`:''}
+ ${!st.running||!st.permsOk||st.popupOk===false||st.selfTest==='fail'?`<div class="banner warn" onclick="go('perms')">⚠ ${t('lock_warn')}</div>`:''}
  ${fe?`<div class="banner">🪔 ${fe.dd===0?t('fest_today',{f:esc(pick(fe.f.name))}):t('fest',{f:esc(pick(fe.f.name)),d:fe.dd})}</div>`:''}
  <div class="card c" onclick="startJapa()" style="cursor:pointer">${ring(S.count,Math.min(S.japToday,S.count),170)}
   <p class="mantra" style="font-size:24px;margin-top:6px;color:var(--god)">${esc(japa())}</p>
@@ -558,6 +569,7 @@ function mockSheet(k,ok){const old=document.getElementById('mock');if(old)old.re
  if(!S.deity&&LOCK)S.deity=Object.keys(C.deities)[0];
  if(LOCK){lockPkg=LOCK;return go('lock')}
  const jumpTo=q.get('s');if(jumpTo){if(!S.lang)S.lang=q.get('lang')||'hi';if(!S.deity)S.deity=q.get('god')||godOrder()[0];if(jumpTo==='lock'){lockPkg='com.instagram.android';lockLabel='Instagram'}return go(jumpTo)}
+ if(S.done)try{pushLock()}catch(e){}
  if(!S.done)return go(S.step||'lang');
  go(S.plus?'home':'pay');
 })();

@@ -198,7 +198,14 @@ en:{
  kind_shloka:"Shloka",
  verses:"{n} verses",
  p_popup:"Pop-up windows",
- p_popup_s:"{brand} phones need this to show the prayer screen"
+ p_popup_s:"{brand} phones need this to show the prayer screen",
+ conf_q:"Did you turn it on?",
+ yes_on:"Yes, it’s on",
+ no_again:"No, open again",
+ test_btn:"Test the lock",
+ test_home:"Now press Home. The prayer screen should appear.",
+ test_pass:"The lock works.",
+ test_fail:"The lock didn’t appear. Turn on pop-up windows."
 },
 hi:{
  q_role_h:"आप क्या करते हैं?",
@@ -397,6 +404,13 @@ hi:{
  kind_shloka:"श्लोक",
  verses:"{n} पद",
  p_popup:"पॉप-अप विंडो",
- p_popup_s:"{brand} फ़ोन में प्रार्थना स्क्रीन दिखाने के लिए ज़रूरी"
+ p_popup_s:"{brand} फ़ोन में प्रार्थना स्क्रीन दिखाने के लिए ज़रूरी",
+ conf_q:"क्या आपने इसे चालू किया?",
+ yes_on:"हाँ, चालू है",
+ no_again:"नहीं, फिर खोलें",
+ test_btn:"लॉक जाँचें",
+ test_home:"अब होम दबाएँ। प्रार्थना की स्क्रीन आनी चाहिए।",
+ test_pass:"लॉक काम कर रहा है।",
+ test_fail:"लॉक नहीं दिखा। पॉप-अप विंडो चालू करें।"
 }
 };
