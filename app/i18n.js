@@ -274,7 +274,12 @@ en:{
  share_text:"I begin each day with naam jap on Prayer Lock 🙏 {url}",
  later:"Later",
  pp_mo_btn:"Remind me at {time}",
- perm_link:"Check lock permissions"
+ perm_link:"Check lock permissions",
+ renew_base:"Renews at ₹999/yr. Cancel anytime in Google Play.",
+ renew_offer:"₹{p} for the first year, then renews at ₹999/yr. Cancel anytime in Google Play.",
+ start_for:"Start for ₹{p}",
+ mng_sub:"Manage subscription",
+ rep_work:"{t} a day × 365 ÷ 24 = {d} days a year"
 },
 hi:{
  q_role_h:"आप क्या करते हैं?",
@@ -549,6 +554,11 @@ hi:{
  share_text:"हर दिन की शुरुआत नाम जप से — Prayer Lock 🙏 {url}",
  later:"बाद में",
  pp_mo_btn:"{time} बजे याद दिलाएँ",
- perm_link:"लॉक की अनुमतियाँ देखें"
+ perm_link:"लॉक की अनुमतियाँ देखें",
+ renew_base:"हर साल ₹999 पर रिन्यू। Google Play में कभी भी रद्द करें।",
+ renew_offer:"पहला साल ₹{p}, फिर हर साल ₹999 पर रिन्यू। Google Play में कभी भी रद्द करें।",
+ start_for:"₹{p} में शुरू करें",
+ mng_sub:"सदस्यता प्रबंधित करें",
+ rep_work:"रोज़ {t} × 365 ÷ 24 = साल के {d} दिन"
 }
 };
