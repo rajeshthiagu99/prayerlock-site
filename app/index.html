@@ -496,8 +496,8 @@ V.pay=()=>{track('paywall_viewed');return `<div class="scr">${heroBg()}
  ${showCode?`<input class="input" id="rc" placeholder="${t('code_ph')}" style="font-size:16px;margin-bottom:8px"><button class="btn ghost" onclick="tryCode()">${t('ok')}</button>`:''}
  <div class="grow"></div>
  <div class="price"><span class="p">₹999</span> <span class="d">${t('year')}</span><div class="d">${t('perday2',{x:'2.7'})}</div></div>
- <div style="height:8px;flex:none"></div>
- <button class="btn stick" onclick="buy('999')">${t('cta')} · ₹999</button>${renew(999)}
+ ${renew(999)}<div style="height:10px;flex:none"></div>
+ <button class="btn stick" onclick="buy('999')">${t('cta')} · ₹999</button>
  <p class="fine">${t('pay_via')} · <u onclick="PL.restore()">${t('restore')}</u></p></div>`};
 function hash(s){let h=5381;for(const ch of s.toUpperCase().replace(/[^A-Z0-9]/g,""))h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h}
 function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();pushLock();go(S.ppDone?'home':'pp_in')}else toast(t('code_bad'))}
@@ -616,7 +616,7 @@ V.settings=()=>{const sel=(id,opts,val,on)=>`<select class="sel" onchange="${on}
 /* ---- lock + japa ---- */
 let mala=0,lockPkg=LOCK||'',readWait=0;try{const gl=J(PL.getLock(),{});if(gl.unlockMin)S.unlockMin=gl.unlockMin}catch(e){}
 function lockReading(){const sd=shlokaOfDay();if(sd)return sd.verses?sd.verses[0]:sd;const ids=(god().texts||[]).filter(i=>C.texts[i]);if(!ids.length)return{dev:japa()};const tx=C.texts[ids[Math.floor(Date.now()/864e5)%ids.length]];const vs=tx.verses||[];return vs[Math.floor(Date.now()/36e5)%Math.max(vs.length,1)]||{dev:japa()}}
-function lockHead(done){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `<div class="lockapp">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${done?t('jai')+' 🙏':t('lock_h',{app:esc(lockLabel)})}</h1>`}
+function lockHead(done){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `<div class="lockapp">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${done?t('mala_done')+' 🙏':t('lock_h',{app:esc(lockLabel)})}</h1>`}
 V.lock=()=>{track('lock_shown');if(S.prayer==='read'){const v=lockReading();readWait=8;setTimeout(tickRead,1000);
  return `<div class="scr c"><div style="height:20px;flex:none"></div>${lockHead()}<p class="sub">${t('lock_read')}</p>
  <div class="grow"></div><p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}<div class="grow"></div>
