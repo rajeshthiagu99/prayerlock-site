@@ -136,7 +136,7 @@ body.dark .perm{border-width:1px}
 .ring{display:block;margin:0 auto}
 .ring .bd{fill:var(--bead);transition:fill .15s}
 .ring .bd.on{fill:var(--god)}
-.ring .meru{fill:var(--god)}
+.ring .meru{fill:none;stroke:var(--god);stroke-width:3;stroke-dasharray:3 3}
 .mantra{font-family:var(--scr);font-size:30px;line-height:1.3;text-align:center}
 .cnt{font-weight:800;font-size:44px;font-variant-numeric:tabular-nums;text-align:center;line-height:1}
 .pulse{animation:pl .18s}
@@ -270,7 +270,7 @@ const DARK=['sandhya','peacock','swarna'];
 const GF={anek:'Anek+Latin:wght@500;700;800&family=Anek+Devanagari:wght@500;700;800&family=Anek+Tamil:wght@500;700;800&family=Anek+Telugu:wght@500;700;800&family=Anek+Kannada:wght@500;700;800&family=Anek+Malayalam:wght@500;700;800&family=Anek+Bangla:wght@500;700;800&family=Anek+Gujarati:wght@500;700;800&family=Anek+Gurmukhi:wght@500;700;800',noto:'Noto+Sans:wght@500;700;800&family=Noto+Sans+Devanagari:wght@500;700;800&family=Noto+Sans+Tamil:wght@500;700;800&family=Noto+Sans+Telugu:wght@500;700;800&family=Noto+Sans+Kannada:wght@500;700;800&family=Noto+Sans+Malayalam:wght@500;700;800&family=Noto+Sans+Bengali:wght@500;700;800&family=Noto+Sans+Gujarati:wght@500;700;800&family=Noto+Sans+Gurmukhi:wght@500;700;800'};
 function applyGod(){const b=document.body;b.dataset.theme=S.theme;b.dataset.font=S.font;b.dataset.btn=S.btn||'chunky';b.classList.toggle('dark',DARK.includes(S.theme));
  if(GF[S.font]&&!document.getElementById('gf-'+S.font)){const l=document.createElement('link');l.id='gf-'+S.font;l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+GF[S.font]+'&display=swap';document.head.appendChild(l)}
- const gc=god().color||'#D9560B';document.documentElement.style.setProperty('--god',DARK.includes(S.theme)?`color-mix(in srgb, ${gc} 45%, #F6D58E)`:gc);document.documentElement.lang=L()}
+ const gc=god().color||'#D9560B';document.documentElement.style.setProperty('--god',DARK.includes(S.theme)?`color-mix(in srgb, ${gc} 20%, #F6D58E)`:gc);document.documentElement.lang=L()}
 const img=(k,hero)=>`img/deity/${k}${hero?'-hero':''}.webp`;
 const avatar=(k,sz)=>`<span class="av" style="background:${C.deities[k].color};${sz?`width:${sz}px;height:${sz}px;font-size:${sz*.42}px`:''}">${esc(glyph(k))}<img src="${img(k)}" alt="" onerror="this.remove()"></span>`;
 const heroBg=(cls='')=>`<div class="hero ${cls}" style="background-color:var(--god);background-image:url(${img(S.deity,1)}),url(${img(S.deity)})"></div>`;
