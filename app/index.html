@@ -248,8 +248,9 @@ const vib=(ms=12)=>{try{PL.haptic('tap',ms)}catch(e){}};
 
 /* ============ state ============ */
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
-const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,theme:'peacock',font:'baloo',btn:'chunky',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,japHist:{},checks:{},widgetAsked:false,rem:{am:'06:30',pm:'19:00'}},J(localStorage.getItem('pl'),{}));
+const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,theme:'peacock',font:'baloo',btn:'chunky',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,japHist:{},checks:{},widgetAsked:false,notif:{am:true,pm:true,fest:true},rem:{am:'06:30',pm:'19:00'}},J(localStorage.getItem('pl'),{}));
 const save=()=>localStorage.setItem('pl',JSON.stringify(S));
+if(NATIVE){S.theme='peacock';S.font='baloo';S.btn='chunky';S.dark=false} // look is fixed in the app; only the browser preview can switch it
 if(S.japDay!==today()){S.japDay=today();S.japToday=0}
 const q=new URLSearchParams(location.search);
 const LOCK=q.get('lock');let lockLabel=q.get('label')||'';
@@ -367,7 +368,11 @@ V.journey=()=>{const ch=Object.values(S.checks||{});const avg=k=>ch.length?(ch.r
  </div>${tabs('journey')}`};
 function openCheckin(){const c=(S.checks||{})[today()];ci=c?{...c}:{r:0,m:0};go('checkin')}
 function syncWidget(){try{if(!PL.syncWidget)return;const wk=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return S.days.includes(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate())});
- PL.syncWidget(JSON.stringify({streak:streak(),japToday:S.japToday,mantra:japa(),label:t('streak'),japLabel:t('japtoday'),color:god().color||'#D9560B',week:wk,deityImg:S.deity?img(S.deity):''}))}catch(e){}}
+ const fe=nextFest();const fest=fe&&fe.dd===0;const need=fest?(fe.f.japaCount||108):S.count;const done=S.japToday>=need;const sk=streak();
+ const state=fest&&!done?'festival':done?(sk>=21?'streak':'done'):'pending';
+ PL.syncWidget(JSON.stringify({state,num:done?sk:Math.max(0,need-S.japToday),numLabel:done?t('wd_days'):t('wd_left'),line:done?t('wd_done'):japa(),
+  pill:fest?pick(fe.f.name):'',badge:sk>=21&&done?t('wd_sankalp',{n:sk>=108?108:sk>=51?51:21}):'',deity:S.deity,
+  streak:sk,japToday:S.japToday,mantra:japa(),label:t('streak'),japLabel:t('japtoday'),color:god().color||'#D9560B',week:wk,deityImg:S.deity?img(S.deity):'',deityHero:S.deity?img(S.deity,1):''}))}catch(e){}}
 window.openTo=k=>{if(k==='japa'&&S.done&&S.plus){startJapa()}};
 const CREDITS=[['Ram, Devi, Murugan, Saraswati, Lakshmi','Raja Ravi Varma — public domain'],['Hanuman, Shiva, Ganesha, Vishnu','Ravi Varma Press — public domain'],['Krishna, Radha Krishna','after Raja Ravi Varma; Wellcome Collection, CC BY 4.0'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0'],['Venkateswara','Kalyan Kanuri (Flickr), CC BY-SA 2.0'],['Shirdi Sai Baba','photograph c. 1915 — public domain'],['Varanasi Ganga aarti','Chetanbtc, Wikimedia Commons, CC BY-SA 4.0'],['Tiruvannamalai temple','KARTY JazZ, Wikimedia Commons, CC BY-SA 4.0'],['Photos','Unsplash: Dipqi Ghozali, CHIRAG K, Garv Chaplot · Pexels: RDNE Stock project, Yan Krukau, sujithirapara']];
 V.credits=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('settings')">‹</button></div><h1>© ${t('credits')}</h1>${CREDITS.map(([a,b])=>`<div class="li" style="cursor:default"><span>${a}<small>${b}</small></span></div>`).join('')}</div>`;
@@ -403,7 +408,7 @@ let lastPerm='',testing=false;
 function askPerm(k){track('perm_'+k);lastPerm=k;PL.openPerm(k)}
 function confirmPerm(ok){try{PL.confirmPerm(lastPerm,!!ok)}catch(e){}const k=lastPerm;lastPerm='';if(!ok)return askPerm(k);render()}
 function testLock(){testing=true;try{PL.testLock()}catch(e){}render()}
-window.plResume=()=>{if(testing){const st=(J(PL.lockStatus(),{})).selfTest;if(st&&st!=='untested')testing=false}Object.assign(S,J(localStorage.getItem('pl'),{}));if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
+window.plResume=()=>{setTimeout(()=>{try{syncWidget()}catch(e){}},300);if(testing){const st=(J(PL.lockStatus(),{})).selfTest;if(st&&st!=='untested')testing=false}Object.assign(S,J(localStorage.getItem('pl'),{}));if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
 /* Prominent disclosure (Play User Data policy, docs/play-app-content.md §4): shown in place of the perms screen until "I agree", so no
    Usage access / overlay settings page opens before consent. Lock on/off switch: native LockStore "enabled" (persisted; the
    notification's "Turn off" sets it too), so boot and the 15-min watchdog never restart a lock the user switched off. */
@@ -445,7 +450,13 @@ V.sankalp=()=>`<div class="scr c">${topBar()}
  <h1>${t('snk_h')}</h1><p class="mantra" style="font-size:24px;margin-top:8px">${t('snk_t')}</p>
  <div class="grow"></div><div class="hold" id="hold">${ring(36,0,190)}<span>${t('hold')}</span></div>
  <p class="mantra" style="font-size:20px;color:var(--god)">${esc(japa())}</p><div class="grow"></div></div>`;
-function pushLock(){PL.setLock(JSON.stringify({pkgs:S.plus?S.apps:[],mode:S.mode,unlockMin:S.unlockMin}));PL.reminders(JSON.stringify({am:S.rem.am,pm:S.mode==='sandhya'?S.rem.pm:'',title:t('notif_title'),body:t('notif_body',{n:S.count})+' '+japa(),action:t('notif_act')}));syncWidget()}
+function remPayload(){const n=S.notif||{am:true,pm:true,fest:true};const now=new Date();now.setHours(0,0,0,0);
+ const fest=(C.festivals||[]).filter(f=>{const d=(new Date(f.date)-now)/864e5;return d>=0&&d<=60}).map(f=>({date:f.date,title:pick(f.name),body:t('n_fest_b',{f:pick(f.name),n:f.japaCount||108})}));
+ return{am:S.rem.am,pm:S.rem.pm||'19:00',amOn:n.am,pmOn:n.pm,festOn:n.fest,
+  am_t:{title:godName()+' 🙏',body:t('n_am_b',{n:S.count}),action:t('n_act')},
+  pm_t:{title:godName(),body:t('n_pm_b',{n:S.count}),action:t('n_act')},fest,
+  title:t('notif_title'),body:t('n_am_b',{n:S.count}),action:t('n_act')}}
+function pushLock(){PL.setLock(JSON.stringify({pkgs:S.plus?S.apps:[],mode:S.mode,unlockMin:S.unlockMin}));PL.reminders(JSON.stringify(remPayload()));syncWidget()}
 let titleTaps=0,showCode=false;
 function payClose(){track('paywall_closed');const now=Date.now();if(S.o3until>now)return go('offer3');if(!S.envDone)return go('chose');go('guard')}
 V.pay=()=>{track('paywall_viewed');return `<div class="scr">${heroBg()}
@@ -515,19 +526,21 @@ window.plPurchased=j=>window.onPurchase(true,(J(j,{})).price||0,'');
 function streak(){let n=0;const d=new Date();if(!S.days.includes(today()))d.setDate(d.getDate()-1);for(;;){const k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();if(S.days.includes(k)){n++;d.setDate(d.getDate()-1)}else break}return n}
 function nextFest(){const now=new Date();now.setHours(0,0,0,0);let best=null;for(const f of (C.festivals||[])){const d=new Date(f.date);const dd=Math.round((d-now)/864e5);if(dd>=0&&dd<=21&&(!best||dd<best.dd))best={f,dd}}return best}
 V.home=()=>{const h=new Date().getHours(),g=h<12?'gm':h<17?'ga':'ge';const st=J(PL.lockStatus(),{running:true,permsOk:true});const fe=nextFest();
- const wk=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return{k:d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),l:d.toLocaleDateString(L()==='en'?'en-IN':L()+'-IN',{weekday:'narrow'}),today:i===6}});
+ const done=S.japToday>=S.count;const items=[];
+ if(!st.running||!st.permsOk||st.popupOk===false||st.selfTest==='fail')items.push(`<div class="banner warn" onclick="go('perms')">⚠ ${t('lock_warn')}</div>`);
+ if(fe)items.push(`<div class="banner">🪔 ${fe.dd===0?t('fest_today',{f:esc(pick(fe.f.name))}):t('fest',{f:esc(pick(fe.f.name)),d:fe.dd})}</div>`);
+ if(!(S.checks||{})[today()])items.push(`<div class="banner" onclick="openCheckin()">🙏 ${t('ci_btn')}<span style="margin-left:auto">›</span></div>`);
+ if(PL.pinWidget&&!S.widgetAsked)items.push(`<div class="banner" onclick="S.widgetAsked=true;save();try{PL.pinWidget()}catch(e){};render()">▦ ${t('wd_h')}<span style="margin-left:auto;font-size:13px">${t('wd_btn')} ›</span></div>`);
+ items.push(`<div class="li" onclick="go('apps')" style="border:none">🔒 ${t('locked_n',{n:S.apps.length})}<span class="r">›</span></div>`);
  return `<div class="scr tabbed">
  <p class="sub" style="margin:6px 0 10px;font-size:17px">${t(g,{name:S.name})}</p>
- ${st.on===false?`<div class="banner" onclick="go('settings')">🔓 ${t('lk_off_b')}</div>`:(!st.running||!st.permsOk||st.popupOk===false||st.selfTest==='fail')&&S.apps.length?`<div class="banner warn" onclick="go('perms')">⚠ ${t('lock_warn')}</div>`:''}
- ${fe?`<div class="banner">🪔 ${fe.dd===0?t('fest_today',{f:esc(pick(fe.f.name))}):t('fest',{f:esc(pick(fe.f.name)),d:fe.dd})}</div>`:''}
- <div class="card c" onclick="startJapa()" style="cursor:pointer">${ring(S.count,Math.min(S.japToday,S.count),170)}
-  <p class="mantra" style="font-size:24px;margin-top:6px;color:var(--god)">${esc(japa())}</p>
-  <div class="week">${wk.map(w=>`<div><i class="${S.days.includes(w.k)?'on':''} ${w.today?'today':''}"></i>${w.l}</div>`).join('')}</div></div>
- <div class="stats"><div><b>${streak()}</b><span>${t('streak')}</span></div><div><b>${S.japToday}</b><span>${t('japtoday')}</span></div><div><b>${S.japTotal}</b><span>${t('total')}</span></div></div>
- ${!(S.checks||{})[today()]?`<div class="banner" onclick="openCheckin()">🙏 ${t('ci_btn')}<span style="margin-left:auto">›</span></div>`:''}
- ${PL.pinWidget&&!S.widgetAsked?`<div class="banner" onclick="S.widgetAsked=true;save();try{PL.pinWidget()}catch(e){};render()">▦ ${t('wd_h')}<span style="margin-left:auto;font-size:13px">${t('wd_btn')} ›</span></div>`:''}
- <div class="li" onclick="go('apps')" style="border:none">🔒 ${t('locked_n',{n:S.apps.length})}<span class="r">›</span></div>
- <div class="grow"></div><button class="btn" onclick="startJapa()">${t('do_japa')}</button>
+ <div class="card c" style="padding:18px 16px 16px">
+  <div style="position:relative;width:200px;height:200px;margin:0 auto" onclick="startJapa()">${ring(S.count,Math.min(S.japToday,S.count),200)}
+   <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">${avatar(S.deity,70)}<b style="font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums">${Math.min(S.japToday,S.count)}/${S.count}</b></div></div>
+  <p class="mantra" style="font-size:22px;margin-top:8px;color:var(--god)">${esc(japa())}</p>
+  <p class="sub" style="margin:2px 0 12px">🔥 ${t('hero_streak',{n:streak()})}${S.japTotal?` · ${t('total')}: ${S.japTotal}`:''}</p>
+  <button class="btn" onclick="startJapa()">${done?t('jai')+' 🙏':t('do_japa')}</button></div>
+ ${items.slice(0,3).join('')}
  </div>${tabs('home')}`};
 function startJapa(){mala=0;lockPkg='';go('japa')}
 
@@ -560,7 +573,8 @@ V.settings=()=>{const sel=(id,opts,val,on)=>`<select class="sel" onchange="${on}
  <div class="li" onclick="go('prayer')">${t('st_prayer')}<span class="r">${S.prayer==='jap'?t('pr_jap')+' · '+S.count:t('pr_read')} ›</span></div>
  <div class="li">${t('st_mode')}<span class="r">${sel('m',[['every',t('mode_every')],['morning',t('mode_morning')],['sandhya',t('mode_sandhya')]],S.mode,"S.mode=this.value;save();pushLock()")}</span></div>
  <div class="li">${t('st_unlock')}<span class="r">${sel('u',[5,10,15,30,60].map(m=>[m,t('min',{m})]),S.unlockMin,"S.unlockMin=+this.value;save();pushLock()")}</span></div>
- <div class="li">${t('st_rem')}<span class="r"><input type="time" class="sel" value="${S.rem.am}" onchange="S.rem.am=this.value;save();pushLock()"></span></div>
+ <h3>${t('st_n_h')}</h3>
+ ${[['am','st_n_am','am'],['pm','st_n_pm','pm'],['fest','st_n_fest','']].map(([k,l,tm])=>`<div class="li">${t(l)}<span class="r" style="display:flex;gap:8px;align-items:center">${tm?`<input type="time" class="sel" value="${S.rem[tm]||'19:00'}" onchange="S.rem['${tm}']=this.value;save();pushLock()">`:''}<input type="checkbox" style="width:22px;height:22px;accent-color:var(--pri)" ${(S.notif||{})[k]!==false?'checked':''} onchange="S.notif=S.notif||{};S.notif['${k}']=this.checked;save();pushLock()"></span></div>`).join('')}
  <div class="li" id="lk-row" onclick="toggleLock()" style="cursor:pointer">🔒 ${t('lk_row')}<span class="r">${(o=>`<span role="switch" aria-checked="${o}" style="display:inline-block;position:relative;width:52px;height:32px;border-radius:16px;vertical-align:middle;background:${o?'var(--pri)':'#CFC6BA'};transition:.2s"><span style="position:absolute;top:4px;left:${o?24:4}px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:.2s"></span></span>`)(S.plus&&lockOn())}</span></div>
  <div class="li" onclick="go('perms')">🔒 ${t('st_perms')}<span class="r">›</span></div>
  <div class="li" onclick="lockPkg=S.apps[0]||'';lockLabel=S.labels[lockPkg]||'Instagram';mala=0;go('lock')">${t('st_lockprev')}<span class="r">›</span></div>
@@ -592,7 +606,7 @@ function bead(){if(mala>=S.count)return;mala++;S.japToday++;S.japTotal++;S.japHi
  if(mala>=S.count){try{PL.haptic('done',80)}catch(e){}markPrayed();render();return}
  vib(12);document.getElementById('rg').innerHTML=ring(S.count,mala,250);const c=document.getElementById('ct');c.textContent=mala+' / '+S.count;c.classList.remove('pulse');void c.offsetWidth;c.classList.add('pulse')}
 function tickRead(){if(cur!=='lock')return;readWait--;const b=document.getElementById('rd');if(!b)return;if(readWait<=0){b.disabled=false;b.textContent=t('read_done')}else{b.textContent=t('wait_s',{s:readWait});setTimeout(tickRead,1000)}}
-function markPrayed(){setTimeout(syncWidget,50);if(!S.days.includes(today())){S.days.push(today());S.days=S.days.slice(-400)}save();track('prayer_done',{p:S.prayer,n:S.count});if(!lockPkg)PL.prayed()}
+function markPrayed(){setTimeout(syncWidget,50);try{PL.markDone&&PL.markDone()}catch(e){}if(!S.days.includes(today())){S.days.push(today());S.days=S.days.slice(-400)}save();track('prayer_done',{p:S.prayer,n:S.count});if(!lockPkg)PL.prayed()}
 function finish(){if(S.prayer==='read')markPrayed();track('unlocked');if(lockPkg)PL.unlocked(lockPkg);else go('home')}
 function leave(){track('lock_left');PL.goHome()}
 
@@ -624,7 +638,7 @@ function mockSheet(k,ok){const old=document.getElementById('mock');if(old)old.re
 (function boot(){
  if(q.get('dark'))S.dark=q.get('dark')==='1';if(q.get('theme'))S.theme=q.get('theme');if(q.get('font'))S.font=q.get('font');if(q.get('btn'))S.btn=q.get('btn');
  if(q.get('brand')&&PL._mock)PL.setBrand(q.get('brand'));
- if(q.get('reset')){localStorage.removeItem('pl');for(const k of Object.keys(S))delete S[k];Object.assign(S,{lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,japDay:today(),japToday:0,japTotal:0,days:[],t2:600,dark:q.get('dark')==='1',theme:q.get('theme')||'peacock',font:q.get('font')||'baloo',btn:q.get('btn')||'chunky',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,japHist:{},checks:{},widgetAsked:false,rem:{am:'06:30',pm:'19:00'}})}
+ if(q.get('reset')){localStorage.removeItem('pl');for(const k of Object.keys(S))delete S[k];Object.assign(S,{lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,japDay:today(),japToday:0,japTotal:0,days:[],t2:600,dark:q.get('dark')==='1',theme:q.get('theme')||'peacock',font:q.get('font')||'baloo',btn:q.get('btn')||'chunky',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,japHist:{},checks:{},widgetAsked:false,notif:{am:true,pm:true,fest:true},rem:{am:'06:30',pm:'19:00'}})}
  if(q.get('lang')&&q.get('s'))S.lang=q.get('lang');
  try{S.plus=S.plus||!!PL.isPlus()}catch(e){}
  if(!S.deity&&LOCK)S.deity=Object.keys(C.deities)[0];

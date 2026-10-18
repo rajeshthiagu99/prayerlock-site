@@ -244,7 +244,20 @@ en:{
  notif_body:"Your apps are locked. First {n} naam jap.",
  notif_act:"Pray now",
  st_perms:"Permissions",
- credits:"Image credits"
+ credits:"Image credits",
+ n_am_b:"Begin the day with {n} naam jap.",
+ n_pm_b:"Today’s mala is still waiting. Just {n} naam.",
+ n_fest_b:"{f} today. {n} japa for {god}.",
+ n_act:"Start japa",
+ st_n_am:"Morning reminder",
+ st_n_pm:"Evening reminder (only if not done)",
+ st_n_fest:"Festival days",
+ st_n_h:"Notifications",
+ hero_streak:"{n}-day streak",
+ wd_left:"japa left",
+ wd_days:"days",
+ wd_done:"Jai ho · today’s japa done",
+ wd_sankalp:"{n}-day sankalp ✦"
 },
 hi:{
  q_role_h:"आप क्या करते हैं?",
@@ -489,6 +502,19 @@ hi:{
  notif_body:"आपके ऐप्स लॉक हैं। पहले {n} बार नाम जप।",
  notif_act:"अभी जप करें",
  st_perms:"अनुमतियाँ",
- credits:"चित्र श्रेय"
+ credits:"चित्र श्रेय",
+ n_am_b:"दिन की शुरुआत {n} बार नाम जप से करें।",
+ n_pm_b:"आज की माला बाकी है। बस {n} बार नाम।",
+ n_fest_b:"आज {f} है। {god} के लिए {n} जप।",
+ n_act:"जप शुरू करें",
+ st_n_am:"सुबह की याद",
+ st_n_pm:"शाम की याद (जप न हुआ हो तो)",
+ st_n_fest:"त्योहार के दिन",
+ st_n_h:"सूचनाएँ",
+ hero_streak:"{n} दिन लगातार",
+ wd_left:"जप बाकी",
+ wd_days:"दिन लगातार",
+ wd_done:"जय हो · आज का जप पूरा",
+ wd_sankalp:"{n} दिन संकल्प ✦"
 }
 };
