@@ -107,7 +107,7 @@ body.dark .opt{border-width:1px}
 .opt small{display:block;font-weight:500;font-size:13px;color:var(--muted);line-height:1.3}
 .opt.on{background:var(--tint);box-shadow:var(--sh)}
 body.dark .opt.on{outline:2px solid var(--pri);outline-offset:-2px}
-.chk{margin-left:auto;width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);flex:none;display:grid;place-items:center;font-size:13px;color:var(--priInk)}
+.chk{margin-left:auto;width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);flex:none;display:grid;place-items:center;font-size:13px;color:var(--priInk);transition:background .15s,border-color .15s}
 .on .chk{background:var(--pri);border-color:var(--pri)}
 .input{width:100%;font:inherit;font-size:22px;font-weight:600;padding:14px;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none}
 .langs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -153,14 +153,14 @@ body.dark .perm{border-width:1px}
 .hold span{font-weight:700;font-size:15px;color:var(--muted);text-align:center;padding:0 34px}
 .feat{list-style:none;margin:4px 0 10px}
 .feat li{display:flex;gap:10px;align-items:center;font-size:16px;font-weight:600;padding:6px 0;line-height:1.25}
-.feat li::before{content:"✓";width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:12px;flex:none}
+.feat li::before{content:"";width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/14px no-repeat;flex:none}
 .price{border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);padding:14px 16px;position:relative;box-shadow:var(--sh)}
 .price .off{position:absolute;top:-12px;right:14px;background:var(--bad);color:#fff;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px}
 .price s{color:var(--muted);font-size:17px}
 .price .p{font-size:32px;font-weight:800;line-height:1.1}
 .price .d{font-size:14px;color:var(--muted)}
 .fine{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0;line-height:1.35}
-.x{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:16px;width:36px;height:36px;border-radius:50%;border:none;background:var(--tint);color:var(--muted);font-size:15px;cursor:pointer;z-index:3}
+.x{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:16px;width:36px;height:36px;border-radius:50%;border:none;background:var(--tint);color:var(--muted);font-size:15px;cursor:pointer;z-index:3;display:grid;place-items:center}
 .wheel{width:240px;height:240px;margin:10px auto;position:relative}
 .wheel svg{width:100%;height:100%;transition:transform 3.2s cubic-bezier(.17,.67,.18,1)}
 .wheel::before{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);border:12px solid transparent;border-top:18px solid var(--ink);z-index:2}
@@ -172,6 +172,7 @@ body.dark .card{border-width:1px}
 body.dark .stats div{border-width:1px}
 .stats b{display:block;font-size:24px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
 .stats span{font-size:12px;color:var(--muted);line-height:1.2;display:block}
+.banner .ic{flex:none}
 .banner{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);background:var(--tint);font-weight:700;font-size:15px;margin-bottom:12px;cursor:pointer}
 .banner.warn{background:var(--bad);color:#fff}
 .week{display:flex;justify-content:space-between;margin-top:12px}
@@ -182,7 +183,7 @@ body.dark .stats div{border-width:1px}
 .tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:var(--bw) solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:10}
 body.dark .tabs{border-top-width:1px}
 .tabs button{flex:1;background:none;border:none;font:inherit;font-size:13px;font-weight:700;color:var(--muted);padding:10px 0 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-.tabs button i{font-style:normal;font-size:20px;line-height:1}
+.tabs button i{font-style:normal;font-size:20px;line-height:1;display:block;height:22px}
 .tabs button.on{color:var(--pri)}
 .li{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--tint);cursor:pointer;font-size:16px;font-weight:600}
 .li small{display:block;color:var(--muted);font-weight:500;font-size:13px}
@@ -222,6 +223,8 @@ select.sel{font:inherit;font-size:14px;font-weight:600;color:var(--ink);backgrou
 <script src="i18n.js"></script>
 <script src="i18n-more.js" onerror="0"></script>
 <script src="i18n-fgs.js"></script>
+<script src="delight-data.js" onerror="0"></script>
+<script src="delight.js" onerror="0"></script>
 <script>
 "use strict";
 /* ============ content fallback (until content.js exists) ============ */
@@ -255,7 +258,8 @@ const vib=(ms=12)=>{try{PL.haptic('tap',ms)}catch(e){}};
 
 /* ============ state ============ */
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
-const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,theme:'peacock',font:'baloo',btn:'chunky',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,japHist:{},checks:{},widgetAsked:false,notif:{am:true,pm:true,fest:true},rem:{am:'06:30',pm:'19:00'}},J(localStorage.getItem('pl'),{}));
+const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,theme:'peacock',font:'baloo',btn:'chunky',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,japHist:{},checks:{},widgetAsked:false,notif:{am:true,pm:true,fest:true},rem:{am:'06:30',pm:'19:00'},snd:true,doneSnd:'shankh',hap:true,prasad:{},aarti:{}},J(localStorage.getItem('pl'),{}));
+const kidsDefault=()=>{if(S.kids===undefined&&S.done)S.kids=['work','home','business'].includes(S.role)&&(S.want||[]).includes('family')};kidsDefault();
 const save=()=>localStorage.setItem('pl',JSON.stringify(S));
 function lockLook(){if(NATIVE){S.theme='peacock';S.font='baloo';S.btn='chunky';S.dark=false}} // look is fixed in the app; only the browser preview can switch it
 lockLook();try{save()}catch(e){}
@@ -272,6 +276,8 @@ function t(k,v={}){let s=(I[L()]&&I[L()][k])??I.en[k]??k;v={god:godName(),name:S
 const japa=()=>pick(god().japa);
 function glyph(k){k=k||S.deity;const d=C.deities[k]||god();if(k==='murugan'&&L()==='ta')return 'வேல்';if(['hi','mr','en'].includes(L()))return k==='murugan'?'स्कं':(d.glyph||'ॐ');const nm=pick(d.name).replace(/^(ஸ்ரீ|శ్రీ|ಶ್ರೀ|ശ്രീ|শ্রী|શ્રી|ਸ਼੍ਰੀ)\s*/,'');try{return [...new Intl.Segmenter(L(),{granularity:'grapheme'}).segment(nm)][0].segment}catch(e){return nm[0]}}
 const hm=m=>m>=60?t('u_h',{n:Math.floor(m/60)})+' '+t('u_m',{n:m%60}):t('u_m',{n:m});
+/** Line icons (delight.js); plain glyphs if that file is missing. */
+const ic=(k,s=22,st='')=>window.DL?DL.ic(k,s,st):({back:'‹',next:'›',check:'✓',close:'✕'}[k]||'');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LEAD={hi:['ram','hanuman','shiva','krishna','radha_krishna','devi'],ta:['murugan','shiva','devi','vishnu','ganesha','venkatesha','ayyappa'],te:['venkatesha','shiva','ram','hanuman','devi','ganesha'],kn:['venkatesha','shiva','ganesha','hanuman','devi','vishnu'],ml:['ayyappa','krishna','devi','shiva','ganesha','murugan'],mr:['ganesha','vishnu','shiva','ram','hanuman','devi'],bn:['devi','krishna','shiva','radha_krishna','ganesha','lakshmi'],gu:['krishna','hanuman','devi','shiva','ganesha','ram'],pa:['devi','shiva','hanuman','ram','krishna','ganesha'],en:['ram','hanuman','shiva','krishna','devi','ganesha']};
 function godOrder(){const base=(C.deityOrder||Object.keys(C.deities)).filter(k=>C.deities[k]);const lead=(LEAD[L()]||[]).filter(k=>C.deities[k]);return [...lead,...base.filter(k=>!lead.includes(k))]}
@@ -290,14 +296,14 @@ function petals(n=36){const c=['#F59E0B','#EA580C','#FBBF24','#DC2626','#F97316'
 
 /* ============ pieces ============ */
 const OB=['deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','plan','ovprev','perms','report','apps','prayer','sankalp'];
-function topBar(){const i=OB.indexOf(cur);return `<div class="top"><button class="back" onclick="back()" aria-label="${t('back')}">‹</button>${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}</div>`}
-function ring(n,done,size){const beads=Math.min(n,36),R=size/2-12,c=size/2,on=Math.round(done/n*beads),r=beads>30?6:beads>18?7.5:9;
- let s=`<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+function topBar(){const i=OB.indexOf(cur);return `<div class="top"><button class="back" onclick="back()" aria-label="${t('back')}">${ic('back',24)}</button>${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}</div>`}
+function ring(n,done,size,meruOn){const beads=Math.min(n,36),R=size/2-12,c=size/2,on=Math.round(done/n*beads),r=beads>30?6:beads>18?7.5:9;
+ let s=`<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle class="thr" cx="${c}" cy="${c}" r="${R}"/>`;
  for(let i=0;i<beads;i++){const a=-Math.PI/2+(i+1)/(beads+1)*Math.PI*2;s+=`<circle class="bd ${i<on?'on':''}" cx="${(c+R*Math.cos(a)).toFixed(1)}" cy="${(c+R*Math.sin(a)).toFixed(1)}" r="${r}"/>`}
- return s+`<circle class="meru" cx="${c}" cy="${c-R}" r="${r+3}"/></svg>`}
+ return s+`<circle class="meru ${meruOn?'on':''}" cx="${c}" cy="${c-R}" r="${r+3}"/></svg>`}
 function appIcon(a,sz=40){return a.icon?`<img src="${a.icon}" width="${sz}" height="${sz}" alt="">`:`<span class="ai" style="background:${a.col||'#888'};width:${sz}px;height:${sz}px">${esc((a.label||'?')[0])}</span>`}
 function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
-const tabs=a=>`<div class="tabs">${[['home','◎','tab_today'],['read','❁','tab_read'],['journey','▤','tab_journey'],['settings','≡','tab_me']].map(([k,i,l])=>`<button class="${a===k?'on':''}" onclick="go('${k}')"><i>${i}</i>${t(l)}</button>`).join('')}</div>`;
+const tabs=a=>`<div class="tabs">${[['home','today','◎','tab_today'],['read','read','❁','tab_read'],['journey','journey','▤','tab_journey'],['settings','me','≡','tab_me']].map(([k,i,g,l])=>`<button class="${a===k?'on':''}" onclick="go('${k}')"><i>${window.DL?ic(i,22):g}</i>${t(l)}</button>`).join('')}</div>`;
 
 /* ============ screens ============ */
 const V={};let cur='';
@@ -318,12 +324,12 @@ V.name=()=>`<div class="scr">${topBar()}
  <input class="input" id="nm" placeholder="${t('name_ph')}" value="${esc(S.name)}" maxlength="24" oninput="S.name=this.value.trim();save()" onkeydown="if(event.key==='Enter')go('q_role')" autocomplete="off">
  <div class="grow"></div><button class="btn" onclick="go('q_role')">${t('cont')}</button></div>`;
 const one=(key,opts,next)=>`<div class="scr">${topBar()}<h1>${t(key)}</h1><div style="height:8px"></div>
- ${opts.map(([v,l])=>`<button class="opt ${S[key.slice(2,-2)]===v?'on':''}" onclick="S['${key.slice(2,-2)}']=${typeof v==='number'?v:`'${v}'`};save();track('${key}');render();setTimeout(()=>go('${next}'),260)">${l}<span class="chk">${S[key.slice(2,-2)]===v?'✓':''}</span></button>`).join('')}<div class="grow"></div></div>`;
+ ${opts.map(([v,l])=>`<button class="opt ${S[key.slice(2,-2)]===v?'on':''}" onclick="S['${key.slice(2,-2)}']=${typeof v==='number'?v:`'${v}'`};save();track('${key}');render();setTimeout(()=>go('${next}'),260)">${l}<span class="chk">${S[key.slice(2,-2)]===v?ic('check',14):''}</span></button>`).join('')}<div class="grow"></div></div>`;
 V.q_role=()=>one('q_role_h',['student','college','work','business','home','retired'].map(k=>[k,t('r_'+k)]),'q_want');
 V.q_want=()=>`<div class="scr">${topBar()}<h1>${t('q_want_h')}</h1><p class="sub">${t('q_want_s')}</p>
- ${['peace','focus','family','sleep','bhakti'].map(k=>`<button class="opt ${S.want.includes(k)?'on':''}" onclick="togWant('${k}')">${t('w_'+k)}<span class="chk">${S.want.includes(k)?'✓':''}</span></button>`).join('')}
+ ${['peace','focus','family','sleep','bhakti'].map(k=>`<button class="opt ${S.want.includes(k)?'on':''}" onclick="togWant('${k}')">${t('w_'+k)}<span class="chk">${S.want.includes(k)?ic('check',14):''}</span></button>`).join('')}
  <div class="grow"></div><button class="btn" ${S.want.length?'':'disabled'} onclick="track('q_want');go('q_hours')">${t('cont')}</button></div>`;
-function togWant(k){const i=S.want.indexOf(k);i<0?S.want.push(k):S.want.splice(i,1);save();vib(8);render()}
+function togWant(k){const i=S.want.indexOf(k);i<0?S.want.push(k):S.want.splice(i,1);save();render()}
 V.q_hours=()=>one('q_hours_h',[[0,t('hrs',{a:1,b:3})],[1,t('hrs',{a:3,b:5})],[2,t('hrs',{a:5,b:7})],[3,t('hrs_plus',{a:7})]],'q_morn');
 V.q_morn=()=>one('q_morn_h',['phone','pray','bath','tea'].map(k=>[k,t('m_'+k)]),'st1');
 V.st1=()=>`<div class="scr">${storyBg('ghat-sunrise')}${topBar().replace('class="top"','class="top" style="position:absolute;top:calc(env(safe-area-inset-top) + 14px);left:22px;right:22px;z-index:2"')}
@@ -347,7 +353,7 @@ V.imp1=()=>{const a=firstApp();const row=(n,ic,txt)=>`<div style="display:flex;a
  <div style="width:2px;height:22px;background:var(--tint);margin-left:16px"></div>
  ${row(2,avatar(S.deity,44),t('imp_2',{n:S.count}))}
  <div style="width:2px;height:22px;background:var(--tint);margin-left:16px"></div>
- ${row(3,`<span style="width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:22px">✓</span>`,t('imp_3',{app:esc(a.label),m:S.unlockMin}))}
+ ${row(3,`<span style="width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:22px">${ic('check',26)}</span>`,t('imp_3',{app:esc(a.label),m:S.unlockMin}))}
  <p class="mantra" style="color:var(--god);margin-top:18px">${esc(japa())}</p>
  <div class="grow"></div><button class="btn" onclick="track('imp1');go('imp2')">${t('cont')}</button></div>`};
 V.imp2=()=>`<div class="scr">${storyBg(['ta','te','kn','ml'].includes(L())?'temple-morning':S.morn==='tea'?'morning-tea':'young-pray')}<div class="grow"></div>
@@ -361,7 +367,7 @@ V.imp3=()=>`<div class="scr c"><div style="height:24px;flex:none"></div><div cla
  <div class="grow"></div><button class="btn" onclick="track('imp3');go('pay')">${t('cont')}</button></div>`;
 const lvl=(key,val,pre)=>`<div style="display:flex;justify-content:space-between;gap:6px;margin:10px 0 4px">${[1,2,3,4,5].map(i=>`<button onclick="ci['${key}']=${i};render()" style="flex:1;border:var(--bw) solid var(--line);border-radius:12px;padding:10px 2px;background:${val===i?'var(--pri)':'var(--card)'};color:${val===i?'var(--priInk)':'var(--ink)'};font:inherit;font-size:12px;font-weight:700;line-height:1.15;cursor:pointer;min-height:58px"><b style="display:block;font-size:20px">${i}</b>${t(pre+i)}</button>`).join('')}</div>`;
 let ci={r:0,m:0};
-V.checkin=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('home')">‹</button></div>
+V.checkin=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('home')" aria-label="${t('back')}">${ic('back',24)}</button></div>
  <div style="display:flex;justify-content:center">${avatar(S.deity,80)}</div>
  <h3 style="font-size:20px;line-height:1.3">${t('ci_rel')}</h3>${lvl('r',ci.r,'rel')}
  <h3 style="font-size:20px;line-height:1.3;margin-top:22px">${t('ci_mood')}</h3>${lvl('m',ci.m,'mood')}
@@ -371,6 +377,7 @@ V.journey=()=>{const ch=Object.values(S.checks||{});const avg=k=>ch.length?(ch.r
  const tile=(v,l,c)=>`<div style="border-radius:var(--r);padding:16px 12px;background:${c};color:#fff"><b style="display:block;font-size:34px;line-height:1">${v}</b><span style="font-size:13px;opacity:.9">${l}</span></div>`;
  return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('jr_h')}</h1>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px">${tile(streak(),t('jr_streak'),'#C2410C')}${tile(S.japTotal,t('jr_total'),'#3F5A8A')}${tile(ch.length,t('ci_btn'),'#A16207')}${tile(S.days.length,t('jr_days'),'#2F6B2F')}</div>
+ ${window.DL?DL.thali():''}
  <div class="card"><div class="lbl" style="margin:0 0 8px">${t('jr_30')}</div><div style="display:flex;align-items:flex-end;gap:3px;height:110px">${days.map(v=>`<i style="flex:1;border-radius:3px 3px 0 0;background:${v?'var(--god)':'var(--tint)'};height:${Math.max(4,v/mx*100)}%"></i>`).join('')}</div></div>
  <button class="btn ghost" onclick="openCheckin()">${t('ci_btn')}</button>
  </div>${tabs('journey')}`};
@@ -383,7 +390,7 @@ function syncWidget(){try{if(!PL.syncWidget)return;const wk=[...Array(7)].map((_
   streak:sk,japToday:S.japToday,mantra:japa(),label:t('streak'),japLabel:t('japtoday'),color:god().color||'#D9560B',week:wk,deityImg:S.deity?img(S.deity):'',deityHero:S.deity?img(S.deity,1):''}))}catch(e){}}
 window.openTo=k=>{if(k==='japa'&&S.done&&S.plus){startJapa()}else if(S.plus&&k&&k.startsWith('pp_')&&V[k])go(k)};
 const CREDITS=[['Ram, Devi, Murugan, Saraswati, Lakshmi','Raja Ravi Varma — public domain'],['Hanuman, Shiva, Ganesha, Vishnu','Ravi Varma Press — public domain'],['Krishna, Radha Krishna','after Raja Ravi Varma; Wellcome Collection, CC BY 4.0'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0'],['Venkateswara','Kalyan Kanuri (Flickr), CC BY-SA 2.0'],['Shirdi Sai Baba','photograph c. 1915 — public domain'],['Varanasi Ganga aarti','Chetanbtc, Wikimedia Commons, CC BY-SA 4.0'],['Tiruvannamalai temple','KARTY JazZ, Wikimedia Commons, CC BY-SA 4.0'],['Photos','Unsplash: Dipqi Ghozali, CHIRAG K, Garv Chaplot · Pexels: RDNE Stock project, Yan Krukau, sujithirapara']];
-V.credits=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('settings')">‹</button></div><h1>© ${t('credits')}</h1>${CREDITS.map(([a,b])=>`<div class="li" style="cursor:default"><span>${a}<small>${b}</small></span></div>`).join('')}</div>`;
+V.credits=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('settings')" aria-label="${t('back')}">${ic('back',24)}</button></div><h1>${t('credits')}</h1>${[...CREDITS,...(window.DL?DL.credits():[])].map(([a,b])=>`<div class="li" style="cursor:default"><span>${a}<small>${b}</small></span></div>`).join('')}</div>`;
 V.rate=()=>{return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div>
  <h1 style="margin-top:14px">${t('rate_h')}</h1><p class="sub" style="font-size:17px">${t('rate_s')}</p><div class="grow"></div>
  <button class="btn" onclick="askRating()">${t('rate_btn')}</button><button class="link" onclick="S.rateAsked=true;save();track('rating_skipped');go('plan')">${t('notnow')}</button></div>`};
@@ -400,13 +407,13 @@ V.pp_wd=()=>{track('post_pw_widget');syncWidget();let src='';try{src=PL.widgetPr
 V.pp_mo=()=>{track('post_pw_morning');const pm=J(PL.perms(),{});const okp=pm.usage&&pm.overlay&&(!pm.popupNeeded||pm.popup);
  return ppStep('morning',`<div style="height:20px;flex:none"></div><div style="display:flex;justify-content:center;margin-bottom:10px">${avatar(S.deity,96)}</div><h1>${t('pp_mo_h')}</h1><p class="sub">${t('pp_mo_s')}</p>
  <input type="time" class="input" style="text-align:center;font-size:34px;margin:16px 0" value="${S.rem.am}" onchange="S.rem.am=this.value;S.notif=S.notif||{};S.notif.am=true;save();pushLock();render()">
- ${okp?`<div class="trust" style="color:var(--ok);font-weight:700">✓ ${t('test_pass')}</div>`:`<button class="link" onclick="S.afterPay=true;save();go('perms')">${t('perm_link')} ›</button>`}`,
+ ${okp?`<div class="trust" style="color:var(--ok);font-weight:700">${ic('check',18)} ${t('test_pass')}</div>`:`<button class="link" onclick="S.afterPay=true;save();go('perms')">${t('perm_link')} ${ic('next',16)}</button>`}`,
  t('pp_mo_btn',{time:S.rem.am}),"pushLock();go('pp_sh')","go('pp_sh')")};
 V.pp_sh=()=>{track('post_pw_share');return ppStep('share',`<div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div><h1 style="margin-top:16px">${t('pp_sh_h')}</h1><p class="sub" style="font-size:17px">${t('pp_sh_s')}</p>`,
  t('pp_sh_btn'),"track('post_pw_share_tap');try{PL.shareWhatsApp?PL.shareWhatsApp(t('share_text',{url:PLAY_URL})):PL.share(t('share_text',{url:PLAY_URL}))}catch(e){}S.ppDone=true;save();setTimeout(()=>go('home'),600)","S.ppDone=true;save();go('home')")};
 V.reading=()=>{setTimeout(()=>{[0,1,2].forEach(i=>setTimeout(()=>{const e=document.getElementById('cr'+i);if(e)e.classList.add('on');vib(10)},500+i*800));setTimeout(()=>{if(cur==='reading')go(S.rateAsked?'plan':'rate')},3200)},50);
  return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,96)}</div><h1 style="margin-top:18px">${t('rd_h')}</h1>
- <div style="text-align:left;display:inline-block;margin:10px auto">${[t('rd_1',{h:hrsN()}),t('rd_2',{days:daysN()}),t('rd_3')].map((x,i)=>`<div class="chk-row" id="cr${i}"><i>✓</i>${x}</div>`).join('')}</div><div class="grow"></div></div>`};
+ <div style="text-align:left;display:inline-block;margin:10px auto">${[t('rd_1',{h:hrsN()}),t('rd_2',{days:daysN()}),t('rd_3')].map((x,i)=>`<div class="chk-row" id="cr${i}"><i>${ic('check',14)}</i>${x}</div>`).join('')}</div><div class="grow"></div></div>`};
 V.plan=()=>{const h=hrsN();return `<div class="scr plan">${topBar()}<h1>${t('plan_h',{date:planDate()})}</h1>
  <svg viewBox="0 0 300 190" width="100%"><defs><linearGradient id="pg" x1="0" x2="1"><stop offset="0" stop-color="#DC2626"/><stop offset="1" stop-color="#2F6B2F"/></linearGradient></defs>
  <path d="M20 40 C 110 40, 150 150, 280 150" fill="none" stroke="url(#pg)" stroke-width="5" stroke-linecap="round"/>
@@ -420,16 +427,16 @@ function permList(){const p=J(PL.perms(),{});const L=['usage','overlay'];if(p.po
 V.perms=()=>{if(!S.agreed)return V.disclose();const {p,L:list}=permList();const first=list.find(k=>!p[k]);const brand=(p.brand||'').replace(/^./,c=>c.toUpperCase());
  return `<div class="scr">${topBar()}
  <h1>${t('perm_h')}</h1><p class="sub">${t('perm_s')}</p>
- <div class="trust"><span>🔒</span><span>${t('trust')}</span></div>
- ${list.map((k,i)=>`<div class="perm ${p[k]?'ok':first===k?'':'wait'}"><span class="n">${p[k]?'✓':i+1}</span><div><b>${t('p_'+k)}</b><span class="s">${t('p_'+k+'_s',{brand})}</span></div>
+ <div class="trust"><span>${ic('lock',18)}</span><span>${t('trust')}</span></div>
+ ${list.map((k,i)=>`<div class="perm ${p[k]?'ok':first===k?'':'wait'}"><span class="n">${p[k]?ic('check',16):i+1}</span><div><b>${t('p_'+k)}</b><span class="s">${t('p_'+k+'_s',{brand})}</span></div>
   <button class="go" onclick="askPerm('${k}')">${p[k]?t('done'):t('allow')}</button></div>`).join('')}
  ${(()=>{const unk=lastPerm&&(lastPerm==='popup'&&p.popupKnown===false||lastPerm==='autostart'&&p.autostartKnown===false);
   if(unk)return `<div class="trust" style="flex-direction:column;background:var(--tint)"><b style="color:var(--ink)">${t('conf_q')} · ${t('p_'+lastPerm)}</b><div style="display:flex;gap:8px;width:100%"><button class="btn ghost" style="min-height:44px;font-size:15px" onclick="confirmPerm(true)">${t('yes_on')}</button><button class="btn ghost" style="min-height:44px;font-size:15px" onclick="confirmPerm(false)">${t('no_again')}</button></div></div>`;
   const ls=J(PL.lockStatus(),{});const st=ls.selfTest||'untested';
   if(!p.popupNeeded||!p.need.every(k=>p[k]))return '';
-  if(testing&&st==='untested')return `<div class="trust">⏳ ${t('test_home')}</div>`;
-  if(st==='pass')return `<div class="trust" style="color:var(--ok);font-weight:700">✓ ${t('test_pass')}</div>`;
-  if(st==='fail')return `<div class="banner warn" onclick="askPerm('popup')">⚠ ${t('test_fail')}</div><button class="btn ghost" style="min-height:48px" onclick="testLock()">${t('test_btn')}</button>`;
+  if(testing&&st==='untested')return `<div class="trust">${ic('timer',18)} ${t('test_home')}</div>`;
+  if(st==='pass')return `<div class="trust" style="color:var(--ok);font-weight:700">${ic('check',18)} ${t('test_pass')}</div>`;
+  if(st==='fail')return `<div class="banner warn" onclick="askPerm('popup')">${ic('warn',20)} ${t('test_fail')}</div><button class="btn ghost" style="min-height:48px" onclick="testLock()">${t('test_btn')}</button>`;
   return `<button class="btn ghost" style="min-height:48px;margin-bottom:8px" onclick="testLock()">${t('test_btn')}</button>`})()}
  <div class="grow"></div><button class="btn stick" ${p.need.every(k=>p[k])?'':'disabled'} onclick="track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else go('report')">${t('cont')}</button></div>`};
 let lastPerm='',testing=false;
@@ -465,12 +472,12 @@ let APPS=null;
 V.apps=()=>{APPS=APPS||J(PL.apps(),[]).sort((x,y)=>(DISTRACT.includes(y.pkg)-DISTRACT.includes(x.pkg))||((y.min||0)-(x.min||0)));if(!S.apps.length&&!S.done){S.apps=APPS.filter(a=>DISTRACT.includes(a.pkg)).slice(0,4).map(a=>a.pkg);if(!S.apps.length)S.apps=APPS.slice(0,2).map(a=>a.pkg)}
  return `<div class="scr">${topBar()}
  <h1>${t('apps_h')}</h1><p class="sub">${t('apps_s')}</p>
- <div class="applist">${APPS.slice(0,24).map(a=>`<div class="row ${S.apps.includes(a.pkg)?'on':''}" onclick="togApp('${a.pkg}')">${appIcon(a)}<div style="flex:1"><b>${esc(a.label)}</b><small>${a.min?t('min_y',{m:hm(a.min)}):''}</small></div><span class="chk" style="${S.apps.includes(a.pkg)?'background:var(--pri);border-color:var(--pri)':''}">${S.apps.includes(a.pkg)?'✓':''}</span></div>`).join('')}</div>
+ <div class="applist">${APPS.slice(0,24).map(a=>`<div class="row ${S.apps.includes(a.pkg)?'on':''}" onclick="togApp('${a.pkg}')">${appIcon(a)}<div style="flex:1"><b>${esc(a.label)}</b><small>${a.min?t('min_y',{m:hm(a.min)}):''}</small></div><span class="chk" style="${S.apps.includes(a.pkg)?'background:var(--pri);border-color:var(--pri)':''}">${S.apps.includes(a.pkg)?ic('check',14):''}</span></div>`).join('')}</div>
  <div style="height:14px;flex:none"></div><button class="btn" style="position:sticky;bottom:0" ${S.apps.length||S.done?'':'disabled'} onclick="track('ob_apps',{n:S.apps.length});go(S.done?'settings':'prayer')">${t(S.done?'done':'cont')}</button></div>`};
-function togApp(p){const i=S.apps.indexOf(p);i<0?S.apps.push(p):S.apps.splice(i,1);const a=(APPS||[]).find(x=>x.pkg===p);if(a)S.labels[p]=a.label;save();vib(8);render();if(S.done)pushLock()}
+function togApp(p){const i=S.apps.indexOf(p);i<0?S.apps.push(p):S.apps.splice(i,1);const a=(APPS||[]).find(x=>x.pkg===p);if(a)S.labels[p]=a.label;save();render();if(S.done)pushLock()}
 V.prayer=()=>`<div class="scr">${topBar()}
  <h1>${t('pr_h')}</h1><div style="height:6px"></div>
- ${['jap','read'].map(k=>`<button class="opt ${S.prayer===k?'on':''}" onclick="S.prayer='${k}';save();render()"><span>${t('pr_'+k)}<small>${t('pr_'+k+'_s')}</small></span><span class="chk">${S.prayer===k?'✓':''}</span></button>`).join('')}
+ ${['jap','read'].map(k=>`<button class="opt ${S.prayer===k?'on':''}" onclick="S.prayer='${k}';save();render()"><span>${t('pr_'+k)}<small>${t('pr_'+k+'_s')}</small></span><span class="chk">${S.prayer===k?ic('check',14):''}</span></button>`).join('')}
  ${S.prayer==='jap'?`<div class="lbl">${t('count')}</div><div class="seg">${[11,21,108].map(n=>`<button class="${S.count===n?'on':''}" onclick="S.count=${n};save();render()">${n}</button>`).join('')}</div>
  <p class="mantra" style="margin-top:16px;color:var(--god)">${esc(japa())}</p>`:''}
  <div class="grow"></div><button class="btn" onclick="track('ob_prayer',{p:S.prayer,n:S.count});go(S.done?'settings':'sankalp')">${t(S.done?'done':'cont')}</button></div>`;
@@ -489,7 +496,7 @@ let titleTaps=0,showCode=false;
 const renew=p=>`<p class="fine" style="margin:6px 0 0">${+p===999?t('renew_base'):t('renew_offer',{p})}</p>`;
 function payClose(){track('paywall_closed');const now=Date.now();if(S.o3until>now)return go('offer3');if(!S.envDone)return go('chose');go('guard')}
 V.pay=()=>{track('paywall_viewed');return `<div class="scr">${heroBg()}
- <button class="x" onclick="payClose()">✕</button>
+ <button class="x" onclick="payClose()" aria-label="${t('back')}">${ic('close',18)}</button>
  <h1 style="margin-top:-30px;position:relative" onclick="if(++titleTaps>=5){showCode=true;render()}">${t('pay2_h',{name:S.name})}</h1>
  <p class="sub" style="color:var(--ink);font-weight:600">${t('pay2_s',{h:hrsN(),date:planDate()})}</p>
  <ul class="feat">${['f1','f2','f3','f4'].map(f=>`<li>${t(f)}</li>`).join('')}</ul>
@@ -498,7 +505,7 @@ V.pay=()=>{track('paywall_viewed');return `<div class="scr">${heroBg()}
  <div class="price"><span class="p">₹999</span> <span class="d">${t('year')}</span><div class="d">${t('perday2',{x:'2.7'})}</div></div>
  ${renew(999)}<div style="height:10px;flex:none"></div>
  <button class="btn stick" onclick="buy('999')">${t('cta')} · ₹999</button>
- <p class="fine">${t('pay_via')} · <u onclick="PL.restore()">${t('restore')}</u></p></div>`};
+ <p class="fine">${t('pay_via')} · <u onclick="restore()">${t('restore')}</u></p></div>`};
 function hash(s){let h=5381;for(const ch of s.toUpperCase().replace(/[^A-Z0-9]/g,""))h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h}
 function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();pushLock();go(S.ppDone?'home':'pp_in')}else toast(t('code_bad'))}
 V.chose=()=>{track('chose_viewed');setTimeout(()=>{const e=document.getElementById('chs');if(e)e.style.opacity=1},900);setTimeout(()=>{if(cur==='chose')go('env')},3000);
@@ -537,7 +544,7 @@ V.last=()=>{track('wheel_viewed');const seg=[40,50,70,80,40,50,70,80];let p='';
 function spin(){S.spun=true;save();document.getElementById('spb').disabled=true;document.getElementById('wh').style.transform=`rotate(${360*5+202.5}deg)`;vib(20);
  setTimeout(()=>{vib(60);petals(60);S.o3until=Date.now()+15*60e3;save();setTimeout(()=>go('offer3'),900)},3400)}
 V.offer3=()=>{track('offer3_viewed');return `<div class="scr">
- <button class="x" onclick="go('pay')">✕</button><div style="height:40px;flex:none"></div>
+ <button class="x" onclick="go('pay')" aria-label="${t('back')}">${ic('close',18)}</button><div style="height:40px;flex:none"></div>
  <div style="display:flex;justify-content:center">${avatar(S.deity,84)}</div>
  <h1 class="c" style="margin-top:12px">${t('o3_h')}</h1><p class="sub c">${t('o2_s')} ${t('ends')} <span class="timer" id="tm">${fmt(Math.max(0,Math.round((S.o3until-Date.now())/1000)))}</span></p>
  <div class="ticket"><div class="pct">80%</div><div style="font-weight:800;letter-spacing:.06em">${t('off_word')}</div><div style="margin-top:8px"><s style="color:var(--muted)">₹999</s> <b style="font-size:28px">₹199</b> <span class="d">${t('first')}</span></div><div class="d" style="color:var(--muted);font-size:14px">${t('perday',{x:'0.5'})}</div></div>
@@ -546,29 +553,37 @@ V.offer3=()=>{track('offer3_viewed');return `<div class="scr">
  <button class="btn" onclick="buy(S.o3until>Date.now()?'199':'999')">${t('o3_cta',{p:199})}</button>${renew(199)}<p class="fine">${t('pay_via')}</p></div>`};
 const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 setInterval(()=>{if(cur!=='offer3')return;const r=Math.round((S.o3until-Date.now())/1000);const e=document.getElementById('tm');if(e)e.textContent=fmt(Math.max(0,r));if(r<=0)go('pay')},1000);
-function buy(p){PL.buy(p)}
-window.onPurchase=(ok,price,err)=>{if(ok){S.plus=true;pushLock();const pm=J(PL.perms(),{});save();go(S.ppDone?'home':'pp_in')}else if(err)toast(err)};
+function buy(p){if(window.DL)DL.lastPlan=p;if(window.DL&&navigator.onLine===false)return DL.offline();PL.buy(p)}
+function restore(){if(window.DL&&navigator.onLine===false)return DL.offline();PL.restore()}
+window.onPurchase=(ok,price,err)=>{if(ok){S.plus=true;pushLock();const pm=J(PL.perms(),{});save();go(S.ppDone?'home':'pp_in')}else if(err){if(window.DL&&!/pending/i.test(err))DL.payFail(DL.lastPlan);else toast(err)}};
 window.onPlus=owned=>{if(owned&&!S.plus){S.plus=true;save();pushLock();if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))go(S.ppDone?'home':'pp_in')}};
 window.plPurchased=j=>window.onPurchase(true,(J(j,{})).price||0,'');
 
 /* ---- home ---- */
 function streak(){let n=0;const d=new Date();if(!S.days.includes(today()))d.setDate(d.getDate()-1);for(;;){const k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();if(S.days.includes(k)){n++;d.setDate(d.getDate()-1)}else break}return n}
 function nextFest(){const now=new Date();now.setHours(0,0,0,0);let best=null;for(const f of (C.festivals||[])){const d=new Date(f.date);const dd=Math.round((d-now)/864e5);if(dd>=0&&dd<=21&&(!best||dd<best.dd))best={f,dd}}return best}
-V.home=()=>{const h=new Date().getHours(),g=h<12?'gm':h<17?'ga':'ge';const st=J(PL.lockStatus(),{running:true,permsOk:true});const fe=nextFest();
- const done=S.japToday>=S.count;const items=[];
- if(!st.running||!st.permsOk||st.popupOk===false||st.selfTest==='fail')items.push(`<div class="banner warn" onclick="go('perms')">⚠ ${t('lock_warn')}</div>`);
- if(fe)items.push(`<div class="banner">🪔 ${fe.dd===0?t('fest_today',{f:esc(pick(fe.f.name))}):t('fest',{f:esc(pick(fe.f.name)),d:fe.dd})}</div>`);
- if(!(S.checks||{})[today()])items.push(`<div class="banner" onclick="openCheckin()">🙏 ${t('ci_btn')}<span style="margin-left:auto">›</span></div>`);
- if(PL.pinWidget&&!S.widgetAsked)items.push(`<div class="banner" onclick="S.widgetAsked=true;save();try{PL.pinWidget()}catch(e){};render()">▦ ${t('wd_h')}<span style="margin-left:auto;font-size:13px">${t('wd_btn')} ›</span></div>`);
- items.push(`<div class="li" onclick="go('apps')" style="border:none">🔒 ${t('locked_n',{n:S.apps.length})}<span class="r">›</span></div>`);
- return `<div class="scr tabbed">
- <p class="sub" style="margin:6px 0 10px;font-size:17px">${t(g,{name:S.name})}</p>
- <div class="card c" style="padding:18px 16px 16px">
-  <div style="position:relative;width:200px;height:200px;margin:0 auto" onclick="startJapa()">${ring(S.count,Math.min(S.japToday,S.count),200)}
-   <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">${avatar(S.deity,70)}<b style="font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums">${Math.min(S.japToday,S.count)}/${S.count}</b></div></div>
+V.home=()=>{if(window.DL&&DL.dawnDue()){cur='dawn';return V.dawn()}
+ const h=new Date().getHours(),g=h<12?'gm':h<17?'ga':'ge';const st=J(PL.lockStatus(),{running:true,permsOk:true});const fe=nextFest();
+ const done=S.japToday>=S.count;const items=[];const D=window.DL;const bad=!st.running||!st.permsOk||st.popupOk===false||st.selfTest==='fail';
+ const fs=D?DL.fest(fe):null;let fixed='';if(S.fixing&&!bad){S.fixing=0;save();if(D){fixed=DL.fixed();setTimeout(()=>DL.hap('done'),200)}}
+ if(bad)items.push(D?DL.lockCard(st):`<div class="banner warn" onclick="go('perms')">${ic('warn',20)} ${t('lock_warn')}</div>`);
+ if(fe&&!fs)items.push(`<div class="banner">${fe.dd===0?t('fest_today',{f:esc(pick(fe.f.name))}):t('fest',{f:esc(pick(fe.f.name)),d:fe.dd})}</div>`);
+ if(D&&DL.bedDue())items.push(`<div class="banner" onclick="DL.bed()">${ic('lotus',20)} ${t('dl_bed_e')}<span style="margin-left:auto">${ic('next',18)}</span></div>`);
+ if(D&&DL.deskDue()&&!done)items.push(`<div class="banner" onclick="DL.desk()">${ic('timer',20)} ${t('dl_off_chip')}<span style="margin-left:auto">${ic('next',18)}</span></div>`);
+ if(!(S.checks||{})[today()])items.push(`<div class="banner" onclick="openCheckin()">${ic('lotus',20)} ${t('ci_btn')}<span style="margin-left:auto">${ic('next',18)}</span></div>`);
+ if(PL.pinWidget&&!S.widgetAsked)items.push(`<div class="banner" onclick="S.widgetAsked=true;save();try{PL.pinWidget()}catch(e){};render()">${ic('widget',20)} ${t('wd_h')}<span style="margin-left:auto;font-size:13px;display:flex;align-items:center;gap:2px">${t('wd_btn')} ${ic('next',16)}</span></div>`);
+ items.push(`<div class="li" onclick="go('apps')" style="border:none">${ic('lock',20)} ${t('locked_n',{n:S.apps.length})}<span class="r">${ic('next',18)}</span></div>`);
+ const festDay=!!(fe&&fe.dd===0);
+ return `<div class="scr tabbed">${fs?fs.head:''}${fixed}
+ <p class="sub" style="margin:6px 0 2px;font-size:17px">${t(g,{name:S.name})}</p>
+ ${D?DL.dayLine(festDay):''}${fs?fs.banner:''}
+ <div class="card c" style="padding:18px 16px 16px;position:relative">${fs&&fs.feather?fs.feather:''}
+  <div style="position:relative;width:200px;height:200px;margin:0 auto" onclick="startJapa()">${ring(S.count,Math.min(S.japToday,S.count),200,done)}
+   <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">${D?DL.press(70):avatar(S.deity,70)}<b style="font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums">${Math.min(S.japToday,S.count)}/${S.count}</b></div></div>
   <p class="mantra" style="font-size:22px;margin-top:8px;color:var(--god)">${esc(japa())}</p>
-  <p class="sub" style="margin:2px 0 12px">🔥 ${t('hero_streak',{n:streak()})}${S.japTotal?` · ${t('total')}: ${S.japTotal}`:''}</p>
-  <button class="btn" onclick="startJapa()">${done?t('jai')+' 🙏':t('do_japa')}</button></div>
+  ${D?DL.streakLine(streak()):`<p class="sub" style="margin:2px 0 12px">${t('hero_streak',{n:streak()})}${S.japTotal?` · ${t('total')}: ${S.japTotal}`:''}</p>`}
+  <button class="btn" onclick="startJapa()">${done?((D&&DL.btn())||t('jai')):t('do_japa')}</button></div>
+ ${D?DL.holdHint():''}${fs?fs.orn:''}
  ${items.slice(0,3).join('')}
  </div>${tabs('home')}`};
 function startJapa(){mala=0;lockPkg='';go('japa')}
@@ -577,7 +592,7 @@ function startJapa(){mala=0;lockPkg='';go('japa')}
 function gitaList(){return (window.GITA||C.gita||Object.entries(C.texts||{}).filter(([k,v])=>v.kind==='shloka').map(([k,v])=>({id:k,...v})))}
 function shlokaOfDay(){const g=gitaList();if(!g.length)return null;const d=Math.floor(Date.now()/864e5);return g[d%g.length]}
 V.read=()=>{const mine=(god().texts||[]).filter(id=>C.texts[id]);const all=Object.keys(C.texts||{}).filter(id=>!mine.includes(id)&&C.texts[id].kind!=='shloka');const sd=shlokaOfDay();
- const row=id=>{const x=C.texts[id];return `<div class="li" onclick="openText('${id}')"><span>${esc(pick(x.title))}<small>${t('verses',{n:(x.verses||[]).length})} · ${t('kind_'+(x.kind||'mantra'))}</small></span><span class="r">›</span></div>`};
+ const row=id=>{const x=C.texts[id];return `<div class="li" onclick="openText('${id}')"><span>${esc(pick(x.title))}<small>${t('verses',{n:(x.verses||[]).length})} · ${t('kind_'+(x.kind||'mantra'))}</small></span><span class="r">${ic('next',18)}</span></div>`};
  return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('read_h')}</h1>
  ${sd?`<div class="card c" onclick="openText('__sd')" style="cursor:pointer"><div class="lbl" style="margin:0">${t('shloka_day')}</div><p class="verse" style="font-size:19px">${esc(verseText(sd.verses?sd.verses[0]:sd))}</p></div>`:''}
  ${mine.length?`<h3>${t('read_for')}</h3>${mine.map(row).join('')}`:''}
@@ -586,7 +601,7 @@ V.read=()=>{const mine=(god().texts||[]).filter(id=>C.texts[id]);const all=Objec
 function verseText(v){if(!v)return'';const l=L();if(v.tr&&v.tr[l])return v.tr[l];if(['hi','mr'].includes(l)||!v.tr)return v.dev||v.text||'';return v.tr.en||v.dev}
 let openId='';function openText(id){openId=id;go('reader')}
 V.reader=()=>{const x=openId==='__sd'?shlokaOfDay():C.texts[openId];if(!x)return V.read();const vs=x.verses||[x];
- return `<div class="scr"><div class="top"><button class="back" onclick="go('read')">‹</button></div>
+ return `<div class="scr"><div class="top"><button class="back" onclick="go('read')" aria-label="${t('back')}">${ic('back',24)}</button></div>
  <h1 class="c">${esc(pick(x.title)||t('shloka_day'))}</h1>
  ${vs.map((v,i)=>`${i?'<div class="vdiv"></div>':''}<p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}`).join('')}
  ${x.meaning?`<div class="lbl c">${t('meaning')}</div><p class="mean">${esc(pick(x.meaning))}</p>`:''}
@@ -595,28 +610,29 @@ V.reader=()=>{const x=openId==='__sd'?shlokaOfDay():C.texts[openId];if(!x)return
 /* ---- settings ---- */
 V.settings=()=>{const sel=(id,opts,val,on)=>`<select class="sel" onchange="${on}">${opts.map(([v,l])=>`<option value="${v}" ${v==val?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
  return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('tab_me')}</h1>
- ${S.plus?`<p class="sub">✓ ${t('plus_on')}</p>`:''}
+ ${S.plus?`<p class="sub">${ic('check',18)} ${t('plus_on')}</p>`:''}
  <div class="li">${t('st_lang')}<span class="r">${sel('l',LANGS.map(l=>[l,I[l]._name]),L(),"S.lang=this.value;save();applyGod();render();pushLock();lockText()")}</span></div>
- <div class="li" onclick="go('deity')">${t('st_deity')}<span class="r">${esc(pick(god().name))} ›</span></div>
- <div class="li" onclick="go('apps')">${t('st_apps')}<span class="r">${S.apps.length} ›</span></div>
- <div class="li" onclick="go('prayer')">${t('st_prayer')}<span class="r">${S.prayer==='jap'?t('pr_jap')+' · '+S.count:t('pr_read')} ›</span></div>
+ <div class="li" onclick="go('deity')">${t('st_deity')}<span class="r">${esc(pick(god().name))} ${ic('next',18)}</span></div>
+ <div class="li" onclick="go('apps')">${t('st_apps')}<span class="r">${S.apps.length} ${ic('next',18)}</span></div>
+ <div class="li" onclick="go('prayer')">${t('st_prayer')}<span class="r">${S.prayer==='jap'?t('pr_jap')+' · '+S.count:t('pr_read')} ${ic('next',18)}</span></div>
  <div class="li">${t('st_mode')}<span class="r">${sel('m',[['every',t('mode_every')],['morning',t('mode_morning')],['sandhya',t('mode_sandhya')]],S.mode,"S.mode=this.value;save();pushLock()")}</span></div>
  <div class="li">${t('st_unlock')}<span class="r">${sel('u',[5,10,15,30,60].map(m=>[m,t('min',{m})]),S.unlockMin,"S.unlockMin=+this.value;save();pushLock()")}</span></div>
+ ${window.DL?DL.settings():''}
  <h3>${t('st_n_h')}</h3>
  ${[['am','st_n_am','am'],['pm','st_n_pm','pm'],['fest','st_n_fest','']].map(([k,l,tm])=>`<div class="li">${t(l)}<span class="r" style="display:flex;gap:8px;align-items:center">${tm?`<input type="time" class="sel" value="${S.rem[tm]||'19:00'}" onchange="S.rem['${tm}']=this.value;save();pushLock()">`:''}<input type="checkbox" style="width:22px;height:22px;accent-color:var(--pri)" ${(S.notif||{})[k]!==false?'checked':''} onchange="S.notif=S.notif||{};S.notif['${k}']=this.checked;save();pushLock()"></span></div>`).join('')}
- <div class="li" id="lk-row" onclick="toggleLock()" style="cursor:pointer">🔒 ${t('lk_row')}<span class="r">${(o=>`<span role="switch" aria-checked="${o}" style="display:inline-block;position:relative;width:52px;height:32px;border-radius:16px;vertical-align:middle;background:${o?'var(--pri)':'#CFC6BA'};transition:.2s"><span style="position:absolute;top:4px;left:${o?24:4}px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:.2s"></span></span>`)(S.plus&&lockOn())}</span></div>
- <div class="li" onclick="go('perms')">🔒 ${t('st_perms')}<span class="r">›</span></div>
- <div class="li" onclick="lockPkg=S.apps[0]||'';lockLabel=S.labels[lockPkg]||'Instagram';mala=0;go('lock')">${t('st_lockprev')}<span class="r">›</span></div>
- <div class="li" onclick="PL.restore()">${t('st_restore')}<span class="r">›</span></div>
- <div class="li" onclick="PL.openUrl('https://rajeshthiagu99.github.io/prayerlock-site/privacy.html')">${t('privacy')}<span class="r">›</span></div>
- ${S.plus?`<div class="li" onclick="PL.openUrl('https://play.google.com/store/account/subscriptions?package=com.prayerlock.naamjap&sku=plus_yearly')">${t('mng_sub')}<span class="r">›</span></div>`:''}
- <div class="li" onclick="go('credits')">© ${t('credits')}<span class="r">›</span></div>
+ <div class="li" id="lk-row" onclick="toggleLock()" style="cursor:pointer">${ic('lock',20)} ${t('lk_row')}<span class="r">${(o=>`<span role="switch" aria-checked="${o}" style="display:inline-block;position:relative;width:52px;height:32px;border-radius:16px;vertical-align:middle;background:${o?'var(--pri)':'#CFC6BA'};transition:.2s"><span style="position:absolute;top:4px;left:${o?24:4}px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:.2s"></span></span>`)(S.plus&&lockOn())}</span></div>
+ <div class="li" onclick="go('perms')">${ic('lock',20)} ${t('st_perms')}<span class="r">${ic('next',18)}</span></div>
+ <div class="li" onclick="lockPkg=S.apps[0]||'';lockLabel=S.labels[lockPkg]||'Instagram';mala=0;go('lock')">${t('st_lockprev')}<span class="r">${ic('next',18)}</span></div>
+ <div class="li" onclick="restore()">${t('st_restore')}<span class="r">${ic('next',18)}</span></div>
+ <div class="li" onclick="PL.openUrl('https://rajeshthiagu99.github.io/prayerlock-site/privacy.html')">${t('privacy')}<span class="r">${ic('next',18)}</span></div>
+ ${S.plus?`<div class="li" onclick="PL.openUrl('https://play.google.com/store/account/subscriptions?package=com.prayerlock.naamjap&sku=plus_yearly')">${t('mng_sub')}<span class="r">${ic('next',18)}</span></div>`:''}
+ <div class="li" onclick="go('credits')">${t('credits')}<span class="r">${ic('next',18)}</span></div>
  </div>${tabs('settings')}`};
 
 /* ---- lock + japa ---- */
 let mala=0,lockPkg=LOCK||'',readWait=0;try{const gl=J(PL.getLock(),{});if(gl.unlockMin)S.unlockMin=gl.unlockMin}catch(e){}
 function lockReading(){const sd=shlokaOfDay();if(sd)return sd.verses?sd.verses[0]:sd;const ids=(god().texts||[]).filter(i=>C.texts[i]);if(!ids.length)return{dev:japa()};const tx=C.texts[ids[Math.floor(Date.now()/864e5)%ids.length]];const vs=tx.verses||[];return vs[Math.floor(Date.now()/36e5)%Math.max(vs.length,1)]||{dev:japa()}}
-function lockHead(done){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `<div class="lockapp">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${done?t('mala_done')+' 🙏':t('lock_h',{app:esc(lockLabel)})}</h1>`}
+function lockHead(done){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `<div class="lockapp">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${done?t('mala_done'):t('lock_h',{app:esc(lockLabel)})}</h1>`}
 V.lock=()=>{track('lock_shown');if(S.prayer==='read'){const v=lockReading();readWait=8;setTimeout(tickRead,1000);
  return `<div class="scr c"><div style="height:20px;flex:none"></div>${lockHead()}<p class="sub">${t('lock_read')}</p>
  <div class="grow"></div><p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}<div class="grow"></div>
@@ -624,17 +640,19 @@ V.lock=()=>{track('lock_shown');if(S.prayer==='read'){const v=lockReading();read
  <button class="link" onclick="leave()">${t('goback')}</button></div>`}
  return japaView(true)};
 V.japa=()=>japaView(false);
-function japaView(isLock){const done=mala>=S.count;
- return `<div class="scr c" ${done?'':'onclick="bead()"'}>
- ${isLock?`<div style="height:12px;flex:none"></div>${lockHead(done)}<p class="sub">${done?t('unlocked',{app:esc(lockLabel),m:S.unlockMin}):t('lock_s',{n:S.count})}</p>`:`<div class="top"><button class="back" onclick="event.stopPropagation();go('home')">‹</button></div><h1>${done?t('mala_done'):t('pr_jap')}</h1>`}
- <div class="grow"></div><div id="rg">${ring(S.count,mala,250)}</div>
+function japaView(isLock){const done=mala>=S.count;const D=window.DL;
+ return `<div class="scr c" id="jw" ${done?'':'onclick="bead()"'}>
+ ${isLock?`<div style="height:12px;flex:none"></div>${lockHead(done)}<p class="sub">${done?(D?'':t('unlocked',{app:esc(lockLabel),m:S.unlockMin})):t('lock_s',{n:S.count})}</p>`:`<div class="top"><button class="back" onclick="event.stopPropagation();go('home')" aria-label="${t('back')}">${ic('back',24)}</button></div><h1>${done?(D?t('dl_done_h'):t('mala_done')):t('pr_jap')}</h1>`}
+ <div class="grow"></div><div><div class="ringbox" style="${D?'':'display:block'}"><div id="rg">${ring(S.count,mala,250,done)}</div>${D?`<span class="ringav">${avatar(S.deity,isLock?72:84)}</span>`:''}</div></div>
  <p class="mantra" style="margin-top:14px;color:var(--god)">${esc(japa())}</p>
- <p class="cnt" id="ct">${mala} / ${S.count}</p><div class="grow"></div>
- ${done?(isLock?`<button class="btn" onclick="finish()">${t('open',{app:esc(lockLabel)})}</button>`:`<button class="btn" onclick="go('home')">${t('jai')} 🙏</button>`):`<p class="fine" style="margin-bottom:6px">${t('tap')}</p>`}
+ <p class="cnt" id="ct">${mala} / ${S.count}</p><div id="dmsg"></div><div class="grow"></div>
+ ${done?(isLock?`<button class="btn" onclick="finish()">${t('open',{app:esc(lockLabel)})}</button>`:(D?'<div style="height:64px;flex:none"></div>':`<button class="btn" onclick="go('home')">${t('jai')}</button>`)):`<p class="fine" style="margin-bottom:6px">${t('tap')}</p>`}
  ${isLock&&!done?`<button class="link" onclick="event.stopPropagation();leave()">${t('goback')}</button>`:''}</div>`}
 function bead(){if(mala>=S.count)return;mala++;S.japToday++;S.japTotal++;S.japHist=S.japHist||{};S.japHist[today()]=(S.japHist[today()]||0)+1;save();
- if(mala>=S.count){try{PL.haptic('done',80)}catch(e){}markPrayed();render();return}
- vib(12);document.getElementById('rg').innerHTML=ring(S.count,mala,250);const c=document.getElementById('ct');c.textContent=mala+' / '+S.count;c.classList.remove('pulse');void c.offsetWidth;c.classList.add('pulse')}
+ const D=window.DL;
+ if(mala>=S.count){if(D){DL.hap('meru');DL.play('manjira');DL.markFest()}else{try{PL.haptic('done',80)}catch(e){}}markPrayed();render();
+  if(D)setTimeout(()=>{if(cur==='lock')DL.unlock();else if(cur==='japa')DL.complete()},380);return}
+ if(D)DL.hap('tick');else vib(12);document.getElementById('rg').innerHTML=ring(S.count,mala,250);const c=document.getElementById('ct');c.textContent=mala+' / '+S.count;c.classList.remove('pulse');void c.offsetWidth;c.classList.add('pulse')}
 function tickRead(){if(cur!=='lock')return;readWait--;const b=document.getElementById('rd');if(!b)return;if(readWait<=0){b.disabled=false;b.textContent=t('read_done')}else{b.textContent=t('wait_s',{s:readWait});setTimeout(tickRead,1000)}}
 function markPrayed(){setTimeout(syncWidget,50);try{PL.markDone&&PL.markDone()}catch(e){}if(!S.days.includes(today())){S.days.push(today());S.days=S.days.slice(-400)}save();track('prayer_done',{p:S.prayer,n:S.count});if(!lockPkg)PL.prayed()}
 function finish(){if(S.prayer==='read')markPrayed();track('unlocked');if(lockPkg)PL.unlocked(lockPkg);else go('home')}
@@ -642,12 +660,12 @@ function leave(){track('lock_left');PL.goHome()}
 
 /* ============ router ============ */
 const FLOW=['lang','welcome','deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','reading','rate','plan','ovprev','perms','report','apps','prayer','sankalp','imp1','imp2','imp3','pay'];
-function go(s){cur=s;if(FLOW.includes(s)&&!S.done){S.step=s;save()}render();try{document.querySelector('.scr').scrollTop=0}catch(e){}}
+function go(s){if(window.DL){DL.clearFx();while(DL.isOpen())DL.close()}cur=s;if(FLOW.includes(s)&&!S.done){S.step=s;save()}render();try{document.querySelector('.scr').scrollTop=0}catch(e){}}
 function back(){if(cur==='plan')return go('st3');if(S.done&&['deity','apps','prayer','perms'].includes(cur))return go('settings');const i=FLOW.indexOf(cur);if(i>0)go(FLOW[i-1])}
-window.goBack=()=>{if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa','journey','checkin'].includes(cur)){go('home');return true}if(cur==='credits'){go('settings');return true}if(cur.startsWith('pp_'))return true;if(cur==='reader'){go('read');return true}if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))return false;back();return true};
-function render(){applyGod();document.getElementById('app').innerHTML=V[cur]();bindHold();const n=document.getElementById('nm');if(n&&!S.name)setTimeout(()=>n.focus(),300)}
+window.goBack=()=>{if(window.DL&&DL.back())return true;if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa','journey','checkin','dawn','aarti'].includes(cur)){go('home');return true}if(cur==='credits'){go('settings');return true}if(cur.startsWith('pp_'))return true;if(cur==='reader'){go('read');return true}if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))return false;back();return true};
+function render(){applyGod();document.getElementById('app').innerHTML=V[cur]();bindHold();if(window.DL)DL.bind();const n=document.getElementById('nm');if(n&&!S.name)setTimeout(()=>n.focus(),300)}
 function bindHold(){const h=document.getElementById('hold');if(!h)return;let st=0,raf=0;
- const fill=()=>{if(!st)return;const p=Math.min((performance.now()-st)/2000,1);h.querySelector('svg').outerHTML=ring(36,36*p,190);if(p>=1){st=0;try{PL.haptic('done',90)}catch(e){}S.done=true;save();pushLock();try{if(!J(PL.perms(),{}).notif)PL.openPerm('notif')}catch(e){}track('onboarding_completed');setTimeout(()=>go(S.plus?'home':'imp1'),350);return}raf=requestAnimationFrame(fill)};
+ const fill=()=>{if(!st)return;const p=Math.min((performance.now()-st)/2000,1);h.querySelector('svg').outerHTML=ring(36,36*p,190);if(p>=1){st=0;try{PL.haptic('done',90)}catch(e){}S.done=true;kidsDefault();save();pushLock();try{if(!J(PL.perms(),{}).notif)PL.openPerm('notif')}catch(e){}track('onboarding_completed');setTimeout(()=>go(S.plus?'home':'imp1'),350);return}raf=requestAnimationFrame(fill)};
  h.addEventListener('pointerdown',e=>{e.preventDefault();st=performance.now();vib(10);raf=requestAnimationFrame(fill)});
  const up=()=>{if(!st)return;st=0;cancelAnimationFrame(raf);const s=h.querySelector('svg');if(s)s.outerHTML=ring(36,0,190)};
  h.addEventListener('pointerup',up);h.addEventListener('pointerleave',up);h.addEventListener('pointercancel',up)}
@@ -665,6 +683,9 @@ function mockSheet(k,ok){const old=document.getElementById('mock');if(old)old.re
  d.querySelector('#m1').onclick=e=>{e.target.classList.add('on');setTimeout(()=>{close();ok()},k==='battery'||k==='notif'?50:600)}}
 
 /* ============ boot ============ */
+if(window.DL)DL.install(V);
+/* Every tap is acknowledged: a haptic here, a pressed state in CSS. Bead taps (the japa screen) have their own tick. */
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('button,[role=button],.opt,.li,.banner,.god,.row,.katori');if(!b||b.disabled)return;vib()},{passive:true});
 (function boot(){
  if(q.get('dark'))S.dark=q.get('dark')==='1';if(q.get('theme'))S.theme=q.get('theme');if(q.get('font'))S.font=q.get('font');if(q.get('btn'))S.btn=q.get('btn');
  if(q.get('brand')&&PL._mock)PL.setBrand(q.get('brand'));
@@ -673,6 +694,7 @@ function mockSheet(k,ok){const old=document.getElementById('mock');if(old)old.re
  try{S.plus=S.plus||!!PL.isPlus()}catch(e){}
  if(!S.deity&&LOCK)S.deity=Object.keys(C.deities)[0];
  if(LOCK){lockPkg=LOCK;return go('lock')}
+ if(q.get('dl')&&window.DL)setTimeout(()=>DL.demo(q.get('dl')),400);
  const jumpTo=q.get('s');if(jumpTo){if(!S.lang)S.lang=q.get('lang')||'hi';if(!S.deity)S.deity=q.get('god')||godOrder()[0];if(jumpTo==='lock'){lockPkg='com.instagram.android';lockLabel='Instagram'}return go(jumpTo)}
  if(S.done)try{pushLock()}catch(e){}
  if(!S.done)return go(S.step||'lang');

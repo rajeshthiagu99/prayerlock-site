@@ -60,3 +60,11 @@ All images were cropped, resized and re-encoded to WebP. The derivatives keep th
 | story/young-pray | https://www.pexels.com/photo/woman-in-traditional-dress-praying-8819422/ | Yan Krukau | Pexels License |
 
 CC BY / BY-SA credits are shown in-app under Settings › © Credits. No AI-generated images are used anywhere.
+
+## Delight layer, 18 Oct 2026 (v0.7.0)
+
+No new raster images were added. The delight moments reuse the deity portraits above (`deity/<id>.webp`, `deity/<id>-hero.webp`) for the darshan sheet, the unlock doors, the aarti arch and the ring centre.
+
+Everything else is an original SVG drawing made for Prayer Lock and drawn in code (`assets/delight.js`): the diya, the marigold-and-mango-leaf toran, the agal vilakku rows, the peacock feather, the modak, the pulli kolam, the brass thali and katoris, the prasad sketches, the Ram Setu stones and water, the temple doors and the 22-icon line set. None of them depict a deity.
+
+Sounds are listed separately in `assets/sfx/CREDITS.md` (4 CC0 recordings from freesound.org), and in the app under Settings › Image credits.
