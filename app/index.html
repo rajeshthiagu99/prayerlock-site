@@ -47,7 +47,7 @@ body[data-font=tiro] .btn{font-family:var(--scr);font-weight:400}
 .env.dimmed{opacity:.35;pointer-events:none}
 .env.shake{animation:shk .5s}
 @keyframes shk{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
-.petal{position:fixed;top:-20px;width:12px;height:16px;border-radius:60% 60% 50% 50%;z-index:70;pointer-events:none;animation:fall linear forwards}
+.petal{position:fixed;top:-20px;width:12px;height:16px;border-radius:60% 60% 50% 50%;z-index:1;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--r2))}}
 .vsbar{display:flex;gap:22px;justify-content:center;align-items:flex-end;height:250px;margin:16px 0}
 .vsbar div{width:96px;border-radius:12px 12px 4px 4px;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding-top:10px;font-weight:800;color:#fff;text-align:center;font-size:15px}
@@ -92,6 +92,8 @@ h3{font-weight:700;font-size:18px;margin:16px 0 8px}
 body.dark .btn{border-color:transparent}
 .btn:active{transform:translate(3px,3px);box-shadow:none}
 .btn.stick{position:sticky;bottom:0;z-index:4}
+.scr .btn:not(.stick){position:relative;z-index:3}
+body.dark input[type=time]::-webkit-calendar-picker-indicator{filter:invert(1) sepia(1) saturate(4) hue-rotate(5deg)}
 .btn[disabled]{opacity:.35;pointer-events:none}
 .btn.ghost{background:var(--card);color:var(--ink)}
 .link{display:block;margin:8px auto 0;background:none;border:none;color:var(--muted);font:inherit;font-size:15px;cursor:pointer;min-height:44px;padding:0 12px}
@@ -250,7 +252,8 @@ const vib=(ms=12)=>{try{PL.haptic('tap',ms)}catch(e){}};
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
 const S=Object.assign({lang:'',deity:'',name:'',apps:[],labels:{},prayer:'jap',count:11,mode:'every',unlockMin:15,step:'lang',done:false,plus:false,spun:false,o2:0,japDay:'',japToday:0,japTotal:0,days:[],t2:600,dark:false,theme:'peacock',font:'baloo',btn:'chunky',role:'',want:[],hours:-1,morn:'',env1:0,envDone:false,o3until:0,japHist:{},checks:{},widgetAsked:false,notif:{am:true,pm:true,fest:true},rem:{am:'06:30',pm:'19:00'}},J(localStorage.getItem('pl'),{}));
 const save=()=>localStorage.setItem('pl',JSON.stringify(S));
-if(NATIVE){S.theme='peacock';S.font='baloo';S.btn='chunky';S.dark=false} // look is fixed in the app; only the browser preview can switch it
+function lockLook(){if(NATIVE){S.theme='peacock';S.font='baloo';S.btn='chunky';S.dark=false}} // look is fixed in the app; only the browser preview can switch it
+lockLook();try{save()}catch(e){}
 if(S.japDay!==today()){S.japDay=today();S.japToday=0}
 const q=new URLSearchParams(location.search);
 const LOCK=q.get('lock');let lockLabel=q.get('label')||'';
@@ -362,7 +365,7 @@ V.journey=()=>{const ch=Object.values(S.checks||{});const avg=k=>ch.length?(ch.r
  const days=[...Array(30)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return (S.japHist||{})[d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()]||0});const mx=Math.max(S.count,...days);
  const tile=(v,l,c)=>`<div style="border-radius:var(--r);padding:16px 12px;background:${c};color:#fff"><b style="display:block;font-size:34px;line-height:1">${v}</b><span style="font-size:13px;opacity:.9">${l}</span></div>`;
  return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('jr_h')}</h1>
- <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px">${tile(streak(),t('jr_streak'),'#C2410C')}${tile(S.japTotal,t('jr_total'),'#3F5A8A')}${tile(avg('r'),t('jr_rel'),'#A16207')}${tile(avg('m'),t('jr_mood'),'#2F6B2F')}</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px">${tile(streak(),t('jr_streak'),'#C2410C')}${tile(S.japTotal,t('jr_total'),'#3F5A8A')}${tile(ch.length,t('ci_btn'),'#A16207')}${tile(S.days.length,t('jr_days'),'#2F6B2F')}</div>
  <div class="card"><div class="lbl" style="margin:0 0 8px">${t('jr_30')}</div><div style="display:flex;align-items:flex-end;gap:3px;height:110px">${days.map(v=>`<i style="flex:1;border-radius:3px 3px 0 0;background:${v?'var(--god)':'var(--tint)'};height:${Math.max(4,v/mx*100)}%"></i>`).join('')}</div></div>
  <button class="btn ghost" onclick="openCheckin()">${t('ci_btn')}</button>
  </div>${tabs('journey')}`};
@@ -373,10 +376,30 @@ function syncWidget(){try{if(!PL.syncWidget)return;const wk=[...Array(7)].map((_
  PL.syncWidget(JSON.stringify({state,num:done?sk:Math.max(0,need-S.japToday),numLabel:done?t('wd_days'):t('wd_left'),line:done?t('wd_done'):japa(),
   pill:fest?pick(fe.f.name):'',badge:sk>=21&&done?t('wd_sankalp',{n:sk>=108?108:sk>=51?51:21}):'',deity:S.deity,
   streak:sk,japToday:S.japToday,mantra:japa(),label:t('streak'),japLabel:t('japtoday'),color:god().color||'#D9560B',week:wk,deityImg:S.deity?img(S.deity):'',deityHero:S.deity?img(S.deity,1):''}))}catch(e){}}
-window.openTo=k=>{if(k==='japa'&&S.done&&S.plus){startJapa()}};
+window.openTo=k=>{if(k==='japa'&&S.done&&S.plus){startJapa()}else if(S.plus&&k&&k.startsWith('pp_')&&V[k])go(k)};
 const CREDITS=[['Ram, Devi, Murugan, Saraswati, Lakshmi','Raja Ravi Varma — public domain'],['Hanuman, Shiva, Ganesha, Vishnu','Ravi Varma Press — public domain'],['Krishna, Radha Krishna','after Raja Ravi Varma; Wellcome Collection, CC BY 4.0'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0'],['Venkateswara','Kalyan Kanuri (Flickr), CC BY-SA 2.0'],['Shirdi Sai Baba','photograph c. 1915 — public domain'],['Varanasi Ganga aarti','Chetanbtc, Wikimedia Commons, CC BY-SA 4.0'],['Tiruvannamalai temple','KARTY JazZ, Wikimedia Commons, CC BY-SA 4.0'],['Photos','Unsplash: Dipqi Ghozali, CHIRAG K, Garv Chaplot · Pexels: RDNE Stock project, Yan Krukau, sujithirapara']];
 V.credits=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('settings')">‹</button></div><h1>© ${t('credits')}</h1>${CREDITS.map(([a,b])=>`<div class="li" style="cursor:default"><span>${a}<small>${b}</small></span></div>`).join('')}</div>`;
-V.reading=()=>{setTimeout(()=>{[0,1,2].forEach(i=>setTimeout(()=>{const e=document.getElementById('cr'+i);if(e)e.classList.add('on');vib(10)},500+i*800));setTimeout(()=>{if(cur==='reading')go('plan')},3200)},50);
+V.rate=()=>{return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div>
+ <h1 style="margin-top:14px">${t('rate_h')}</h1><p class="sub" style="font-size:17px">${t('rate_s')}</p><div class="grow"></div>
+ <button class="btn" onclick="askRating()">${t('rate_btn')}</button><button class="link" onclick="S.rateAsked=true;save();track('rating_skipped');go('plan')">${t('notnow')}</button></div>`};
+function askRating(){S.rateAsked=true;save();track('rating_prompt_shown');let moved=false;const next=()=>{if(moved)return;moved=true;if(cur==='rate')go('plan')};window.onReviewDone=next;try{PL.review?PL.review():next()}catch(e){next()}setTimeout(next,8000)}
+const PLAY_URL='https://play.google.com/store/apps/details?id=com.prayerlock.naamjap';
+const ppStep=(k,body,cta,act,skip)=>`<div class="scr c">${body}<div class="grow"></div><button class="btn" onclick="${act}">${cta}</button><button class="link" onclick="track('post_pw_${k}_skip');${skip}">${t('later')}</button></div>`;
+V.pp_in=()=>{track('post_pw_welcome');setTimeout(()=>petals(24),300);return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,180)}</div>
+ <h1 style="margin-top:20px">${t('pp_in_h')}</h1><p class="sub" style="font-size:18px">${t('pp_in_s')}</p><div class="grow"></div>
+ <button class="btn" onclick="go('pp_wd')">${t('cont')}</button><button class="link" style="visibility:hidden">·</button></div>`};
+V.pp_wd=()=>{track('post_pw_widget');syncWidget();let src='';try{src=PL.widgetPreview?PL.widgetPreview():''}catch(e){}
+ return ppStep('widget',`<div style="height:30px;flex:none"></div><h1>${t('pp_wd_h')}</h1><p class="sub">${t('pp_wd_s')}</p>
+ <div style="margin:18px -6px;padding:22px 12px;border-radius:24px;background:linear-gradient(160deg,#2b3a67,#0f1630);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)">${src?`<img src="${src}" style="width:100%;border-radius:18px;display:block;animation:up .5s ease both">`:avatar(S.deity,110)}</div>`,
+ t('wd_btn'),"S.widgetAsked=true;save();let ok=false;try{ok=PL.pinWidget()}catch(e){}track('post_pw_widget_add',{ok:!!ok});setTimeout(()=>go('pp_mo'),ok?1200:0)","go('pp_mo')")};
+V.pp_mo=()=>{track('post_pw_morning');const pm=J(PL.perms(),{});const okp=pm.usage&&pm.overlay&&(!pm.popupNeeded||pm.popup);
+ return ppStep('morning',`<div style="height:20px;flex:none"></div><div style="display:flex;justify-content:center;margin-bottom:10px">${avatar(S.deity,96)}</div><h1>${t('pp_mo_h')}</h1><p class="sub">${t('pp_mo_s')}</p>
+ <input type="time" class="input" style="text-align:center;font-size:34px;margin:16px 0" value="${S.rem.am}" onchange="S.rem.am=this.value;S.notif=S.notif||{};S.notif.am=true;save();pushLock();render()">
+ ${okp?`<div class="trust" style="color:var(--ok);font-weight:700">✓ ${t('test_pass')}</div>`:`<button class="link" onclick="S.afterPay=true;save();go('perms')">${t('perm_link')} ›</button>`}`,
+ t('pp_mo_btn',{time:S.rem.am}),"pushLock();go('pp_sh')","go('pp_sh')")};
+V.pp_sh=()=>{track('post_pw_share');return ppStep('share',`<div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div><h1 style="margin-top:16px">${t('pp_sh_h')}</h1><p class="sub" style="font-size:17px">${t('pp_sh_s')}</p>`,
+ t('pp_sh_btn'),"track('post_pw_share_tap');try{PL.share(t('share_text',{url:PLAY_URL}))}catch(e){}S.ppDone=true;save();setTimeout(()=>go('home'),600)","S.ppDone=true;save();go('home')")};
+V.reading=()=>{setTimeout(()=>{[0,1,2].forEach(i=>setTimeout(()=>{const e=document.getElementById('cr'+i);if(e)e.classList.add('on');vib(10)},500+i*800));setTimeout(()=>{if(cur==='reading')go(S.rateAsked?'plan':'rate')},3200)},50);
  return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,96)}</div><h1 style="margin-top:18px">${t('rd_h')}</h1>
  <div style="text-align:left;display:inline-block;margin:10px auto">${[t('rd_1',{h:hrsN()}),t('rd_2',{days:daysN()}),t('rd_3')].map((x,i)=>`<div class="chk-row" id="cr${i}"><i>✓</i>${x}</div>`).join('')}</div><div class="grow"></div></div>`};
 V.plan=()=>{const h=hrsN();return `<div class="scr plan">${topBar()}<h1>${t('plan_h',{date:planDate()})}</h1>
@@ -403,12 +426,12 @@ V.perms=()=>{if(!S.agreed)return V.disclose();const {p,L:list}=permList();const 
   if(st==='pass')return `<div class="trust" style="color:var(--ok);font-weight:700">✓ ${t('test_pass')}</div>`;
   if(st==='fail')return `<div class="banner warn" onclick="askPerm('popup')">⚠ ${t('test_fail')}</div><button class="btn ghost" style="min-height:48px" onclick="testLock()">${t('test_btn')}</button>`;
   return `<button class="btn ghost" style="min-height:48px;margin-bottom:8px" onclick="testLock()">${t('test_btn')}</button>`})()}
- <div class="grow"></div><button class="btn stick" ${p.need.every(k=>p[k])?'':'disabled'} onclick="track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go('home')}else go('report')">${t('cont')}</button></div>`};
+ <div class="grow"></div><button class="btn stick" ${p.need.every(k=>p[k])?'':'disabled'} onclick="track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else go('report')">${t('cont')}</button></div>`};
 let lastPerm='',testing=false;
 function askPerm(k){track('perm_'+k);lastPerm=k;PL.openPerm(k)}
 function confirmPerm(ok){try{PL.confirmPerm(lastPerm,!!ok)}catch(e){}const k=lastPerm;lastPerm='';if(!ok)return askPerm(k);render()}
 function testLock(){testing=true;try{PL.testLock()}catch(e){}render()}
-window.plResume=()=>{setTimeout(()=>{try{syncWidget()}catch(e){}},300);if(testing){const st=(J(PL.lockStatus(),{})).selfTest;if(st&&st!=='untested')testing=false}Object.assign(S,J(localStorage.getItem('pl'),{}));if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
+window.plResume=()=>{setTimeout(()=>{try{syncWidget()}catch(e){}},300);if(testing){const st=(J(PL.lockStatus(),{})).selfTest;if(st&&st!=='untested')testing=false}Object.assign(S,J(localStorage.getItem('pl'),{}));lockLook();if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
 /* Prominent disclosure (Play User Data policy, docs/play-app-content.md §4): shown in place of the perms screen until "I agree", so no
    Usage access / overlay settings page opens before consent. Lock on/off switch: native LockStore "enabled" (persisted; the
    notification's "Turn off" sets it too), so boot and the 15-min watchdog never restart a lock the user switched off. */
@@ -419,7 +442,7 @@ V.disclose=()=>{track('disclosure_viewed');return `<div class="scr">${topBar()}
  <p class="sub c" style="font-size:14px;text-decoration:underline;cursor:pointer" onclick="PL.openUrl('https://rajeshthiagu99.github.io/prayerlock-site/privacy.html')">${t('privacy')}</p>
  <div class="grow"></div><button class="btn" id="dc-yes" onclick="dcAgree()">${t('dc_yes')}</button><button class="btn ghost" id="dc-no" style="margin-top:8px" onclick="dcSkip()">${t('notnow')}</button></div>`};
 function dcAgree(){track('disclosure_agreed');S.agreed=true;save();lockText();try{if(!lockOn()){PL.setLockOn(true);track('lock_on')}}catch(e){}render()}
-function dcSkip(){track('disclosure_declined');try{PL.setLockOn(false)}catch(e){}toast(t('dc_skip',dcV()));if(S.afterPay){S.afterPay=false;save();go('home')}else go(S.done?'settings':'report')}
+function dcSkip(){track('disclosure_declined');try{PL.setLockOn(false)}catch(e){}toast(t('dc_skip',dcV()));if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else go(S.done?'settings':'report')}
 function lockOn(){return J(PL.getLock(),{}).on!==false}
 function lockText(){try{PL.lockText(JSON.stringify({t:t('n_title'),x:t('n_text'),off:t('n_off')}))}catch(e){}}lockText();
 function toggleLock(){if(lockOn()){PL.setLockOn(false);track('lock_off');toast(t('lk_off_t'));return render()}
@@ -471,7 +494,7 @@ V.pay=()=>{track('paywall_viewed');return `<div class="scr">${heroBg()}
  <button class="btn stick" onclick="buy('999')">${t('cta')}</button>
  <p class="fine">${t('pay_via')} · <u onclick="PL.restore()">${t('restore')}</u></p></div>`};
 function hash(s){let h=5381;for(const ch of s.toUpperCase().replace(/[^A-Z0-9]/g,""))h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h}
-function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();pushLock();go('home')}else toast(t('code_bad'))}
+function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();pushLock();go(S.ppDone?'home':'pp_in')}else toast(t('code_bad'))}
 V.chose=()=>{track('chose_viewed');setTimeout(()=>{const e=document.getElementById('chs');if(e)e.style.opacity=1},900);setTimeout(()=>{if(cur==='chose')go('env')},3000);
  return `<div class="scr c" onclick="go('env')"><div class="grow"></div><h1>${t('ch_h')}</h1><p class="sub" id="chs" style="opacity:0;transition:opacity .6s;font-size:19px;color:var(--ink)">${t('ch_s')}</p><div class="grow"></div></div>`};
 let envStage=0,envPos=[[0,0],[1,0],[2,0]];
@@ -518,8 +541,8 @@ V.offer3=()=>{track('offer3_viewed');return `<div class="scr">
 const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 setInterval(()=>{if(cur!=='offer3')return;const r=Math.round((S.o3until-Date.now())/1000);const e=document.getElementById('tm');if(e)e.textContent=fmt(Math.max(0,r));if(r<=0)go('pay')},1000);
 function buy(p){PL.buy(p)}
-window.onPurchase=(ok,price,err)=>{if(ok){S.plus=true;pushLock();const pm=J(PL.perms(),{});if(!(pm.usage&&pm.overlay&&(!pm.popupNeeded||pm.popup))){S.afterPay=true;save();go('perms')}else{save();go('home')}toast(t('jai')+' 🙏')}else if(err)toast(err)};
-window.onPlus=owned=>{if(owned&&!S.plus){S.plus=true;save();pushLock();if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))go('home')}};
+window.onPurchase=(ok,price,err)=>{if(ok){S.plus=true;pushLock();const pm=J(PL.perms(),{});save();go(S.ppDone?'home':'pp_in')}else if(err)toast(err)};
+window.onPlus=owned=>{if(owned&&!S.plus){S.plus=true;save();pushLock();if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))go(S.ppDone?'home':'pp_in')}};
 window.plPurchased=j=>window.onPurchase(true,(J(j,{})).price||0,'');
 
 /* ---- home ---- */
@@ -611,10 +634,10 @@ function finish(){if(S.prayer==='read')markPrayed();track('unlocked');if(lockPkg
 function leave(){track('lock_left');PL.goHome()}
 
 /* ============ router ============ */
-const FLOW=['lang','welcome','deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','reading','plan','ovprev','perms','report','apps','prayer','sankalp','imp1','imp2','imp3','pay'];
+const FLOW=['lang','welcome','deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','reading','rate','plan','ovprev','perms','report','apps','prayer','sankalp','imp1','imp2','imp3','pay'];
 function go(s){cur=s;if(FLOW.includes(s)&&!S.done){S.step=s;save()}render();try{document.querySelector('.scr').scrollTop=0}catch(e){}}
 function back(){if(cur==='plan')return go('st3');if(S.done&&['deity','apps','prayer','perms'].includes(cur))return go('settings');const i=FLOW.indexOf(cur);if(i>0)go(FLOW[i-1])}
-window.goBack=()=>{if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa','journey','checkin'].includes(cur)){go('home');return true}if(cur==='credits'){go('settings');return true}if(cur==='reader'){go('read');return true}if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))return false;back();return true};
+window.goBack=()=>{if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa','journey','checkin'].includes(cur)){go('home');return true}if(cur==='credits'){go('settings');return true}if(cur.startsWith('pp_'))return true;if(cur==='reader'){go('read');return true}if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))return false;back();return true};
 function render(){applyGod();document.getElementById('app').innerHTML=V[cur]();bindHold();const n=document.getElementById('nm');if(n&&!S.name)setTimeout(()=>n.focus(),300)}
 function bindHold(){const h=document.getElementById('hold');if(!h)return;let st=0,raf=0;
  const fill=()=>{if(!st)return;const p=Math.min((performance.now()-st)/2000,1);h.querySelector('svg').outerHTML=ring(36,36*p,190);if(p>=1){st=0;try{PL.haptic('done',90)}catch(e){}S.done=true;save();pushLock();try{if(!J(PL.perms(),{}).notif)PL.openPerm('notif')}catch(e){}track('onboarding_completed');setTimeout(()=>go(S.plus?'home':'imp1'),350);return}raf=requestAnimationFrame(fill)};
