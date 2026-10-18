@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prayer Lock — devotional moments (preview)</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face{font-family:"Baloo 2";src:url("assets/fonts/Baloo2.ttf") format("truetype");font-weight:400 800;font-display:swap}
+@font-face{font-family:"Baloo Thambi 2";src:url("assets/fonts/BalooThambi2.ttf") format("truetype");font-weight:400 800;font-display:swap}
+@font-face{font-family:"Tiro Devanagari Hindi";src:url("assets/fonts/TiroDevanagariHindi-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Tiro Tamil";src:url("assets/fonts/TiroTamil-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+:root{
+ --ui:'Baloo 2','Baloo Thambi 2',system-ui,sans-serif;
+ --scr:'Tiro Devanagari Hindi','Tiro Tamil',serif;
+ --bg:#0D3B42;--card:#124A52;--tint:#1A5C64;--ink:#F4EBD9;--muted:#A9C7C4;--line:#2B6E76;--pri:#E9B949;--priInk:#1A1406;--bead:#24666E;--ok:#7CC86A;
+ --god:color-mix(in srgb,#9A3412 20%,#F6D58E);--accent:var(--god);
+ --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:var(--ui);background:#081F23;color:var(--ink);display:flex;gap:36px;justify-content:center;align-items:flex-start;padding:28px 24px 40px;
+ background-image:radial-gradient(900px 500px at 70% -10%,rgba(233,185,73,.10),transparent 70%)}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* ---------- side rail ---------- */
+.rail{width:330px;position:sticky;top:24px;font-size:14px}
+.rail h1{font-size:26px;font-weight:800;line-height:1.1;color:var(--ink)}
+.rail h1 em{font-style:normal;color:var(--pri)}
+.rail p.lead{color:var(--muted);line-height:1.45;margin:8px 0 14px}
+.grp{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7FA3A0;margin:16px 0 7px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid #2B6E76;background:transparent;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;color:var(--muted)}
+.chip.on{background:var(--pri);color:var(--priInk);border-color:var(--pri)}
+.moments{list-style:none;counter-reset:m;display:flex;flex-direction:column;gap:2px}
+.moments button{width:100%;text-align:left;background:none;border:none;border-radius:10px;padding:8px 10px;display:flex;gap:10px;align-items:baseline;color:var(--muted)}
+.moments button b{color:var(--ink);font-weight:700;font-size:15px}
+.moments button span{font-size:12px;display:block;line-height:1.3}
+.moments button i{font-style:normal;font-weight:800;color:#5E8C88;width:18px;flex:none;font-variant-numeric:tabular-nums}
+.moments button.on{background:#124A52}
+.moments button.on i{color:var(--pri)}
+.how{margin-top:14px;padding:12px 14px;border:1px dashed #2B6E76;border-radius:12px;color:var(--muted);line-height:1.45;font-size:13px}
+.how b{color:var(--ink)}
+.how .k{display:inline-block;font-size:10.5px;letter-spacing:.1em;font-weight:800;color:var(--pri);text-transform:uppercase;width:58px}
+.hap{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);min-height:22px}
+.hap i{width:10px;height:10px;border-radius:50%;background:#2B6E76;flex:none;transition:transform .12s,background .12s}
+.hap.go i{background:var(--pri);transform:scale(1.6)}
+.hap.big i{transform:scale(2.3)}
+.foot{margin-top:14px;font-size:11.5px;color:#6E908D;line-height:1.45}
+.foot a{color:#9FC1BE}
+
+/* ---------- phone ---------- */
+.phone{width:390px;height:844px;border-radius:52px;padding:12px;background:#050B0C;box-shadow:0 0 0 1px #24474B,0 40px 80px rgba(0,0,0,.5);flex:none;position:relative}
+.screen{position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:var(--bg);isolation:isolate}
+.sbar{position:absolute;top:0;left:0;right:0;height:40px;display:flex;align-items:center;justify-content:space-between;padding:6px 28px 0;font-size:14px;font-weight:700;z-index:30;color:var(--ink);pointer-events:none}
+.sbar .isl{position:absolute;left:50%;top:9px;width:96px;height:26px;border-radius:20px;background:#000;transform:translateX(-50%)}
+.sbar .ic{display:flex;gap:5px;align-items:center;font-size:11px;opacity:.85}
+.view{position:absolute;inset:0;padding:52px 22px 22px;display:flex;flex-direction:column;overflow:hidden;animation:vin .35s ease both}
+.view.tabbed{padding-bottom:86px;overflow-y:auto;scrollbar-width:none}.view.tabbed::-webkit-scrollbar{display:none}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 55% at 50% -12%,rgba(233,185,73,.16),transparent 62%);z-index:0}
+.view>*{position:relative;z-index:1}
+
+/* app atoms (copied from the app's peacock theme) */
+h2{font-weight:800;font-size:28px;line-height:1.12;letter-spacing:-.01em;margin:2px 0 6px}
+.sub{color:var(--muted);font-size:16px;line-height:1.35}
+.btn{display:block;width:100%;min-height:62px;flex:none;border:2.5px solid var(--ink);border-radius:12px;background:var(--pri);color:var(--priInk);font-size:19px;font-weight:800;box-shadow:5px 5px 0 rgba(255,255,255,.85);transition:transform .08s,box-shadow .08s;padding:0 16px}
+.btn:active{transform:translate(5px,5px);box-shadow:none}
+.screen button{transition:transform .12s cubic-bezier(.2,.8,.2,1),background .15s,color .15s}.screen button:active{transform:scale(.96)}.screen .btn:active{transform:translate(5px,5px)}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.link{display:block;margin:6px auto 0;background:none;border:none;color:var(--muted);font-size:15px;min-height:40px;padding:0 12px}
+.card{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:16px}
+.mantra{font-family:var(--scr);font-size:28px;line-height:1.3;text-align:center;color:var(--god)}
+.cnt{font-weight:800;font-size:44px;font-variant-numeric:tabular-nums;text-align:center;line-height:1}
+.ring{display:block;margin:0 auto}
+.ring .bd{fill:var(--bead);transition:fill .18s}
+.ring .bd.on{fill:var(--god)}
+.ring .meru{fill:none;stroke:var(--god);stroke-width:3;stroke-dasharray:3 3}
+.ring .meru.on{fill:var(--god);stroke-dasharray:none}
+.av{border-radius:50%;overflow:hidden;position:relative;flex:none;background:#3a2a10}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+.tabs{position:absolute;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding:2px 0 16px;z-index:20}
+.tabs button{flex:1;background:none;border:none;font-size:13px;font-weight:700;color:var(--muted);padding:9px 0 4px;display:flex;flex-direction:column;align-items:center;gap:1px}
+.ic{display:block;flex:none}.back{display:grid;place-items:center}
+.tabs .on{color:var(--pri)}
+.grow{flex:1}
+
+/* ---------- home ---------- */
+.greet{font-size:16px;color:var(--muted);margin:2px 0 0}
+.vaar{display:flex;align-items:baseline;gap:6px 8px;margin:2px 0 10px;flex-wrap:wrap}.vaar span{flex:0 1 auto;min-width:0}.vaar .his{flex:none;align-self:center}
+.vaar b{font-size:20px;font-weight:800;color:var(--ink)}
+.vaar span{font-size:14.5px;color:var(--muted);line-height:1.3}
+.vaar .his{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--priInk);background:var(--pri);border-radius:999px;padding:1px 9px}
+.tithi{display:flex;gap:10px;align-items:center;border-radius:12px;padding:9px 12px;background:var(--tint);font-size:14.5px;font-weight:600;line-height:1.3;margin-bottom:12px}
+.tithi .dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
+.tithi small{display:block;font-weight:500;color:var(--muted);font-size:13px}
+.home-card{padding:16px 16px 14px;text-align:center;position:relative}
+.ringwrap{position:relative;width:206px;height:206px;margin:0 auto}
+.ringwrap .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.press{position:relative;width:84px;height:84px;border-radius:50%;touch-action:none;-webkit-touch-callout:none}
+.press svg{position:absolute;inset:-6px;width:96px;height:96px;transform:rotate(-90deg)}
+.press circle{fill:none;stroke:var(--pri);stroke-width:3;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:283}
+.press.hold circle{transition:stroke-dashoffset .65s linear;stroke-dashoffset:0}
+.ringwrap b.n{font-size:24px;margin-top:6px;font-variant-numeric:tabular-nums}
+.streak{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:15px;margin:4px 0 12px}
+.diya{width:34px;height:34px;cursor:pointer;overflow:visible}
+.diya .fl{transform-origin:50% 92%;animation:fl 2.8s ease-in-out infinite}
+.diya.tap .fl{animation:flt .9s ease-out}
+@keyframes fl{0%,100%{transform:scale(1,1)}30%{transform:scale(.96,1.04) rotate(-1.5deg)}60%{transform:scale(1.03,.97) rotate(1.2deg)}}
+@keyframes flt{0%{transform:scale(1)}18%{transform:scale(.85,1.28) rotate(-5deg)}40%{transform:scale(1.1,.92) rotate(4deg)}65%{transform:scale(.95,1.1) rotate(-2deg)}100%{transform:scale(1)}}
+.diya .halo{opacity:.55;animation:hl 2.8s ease-in-out infinite}
+.diya.tap .halo{animation:hlt .9s ease-out}
+@keyframes hl{50%{opacity:.75}}
+@keyframes hlt{20%{opacity:1;transform:scale(1.3)}}
+.hint{font-size:12px;color:#7FA3A0;text-align:center;margin-top:8px}
+
+/* festival skins */
+.toran{position:absolute;top:40px;left:-6px;right:-6px;height:44px;z-index:2;pointer-events:none}
+.diyarow{display:flex;justify-content:space-between;padding:0 4px;margin-top:8px}
+.fest-banner{display:flex;align-items:center;gap:10px;border-radius:12px;padding:10px 12px;background:linear-gradient(90deg,rgba(233,185,73,.22),rgba(233,185,73,.06));border:1px solid rgba(233,185,73,.35);margin-bottom:12px}
+.fest-banner b{display:block;font-size:16px}
+.fest-banner small{color:var(--muted);font-size:13px;line-height:1.3;display:block}.fest-banner b{line-height:1.2}
+.skinpick{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.skinpick button{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font-weight:700}
+.skinpick .on{background:var(--tint);color:var(--ink)}
+
+/* ---------- dawn ---------- */
+.dawn{background:linear-gradient(180deg,#0B2A3A 0%,#17405A 30%,#7A5A4A 62%,#E3A653 84%,#F3CD7A 100%)}
+.dawn .sun{position:absolute;left:50%;bottom:-120px;width:340px;height:340px;margin-left:-170px;border-radius:50%;background:radial-gradient(circle,rgba(255,236,180,.95) 0,rgba(247,200,110,.55) 30%,rgba(233,160,70,0) 68%);animation:rise 6s ease-out both;z-index:0}
+@keyframes rise{from{transform:translateY(80px);opacity:.3}to{transform:none;opacity:1}}
+.dawn .rays{position:absolute;left:50%;bottom:60px;width:700px;height:700px;margin-left:-350px;background:repeating-conic-gradient(from 0deg,rgba(255,230,170,.07) 0 4deg,transparent 4deg 14deg);border-radius:50%;mask:radial-gradient(circle,#000 20%,transparent 62%);-webkit-mask:radial-gradient(circle,#000 20%,transparent 62%);animation:spin 120s linear infinite;z-index:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dawn .stars{position:absolute!important;inset:0 0 50% 0;z-index:0}.dawn .stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.5;animation:tw 4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.1}}
+.palms{font-family:var(--scr);font-size:22px;line-height:1.5;text-align:center;color:#FFF3D6;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.dawn .tr{font-size:14px;color:#F5E3C0;text-align:center;line-height:1.45;margin-top:8px;opacity:.9}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--pri)}html[lang=hi] .eyebrow,html[lang=ta] .eyebrow,html[lang=hi] .lbl2,html[lang=ta] .lbl2{letter-spacing:0;font-size:13.5px}
+
+/* ---------- japa ---------- */
+.japa{align-items:center;text-align:center;cursor:pointer}
+.japa .top{width:100%;display:flex;justify-content:space-between;align-items:center}
+.back{width:40px;height:40px;border-radius:50%;border:none;background:var(--card);color:var(--ink);font-size:22px;line-height:1}
+.ringbox{position:relative}
+.ringbox .ringav{position:absolute;left:50%;top:50%;margin:-42px 0 0 -42px;box-shadow:0 0 0 3px rgba(233,185,73,.35)}
+.done-msg .jai{max-width:100%}html[lang=ta] .done-msg .jai{font-size:24px!important}
+.ringbox .bead-fly{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--god);pointer-events:none;animation:fly .35s ease-out forwards}
+@keyframes fly{from{opacity:1;transform:scale(1.6)}to{opacity:0;transform:scale(.6)}}
+.cnt.pulse{animation:pl .2s}
+@keyframes pl{50%{transform:scale(1.08)}}
+.fine{font-size:13px;color:var(--muted)}
+.ff{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.ff button{font-size:12px;padding:3px 10px;border-radius:999px;border:1px dashed var(--line);background:transparent;color:#7FA3A0}
+
+/* completion */
+.bloom{position:absolute;inset:0;pointer-events:none;z-index:15;background:radial-gradient(60% 40% at 50% 38%,rgba(255,214,120,.38),transparent 70%);opacity:0;animation:bl 2.6s ease-out forwards}
+@keyframes bl{15%{opacity:1}100%{opacity:.35}}
+.petal{position:absolute;top:-30px;z-index:16;pointer-events:none;will-change:transform;animation:drop linear forwards}
+@keyframes drop{0%{transform:translate(0,0) rotate(0);opacity:1}85%{opacity:1}100%{transform:translate(var(--dx),var(--fy,900px)) rotate(var(--rot));opacity:0}}
+.petal svg{display:block;animation:sway 1.6s ease-in-out infinite alternate}
+@keyframes sway{from{transform:translateX(-7px) rotateY(0)}to{transform:translateX(7px) rotateY(60deg)}}
+.done-msg{position:absolute;left:22px;right:22px;bottom:150px;pointer-events:none;text-align:center;z-index:17;animation:vin .8s .5s ease both}
+.done-msg .jai{font-family:var(--scr);font-size:30px;color:var(--pri);line-height:1.25}
+.done-msg p{color:var(--muted);font-size:15px;margin-top:4px}
+
+/* ---------- shloka card ---------- */
+.sheet{position:absolute;left:0;right:0;bottom:0;top:130px;background:#0F4249;border-radius:26px 26px 0 0;z-index:25;border-top:1px solid rgba(233,185,73,.4);animation:sh .42s cubic-bezier(.2,.8,.2,1) both;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -20px 50px rgba(0,0,0,.45)}
+@keyframes sh{from{transform:translateY(100%)}to{transform:none}}
+.sheet .art{height:190px;flex:none;background-size:cover;background-position:50% 22%;position:relative}
+.sheet .art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,66,73,0) 40%,#0F4249 100%)}
+.sheet .body{padding:4px 24px 20px;overflow:auto;flex:1;scrollbar-width:none}
+.sheet .grab{position:absolute;top:8px;left:50%;width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.5);margin-left:-20px;z-index:2}
+.shl:lang(ta),html[lang=ta] .shl{font-size:16.5px!important}.shl{font-family:var(--scr);font-size:21px;line-height:1.55;text-align:center;color:#FBE9C0;margin:6px 0 8px;white-space:pre-line}
+.trn{font-size:13.5px;color:var(--muted);text-align:center;font-style:italic;line-height:1.45;white-space:pre-line}
+.mean{font-size:15px;line-height:1.5;margin-top:12px;color:var(--ink)}
+.story{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:14.5px;line-height:1.5;color:var(--muted)}
+.story b{color:var(--ink)}
+.src{font-size:11.5px;color:#7FA3A0;margin-top:10px}
+.scrim{position:absolute;inset:0;background:rgba(3,15,17,.55);z-index:24;animation:fade .3s both}
+@keyframes fade{from{opacity:0}}
+
+/* ---------- ram setu ---------- */
+.sea{position:absolute;left:0;right:0;bottom:0;height:420px;background:linear-gradient(180deg,rgba(18,90,100,0) 0,rgba(14,84,94,.85) 18%,#0A4650 45%,#062F36 100%);z-index:14;pointer-events:none;overflow:hidden}
+.sea .wave{position:absolute;left:-20%;right:-20%;height:2px;border-radius:2px;background:rgba(190,235,230,.18);animation:wv 6s ease-in-out infinite alternate}
+@keyframes wv{to{transform:translateX(30px)}}
+.stone{position:absolute;z-index:15;pointer-events:none;animation:sink-in 1.4s cubic-bezier(.2,.8,.2,1) both}
+.stone>div{animation:bob 3.2s ease-in-out infinite alternate}
+@keyframes sink-in{from{transform:translateY(-260px) rotate(-8deg);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
+@keyframes bob{from{transform:translateY(-3px) rotate(-1.5deg)}to{transform:translateY(3px) rotate(1.5deg)}}
+.stone svg{display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
+.reflect{position:absolute;z-index:14;height:6px;border-radius:50%;background:rgba(0,0,0,.25);filter:blur(2px)}
+
+/* ---------- aarti ---------- */
+.arch{position:relative;width:250px;height:300px;margin:6px auto 0}
+.arch .pic{position:absolute;left:18px;right:18px;top:22px;bottom:0;border-radius:110px 110px 6px 6px;background-size:cover;background-position:50% 20%;box-shadow:inset 0 0 0 2px rgba(233,185,73,.6),0 0 60px rgba(233,185,73,.18)}
+.arch .lite{position:absolute;inset:0;border-radius:110px 110px 6px 6px;left:18px;right:18px;top:22px;background:radial-gradient(70px 70px at var(--lx,50%) var(--ly,60%),rgba(255,210,120,.42),transparent 70%);mix-blend-mode:screen;transition:opacity .4s}
+.arch{margin-bottom:58px!important}.thali{position:absolute;left:50%;top:60%;width:96px;height:60px;margin:-30px 0 0 -48px;z-index:3;transform:translateY(150px);transition:transform .6s ease;filter:drop-shadow(0 8px 10px rgba(0,0,0,.45))}
+.aarti-on .thali{animation:arise .6s ease-out forwards,circ 2.4s linear .6s infinite}
+@keyframes arise{from{transform:translateY(150px)}to{transform:translateX(-62px)}}
+@keyframes circ{from{transform:rotate(0) translateX(-62px) rotate(0)}to{transform:rotate(360deg) translateX(-62px) rotate(-360deg)}}
+.sk{display:flex;gap:4px;justify-content:center;margin:14px 0 8px;flex-wrap:wrap}
+.sk i{width:9px;height:9px;border-radius:50%;background:var(--pri)}
+
+/* ---------- journey / prasad ---------- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 14px}
+.tile{border-radius:var(--r);padding:12px 12px;background:var(--card);border:1px solid var(--line)}
+.tile b{display:block;font-size:28px;line-height:1}
+.tile span{font-size:13px;color:var(--muted)}
+.thalis{position:relative;border-radius:50%;width:300px;height:300px;margin:4px auto 0;background:radial-gradient(circle at 50% 45%,#E8C36A 0,#C9973A 55%,#9A6E22 70%,#7A5418 71%,#C9973A 74%,#8E6420 100%);box-shadow:0 18px 30px rgba(0,0,0,.4),inset 0 0 0 6px rgba(255,240,200,.25)}
+.thalis::before{content:"";position:absolute;inset:26px;border-radius:50%;border:1px dashed rgba(90,60,10,.45)}
+.katori{position:absolute;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;display:grid;place-items:center;cursor:pointer;transition:transform .2s}
+.katori:active{transform:scale(.94)}.katori.sel{transform:scale(1.06);box-shadow:0 0 0 2px #E9B949,0 0 18px rgba(233,185,73,.5);border-radius:50%}
+.katori .bowl{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 40%,#F6DD9A 0,#D9A846 52%,#A8761F 66%,#E6C06A 70%,#8A5E18 100%);box-shadow:0 4px 8px rgba(60,35,0,.45)}
+.katori.empty .bowl{background:radial-gradient(circle at 50% 40%,rgba(255,240,200,.18),rgba(90,60,10,.25) 70%);box-shadow:inset 0 0 0 1.5px rgba(90,60,10,.45)}
+.katori svg{position:relative;z-index:1}
+.katori .q{position:relative;z-index:1;font-size:11px;font-weight:800;color:rgba(70,45,5,.75);text-align:center;line-height:1.05}
+.pcap{text-align:center;margin-top:12px;min-height:58px}
+.pcap b{font-size:17px}
+.pcap span{display:block;color:var(--muted);font-size:13.5px}
+
+/* ---------- bedtime ---------- */
+.night{background:radial-gradient(90% 55% at 50% 100%,rgba(233,160,70,.22),transparent 70%),linear-gradient(180deg,#061A1E,#0A2A30 60%,#14302F)}
+.night .moon{position:absolute;right:30px;top:58px;width:30px;height:30px;border-radius:50%;box-shadow:-10px 6px 0 0 #F2E2B8;opacity:.85}
+.bline{font-family:var(--scr);font-size:22px;line-height:1.45;text-align:center;color:#FBE9C0;opacity:.28;transition:opacity .5s,transform .5s}
+.bline.on{opacity:1}.bline .btr{display:block;font-family:var(--ui);font-style:italic;font-size:13px;color:#A9C7C4;line-height:1.3;margin:-2px 0 4px}
+.bline.cur{transform:scale(1.04)}
+.who{display:grid;grid-template-columns:1fr;gap:6px;margin-top:10px;font-size:14px;color:var(--muted);line-height:1.35}
+.who b{color:var(--ink)}
+
+/* ---------- office ---------- */
+.desk{background:#071A1D}
+.desk .dim{color:#5F807D}
+.desk .ring .bd{fill:#16383C}
+.desk .ring .bd.on{fill:#B99545}
+.desk .ring .meru{stroke:#B99545}
+.timer{font-size:15px;font-weight:700;color:#5F807D;font-variant-numeric:tabular-nums}
+
+/* unlock */
+.ucard{position:relative;width:250px;height:320px;margin:16px auto 0;border-radius:125px 125px 16px 16px;overflow:hidden;cursor:pointer;box-shadow:0 0 0 2px rgba(233,185,73,.7),0 20px 40px rgba(0,0,0,.4);perspective:900px}
+.ucard .uart{position:absolute;inset:0;background-size:cover;background-position:50% 20%;filter:brightness(.35) blur(3px);transform:scale(1.1);transition:filter 1.2s ease,transform 1.6s ease}
+.ucard.open .uart{filter:none;transform:none}
+.ucard.open{animation:ug 2.4s ease-out both}
+@keyframes ug{0%{box-shadow:0 0 0 2px rgba(233,185,73,.7),0 0 0 rgba(255,210,120,0)}30%{box-shadow:0 0 0 2px #E9B949,0 0 90px rgba(255,210,120,.65)}100%{box-shadow:0 0 0 2px #E9B949,0 0 40px rgba(255,210,120,.3)}}
+.udoor{position:absolute;top:0;bottom:0;left:0;width:50%;background:linear-gradient(90deg,#6E1C12,#9C2E1C 70%,#842416);transition:transform 1s cubic-bezier(.6,0,.2,1);transform-origin:left center;border-right:1px solid rgba(233,185,73,.6)}
+.udoor.r{left:auto;right:0;transform-origin:right center;background:linear-gradient(270deg,#6E1C12,#9C2E1C 70%,#842416);border-right:none;border-left:1px solid rgba(233,185,73,.6)}
+.udoor::after{content:"";position:absolute;top:14px;bottom:14px;left:14px;right:6px;border:1px solid rgba(233,185,73,.5);border-radius:100px 0 6px 6px}
+.udoor.r::after{left:6px;right:14px;border-radius:0 100px 6px 6px}
+.udoor{box-shadow:inset -3px 0 0 #E9B949}.udoor.r{box-shadow:inset 3px 0 0 #E9B949}
+.udoor::before{content:"";position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FBE4A0,#C9973A 60%,#7A5418);box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.udoor.l::before{right:12px}.udoor.r::before{left:12px}
+.ucard .torn{position:absolute;left:0;right:0;top:0;height:30px;z-index:3;pointer-events:none;transition:opacity .6s}.ucard.open .torn{opacity:.0}
+.ucard.open .udoor.l{transform:rotateY(-105deg)}.ucard.open .udoor.r{transform:rotateY(105deg)}
+.useal{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:#F6D58E;font-weight:700;font-size:14px;z-index:2;transition:opacity .4s;white-space:nowrap}
+.useal span{background:#5E160E;padding:2px 10px;border-radius:999px;box-shadow:0 0 0 1px rgba(233,185,73,.6)}.useal svg{width:58px;height:58px;padding:13px;border-radius:50%;background:#5E160E;box-shadow:0 0 0 1.5px #E9B949,0 0 24px rgba(233,185,73,.35);animation:breathe 2.4s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 1.5px #E9B949,0 0 40px rgba(233,185,73,.6)}}
+.ucard.open .useal{opacity:0;pointer-events:none}
+.ulbtns{display:flex;gap:12px}.ulbtns .btn{flex:1;width:auto;font-size:16px;min-height:58px;padding:0 10px;line-height:1.15}
+.tot{display:flex;justify-content:center;gap:22px;margin-top:8px}.tot b{display:block;font-size:22px;font-variant-numeric:tabular-nums}.tot span{font-size:12px;color:var(--muted)}
+/* settings */
+.lbl2{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7FA3A0;margin:14px 0 6px}
+.list{padding:4px 14px}.row{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}.row:last-child{border:none}
+.row>.ic{color:var(--pri)}.row>div{flex:1}.row b{display:block;font-size:15.5px}.row small{display:block;color:var(--muted);font-size:12.5px;line-height:1.3}
+.row.col{align-items:flex-start}
+.seg{display:flex;gap:6px;margin-top:6px}.seg button{flex:1;border:1px solid var(--line);background:transparent;border-radius:10px;padding:5px 0;font-size:13.5px;font-weight:700;color:var(--muted)}.seg .on{background:var(--pri);color:var(--priInk);border-color:var(--pri)}
+.tg{width:46px;height:28px;border-radius:14px;border:none;background:#24666E;position:relative;flex:none}.tg i{position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#F4EBD9;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.tg.on{background:var(--pri)}.tg.on i{transform:translateX(18px);background:#1A1406}
+.icgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px 4px;color:var(--ink)}.icgrid div{display:flex;flex-direction:column;align-items:center;gap:3px}.icgrid span{font-size:9.5px;color:#7FA3A0}
+.stateart{margin-top:70px}
+
+/* mobile */
+@media(max-width:820px){
+ body{flex-direction:column;align-items:center;padding:12px 0 30px;gap:14px}
+ .rail{position:static;width:100%;padding:0 14px}
+ .rail p.lead,.foot{display:none}
+ .moments{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+ .moments button{white-space:nowrap;border:1px solid #2B6E76;border-radius:999px;padding:5px 12px}
+ .moments button span{display:none}
+ .moments button b{font-size:13px}
+ .phone{transform-origin:top center}
+}
+</style>
+</head>
+<body>
+
+<aside class="rail">
+ <h1>Prayer Lock <em>· devotional moments</em></h1>
+ <p class="lead">A clickable preview of the delight layer: quiet moments hidden inside the screens you already use. Tap inside the phone. Art is the app's own public-domain Ravi Varma set; sounds are CC0 recordings.</p>
+
+ <div class="grp">Moments</div>
+ <ol class="moments" id="mlist"></ol>
+
+ <div class="grp">Settings to try</div>
+ <div class="chips" id="cDeity"></div>
+ <div class="chips" id="cLang" style="margin-top:6px"></div>
+ <div class="chips" style="margin-top:6px">
+  <button class="chip" id="cSound" onclick="toggleSound()">Sound: off</button>
+  <button class="chip" id="cRinger" onclick="toggleRinger()">Phone: ringer on</button>
+ </div>
+ <div class="hap" id="hap"><i></i><span id="hapTxt">Haptics show here (and buzz on Android)</span></div>
+
+ <div class="how" id="how"></div>
+ <p class="foot">Sounds: temple bell, ghanta, shankh, manjira from freesound.org, all CC0 (<a href="assets/sfx/CREDITS.md">credits</a>). Art: Raja Ravi Varma &amp; Ravi Varma Press, public domain. Dates: Drik Panchang, New Delhi. Spec: <code>docs/delight.md</code>.</p>
+</aside>
+
+<div class="phone"><div class="screen" id="scr">
+ <div class="sbar"><span id="clock">9:41</span><div class="isl"></div><span class="ic">
+  <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 10h2V7H1zm4 0h2V5H5zm4 0h2V3H9zm4 0h2V0h-2z" fill="currentColor"/></svg>
+  <svg width="24" height="11" viewBox="0 0 24 11"><rect x=".5" y=".5" width="20" height="10" rx="3" fill="none" stroke="currentColor"/><rect x="2" y="2" width="14" height="7" rx="1.5" fill="currentColor"/><rect x="21.5" y="3.5" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+ <div id="view"></div>
+</div></div>
+
+<script>
+"use strict";
+/* ================= data ================= */
+const Q=new URLSearchParams(location.search);
+const ST={m:Q.get('m')||'home',lang:Q.get('lang')||'en',deity:Q.get('deity')||'hanuman',sound:true,primed:false,ringer:true,skin:Q.get('skin')||'diwali',day:Q.get('day')!=null?+Q.get('day'):new Date().getDay(),tithi:Q.get('tithi')||'auto',doneSnd:'shankh',kids:true,state:Q.get('state')||'empty',unl:0};
+
+const D={
+ hanuman:{img:'hanuman',col:'#9A3412',name:{en:'Hanuman ji',hi:'हनुमान जी',ta:'ஆஞ்சநேயர்'},
+  gw:'ஆஞ்சநேயருடன்',btn:{en:'Jai Hanuman ji',hi:'जय हनुमान जी',ta:'ஜெய் ஆஞ்சநேயா'},
+  japa:{en:'Om Ham Hanumate Namah',hi:'ॐ हं हनुमते नमः',ta:'ஓம் ஹம் ஹனுமதே நம:'},
+  aarti:{en:'Aarti kije Hanuman Lala ki',hi:'आरती कीजै हनुमान लला की',ta:'ஆரத்தி கீஜை ஹனுமான் லலா கீ'},
+  jai:{en:'Jai Bajrangbali',hi:'जय बजरंगबली',ta:'ஜெய் ஆஞ்சநேயா'},
+  shloka:{dev:'मनोजवं मारुततुल्यवेगं\nजितेन्द्रियं बुद्धिमतां वरिष्ठम् ।\nवातात्मजं वानरयूथमुख्यं\nश्रीरामदूतं शरणं प्रपद्ये ॥',
+   ta:'மனோஜவம் மாருததுல்யவேகம்\nஜிதேந்த்ரியம் புத்திமதாம் வரிஷ்டம் ।\nவாதாத்மஜம் வானரயூதமுக்யம்\nஸ்ரீராமதூதம் சரணம் ப்ரபத்யே ॥',
+   tr:'Manojavam maruta-tulya-vegam\njitendriyam buddhimatam varishtham\nvatatmajam vanara-yutha-mukhyam\nshri-rama-dutam sharanam prapadye',
+   mean:{en:'Swift as the mind, fast as the wind, master of the senses, wisest of the wise, son of the Wind, chief among the vanaras, messenger of Shri Ram: in him I take refuge.',
+    hi:'जो मन के समान तेज़ और वायु के समान वेगवान हैं, जिन्होंने इंद्रियों को जीत लिया, जो बुद्धिमानों में श्रेष्ठ हैं, पवनपुत्र, वानरों के प्रमुख, श्रीराम के दूत, मैं उनकी शरण लेता हूँ।',
+    ta:'மனத்தைப் போல் வேகமானவர், காற்றைப் போல் விரைபவர், புலன்களை வென்றவர், அறிஞர்களில் சிறந்தவர், வாயு புத்திரர், வானரர்களின் தலைவர், ஸ்ரீராமரின் தூதர் — அவரைச் சரணடைகிறேன்.'},
+   story:{en:'<b>In this picture</b> Hanuman ji is carrying the whole mountain. When Lakshman lay wounded, he could not tell which herb was sanjeevani, so he brought the mountain.',
+    hi:'<b>इस चित्र में</b> हनुमान जी पूरा पर्वत उठाए हैं। लक्ष्मण जी घायल थे, संजीवनी बूटी पहचान न सके तो पूरा पर्वत ही ले आए।',
+    ta:'<b>இந்தப் படத்தில்</b> ஆஞ்சநேயர் முழு மலையையும் தூக்கி வருகிறார். லட்சுமணர் காயமுற்றபோது சஞ்சீவி மூலிகையை அடையாளம் காண முடியாததால் மலையையே கொண்டு வந்தார்.'},
+   src:'Shri Ram Raksha Stotram, verse 33 · art: Ravi Varma Press, 1910s, public domain'}},
+ murugan:{img:'murugan',col:'#B45309',name:{en:'Murugan',hi:'मुरुगन',ta:'முருகன்'},
+  gw:'முருகனுடன்',btn:{en:'Muruga Saranam',hi:'मुरुगा शरणम्',ta:'முருகா சரணம்'},
+  japa:{en:'Om Saravanabhava',hi:'ॐ शरवणभव',ta:'ஓம் சரவணபவ'},
+  aarti:{en:'Kandanukku Arohara · karpoora aarti',hi:'कंदनुक्कु अरोहरा · कर्पूर आरती',ta:'கந்தனுக்கு அரோகரா · கற்பூர ஆரத்தி'},
+  jai:{en:'Vetrivel Muruganukku Arohara',hi:'वेट्रिवेल मुरुगनुक्कु अरोहरा',ta:'வெற்றிவேல் முருகனுக்கு அரோகரா'},
+  shloka:{dev:'துதிப்போர்க்கு வல்வினை போம் துன்பம்போம் நெஞ்சில்\nபதிப்போர்க்குச் செல்வம் பலித்துக் கதித்தோங்கும்\nநிஷ்டையும் கைகூடும் நிமலரருள் கந்தர்\nசஷ்டி கவசம் தனை',
+   ta:'துதிப்போர்க்கு வல்வினை போம் துன்பம்போம் நெஞ்சில்\nபதிப்போர்க்குச் செல்வம் பலித்துக் கதித்தோங்கும்\nநிஷ்டையும் கைகூடும் நிமலரருள் கந்தர்\nசஷ்டி கவசம் தனை',
+   tr:'Thudhipporkku valvinai pom thunbam pom nenjil\npadhipporkkuch chelvam paliththuk kadhiththongum\nnishtaiyum kaigudum nimalararul kandhar\nsashti kavasam thanai',
+   mean:{en:'The opening (kaappu) of Kanda Sashti Kavasam. It is the traditional promise of the hymn: for those who praise it and hold it in the heart, troubles fall away and steadiness of mind comes, by the grace of the pure Kandan.',
+    hi:'कंद षष्टि कवचम् का आरंभ (काप्पु)। यह स्तोत्र की पारंपरिक वाणी है: जो इसकी स्तुति करते हैं और इसे हृदय में रखते हैं, निर्मल कंदन की कृपा से उनके कष्ट दूर होते हैं और मन स्थिर होता है।',
+    ta:'கந்த சஷ்டி கவசத்தின் காப்பு. துதிப்போருக்கும் நெஞ்சில் பதிப்போருக்கும் நிமலனாகிய கந்தனின் அருளால் துன்பம் நீங்கி, நிஷ்டை கைகூடும் என்பது பாடலின் வாக்கு.'},
+   story:{en:'<b>In this picture</b> Murugan rides his peacock with Valli and Deivanai at his side. Under the peacock\'s feet is a serpent.',
+    hi:'<b>इस चित्र में</b> मुरुगन अपने मोर पर विराजमान हैं, साथ में वल्ली और देवयानी हैं। मोर के पैरों के नीचे सर्प है।',
+    ta:'<b>இந்தப் படத்தில்</b> முருகன் மயில் மீது வள்ளி, தெய்வானையுடன் வீற்றிருக்கிறார். மயிலின் கால்களின் கீழ் நாகம்.'},
+   src:'Kanda Sashti Kavasam, kaappu · Bala Devaraya Swamigal (19th c.) · art: Raja Ravi Varma, public domain'}},
+ ram:{img:'ram',col:'#B45309',name:{en:'Shri Ram',hi:'श्री राम',ta:'ஸ்ரீ ராமர்'},
+  gw:'ஸ்ரீ ராமருடன்',btn:{en:'Jai Shri Ram',hi:'जय श्री राम',ta:'ஜெய் ஸ்ரீ ராம்'},
+  japa:{en:'Ram',hi:'राम',ta:'ஸ்ரீ ராம ஜெயம்'},
+  aarti:{en:'Shri Ramachandra kripalu bhaju man',hi:'श्री रामचन्द्र कृपालु भजु मन',ta:'ஸ்ரீ ராமசந்த்ர க்ருபாளு பஜு மன'},
+  jai:{en:'Jai Shri Ram',hi:'जय श्री राम',ta:'ஜெய் ஸ்ரீ ராம்'},
+  shloka:{dev:'श्री राम राम रामेति\nरमे रामे मनोरमे ।\nसहस्रनाम तत्तुल्यं\nरामनाम वरानने ॥',
+   ta:'ஸ்ரீ ராம ராம ராமேதி\nரமே ராமே மனோரமே ।\nஸஹஸ்ரநாம தத்துல்யம்\nராமநாம வரானனே ॥',
+   tr:'Shri Rama Rama Rameti\nrame rame manorame\nsahasranama tat-tulyam\nrama-nama varanane',
+   mean:{en:'Shiva tells Parvati: saying "Rama, Rama, Rama", I delight in Ram. The one name of Ram is equal to the thousand names.',
+    hi:'शिव जी पार्वती जी से कहते हैं: "राम, राम, राम" कहकर मैं मनोरम राम में रमता हूँ। एक राम-नाम सहस्र नामों के बराबर है।',
+    ta:'சிவபெருமான் பார்வதியிடம் சொல்கிறார்: "ராம ராம ராம" என்று சொல்லி மனோரமனான ராமனில் மகிழ்கிறேன். ஒரு ராம நாமம் ஆயிரம் நாமங்களுக்குச் சமம்.'},
+   story:{en:'<b>In this picture</b> is the Ram Panchayatan: Ram and Sita on the throne, with Lakshman, Bharat, Shatrughna, and Hanuman ji at their feet.',
+    hi:'<b>इस चित्र में</b> राम पंचायतन है: सिंहासन पर राम-सीता, साथ में लक्ष्मण, भरत, शत्रुघ्न, और चरणों में हनुमान जी।',
+    ta:'<b>இந்தப் படத்தில்</b> ராம பஞ்சாயதனம்: அரியணையில் ராமர், சீதை; உடன் லட்சுமணர், பரதர், சத்ருக்னர்; திருவடியில் ஆஞ்சநேயர்.'},
+   src:'Vishnu Sahasranama, uttara-bhaga (also recited in Ram Raksha Stotram) · art: Raja Ravi Varma, public domain'}}
+};
+
+/* Drik Panchang, New Delhi (see docs/panchang-2026-27.json). Only the next date of each kind is needed here. */
+const PANCH={ekadashi:[['2026-10-22','Papankusha Ekadashi'],['2026-11-05','Rama Ekadashi'],['2026-11-20','Devutthana Ekadashi'],['2026-12-04','Utpanna Ekadashi'],['2026-12-20','Mokshada Ekadashi']],
+ purnima:[['2026-10-25','Ashwina Purnima'],['2026-11-24','Kartika Purnima'],['2026-12-23','Margashirsha Purnima']],
+ amavasya:[['2026-11-08','Amavasya'],['2026-12-08','Amavasya']],
+ pradosh:[['2026-10-23','Shukra Pradosh'],['2026-11-06','Shukra Pradosh'],['2026-11-22','Ravi Pradosh'],['2026-12-06','Ravi Pradosh']],
+ navratri:[['2026-10-11','Orange','#E07B22'],['2026-10-12','White','#F3EEE2'],['2026-10-13','Red','#C8322B'],['2026-10-14','Royal Blue','#3559C7'],['2026-10-15','Yellow','#F2C230'],['2026-10-16','Green','#3E9B4F'],['2026-10-17','Grey','#9AA3A6'],['2026-10-18','Purple','#8A4FB8'],['2026-10-19','Peacock Green','#1F8F86']]};
+
+/* ================= copy (en + hi are the spec; ta for the Chennai reviewer) ================= */
+const T={
+ en:{gm:'Good morning',vaar_h:'{d}',his:'HIS DAY',start:'Start japa',jai_btn:'Jai',streak:'{n} days, the diya stays lit',hold:'Hold the darshan for a shloka',
+  days:['Ravivar · Surya dev\'s day','Somvar · Shiva\'s day','Mangalvar · Hanuman ji\'s day','Budhvar · Ganesha\'s day','Guruvar · Vishnu, Sai Baba and the guru','Shukravar · the Devi\'s day','Shanivar · Hanuman ji and Shani dev'],
+  dayname:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  daysub:['Face the morning light for a moment.','Many homes keep Monday for Mahadev.','Many homes keep Tuesday for Bajrangbali.','A good day to begin anything new.','Many homes keep Thursday for the guru.','Many homes light a lamp for Maa today.','Many homes visit Hanuman ji on Saturday.'],
+  t_nav:'Navratri · day {n} · {c}',t_nav_s:'Today\'s colour is on your mala thread.',
+  t_ek:'{x} on {w}',t_ek_s:'Many keep a fast. A mala is enough.',
+  t_pur:'Purnima on {w}',t_pur_s:'Look up at the full moon after your mala.',
+  t_ama:'Amavasya on {w}',t_ama_s:'A quiet day to remember the elders of the family.',
+  t_pra:'Pradosh on {w}',t_pra_s:'Om Namah Shivaya at sunset.',
+  today:'today',tomorrow:'tomorrow',
+  dawn_e:'Brahma muhurta',dawn_h:'The quietest hour of the day is yours.',dawn_s:'Before you look at the phone, look at your palms.',dawn_tr:'Lakshmi lives at the fingertips, Saraswati in the palm, Govinda at its base. In the morning, look at your hands.',dawn_btn:'Begin with {g}',
+  fest_diwali:'Diwali · Sun 8 Nov',fest_diwali_s:'Light a diya, then 108 with {g}. 21 days to go.',
+  fest_karthigai:'Karthigai Deepam · Tue 24 Nov',fest_karthigai_s:'Light the lamps at dusk, then 108 with {g}.',fest_sashti:'Kanda Sashti · 10–15 Nov',fest_sashti_s:'Six days of Kavasam. Soorasamharam on Sun 15 Nov.',
+  fest_janm:'Janmashtami · Wed 25 Aug',fest_janm_s:'108 with {g}, and 1008 at midnight if you stay up.',
+  fest_ganesh:'Ganesh Chaturthi · Sat 4 Sep',fest_ganesh_s:'Ganapati Bappa Morya. Then 108 with {g}.',
+  fest_pongal:'Pongal · Fri 15 Jan',fest_pongal_s:'Pongalo pongal. A mala before the pot boils over.',
+  japa_h:'Naam jap',tap:'Tap anywhere for each bead',done_h:'Mala sampoorna',done_s:'108 names, with a full heart.',
+  ff:'Jump to bead 104',ff2:'Restart',
+  setu_h:'108 stones for the setu',setu_s:'In the Ramayana, stones marked with Ram\'s name floated, and the vanaras built a bridge to Lanka. Each "Ram" today is one more stone.',
+  aarti_e:'Sankalp · day 21 of 21',aarti_h:'21 days, your word kept',aarti_s:'Stand for a moment. The aarti is yours.',aarti_btn:'Begin aarti',aarti_done:'Om Jai Jagdish Hare',aarti_next:'Next sankalp: 51 days',
+  jr_h:'Journey',jr_streak:'day streak',jr_total:'names taken',pr_h:'Prasad thali',pr_s:'A small remembrance of each festival you kept with a mala.',pr_tap:'Tap a katori',pr_next:'comes with that day\'s mala',
+  bed_e:'Before sleep · with the children',bed_h:'Ramaskandam',bed_tap:'Tap for the next line. Say it together.',bed_who:'Who are they?',
+  who:['<b>Ram</b>, the kind and truthful king','<b>Skanda</b>, Kartikeya (Murugan), the brave young god','<b>Hanuman</b>, the strongest helper','<b>Garuda</b>, the eagle who carries Vishnu','<b>Bhima</b>, the strong Pandava brother'],
+  bed_mean:'The verse says: whoever remembers them at bedtime will not have bad dreams.',bed_done:'Shubh ratri',
+  off_e:'Quiet desk japa',off_h:'Two minutes, 27 beads',off_s:'Screen stays dim. Sound stays off. Only a soft tick under your thumb.',off_go:'Begin',off_done:'27 names. Back to work with a lighter mind.',
+  ul_pre_h:'Mala complete',ul_pre:'Your darshan is waiting.',ul_tap:'Tap to open',ul_h:'Darshan',ul_today:'today',ul_total:'names in all',ul_days:'days',ul_open:'Open · 15 min',ul_stay:'Stay a moment',
+  st_sound:'Sound and touch',st_temple:'Temple sounds',st_temple_s:'Bell, ghanta, manjira. Soft, and off in silent mode.',st_done:'When a mala completes',st_shankh:'Shankh',st_bell:'Bell',st_none:'None',st_hap:'Mala haptics',st_hap_s:'A tick per bead, a bump on the meru.',st_kids:'Kids at home',st_kids_s:'Bedtime shloka card after 8:30 pm.',st_silent:'When your phone is on silent or Do Not Disturb, Prayer Lock stays silent too.',st_icons:'Icon set',
+  st_e_h:'Your thali is ready',st_e_s:'The first prasad comes with your first festival mala. Diwali is on 8 November.',st_e_b:'Start today\'s mala',
+  st_l_h:'The lock has stopped',st_l_s:'Your phone closed Prayer Lock to save battery. One tap brings it back.',st_l_b:'Turn the lock back on',
+  st_o_h:'No internet right now',st_o_s:'Your mala, texts and streak all work offline. Only purchases need the internet.',st_o_b:'Continue offline',
+  st_p_h:'The payment did not go through',st_p_s:'Nothing was charged. Google Play said the card was declined.',st_p_b:'Try again',st_p_l:'Pay another way in Google Play',st_ok:'Done',
+  tabs:['Today','Read','Journey','Me']},
+ hi:{gm:'सुप्रभात',his:'आज इनका दिन',start:'जाप शुरू करें',jai_btn:'जय',streak:'{n} दिन, दीया जलता रहे',hold:'श्लोक के लिए दर्शन को दबाकर रखें',
+  days:['रविवार · सूर्य देव का दिन','सोमवार · शिव जी का दिन','मंगलवार · हनुमान जी का दिन','बुधवार · गणेश जी का दिन','गुरुवार · विष्णु जी, साईं बाबा और गुरु का दिन','शुक्रवार · देवी माँ का दिन','शनिवार · हनुमान जी और शनि देव का दिन'],
+  dayname:['रविवार','सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार'],
+  daysub:['एक पल सुबह की धूप की ओर मुँह कीजिए।','कई घरों में सोमवार महादेव का होता है।','कई घरों में मंगलवार बजरंगबली का होता है।','नया काम शुरू करने का अच्छा दिन।','कई घरों में गुरुवार गुरु का होता है।','आज कई घरों में माँ के लिए दीया जलता है।','कई घर शनिवार को हनुमान जी के दर्शन करते हैं।'],
+  t_nav:'नवरात्रि · {n}वाँ दिन · {c}',t_nav_s:'आज का रंग आपकी माला के धागे में है।',
+  t_ek:'{w} {x}',t_ek_s:'कई लोग व्रत रखते हैं। एक माला भी काफ़ी है।',
+  t_pur:'{w} पूर्णिमा',t_pur_s:'माला के बाद एक बार पूरा चाँद देखिए।',
+  t_ama:'{w} अमावस्या',t_ama_s:'परिवार के बड़ों को याद करने का शांत दिन।',
+  t_pra:'{w} प्रदोष',t_pra_s:'शाम को ॐ नमः शिवाय।',
+  today:'आज',tomorrow:'कल',
+  dawn_e:'ब्रह्म मुहूर्त',dawn_h:'दिन का सबसे शांत समय आपका है।',dawn_s:'फ़ोन देखने से पहले अपनी हथेलियाँ देखिए।',dawn_tr:'उँगलियों के आगे लक्ष्मी, हथेली में सरस्वती, और मूल में गोविंद। सुबह अपने हाथों के दर्शन करें।',dawn_btn:'{g} के साथ शुरू करें',
+  fest_diwali:'दीपावली · रवि 8 नवंबर',fest_diwali_s:'दीया जलाइए, फिर {g} के साथ 108। 21 दिन बाकी।',
+  fest_karthigai:'कार्तिगै दीपम · मंगल 24 नवंबर',fest_karthigai_s:'शाम को दीये जलाइए, फिर {g} के साथ 108।',fest_sashti:'स्कंद षष्ठी · 10–15 नवंबर',fest_sashti_s:'छह दिन कवचम्। सूरसंहारम् रवि 15 नवंबर को।',
+  fest_janm:'जन्माष्टमी · बुध 25 अगस्त',fest_janm_s:'{g} के साथ 108, और जागें तो आधी रात को 1008।',
+  fest_ganesh:'गणेश चतुर्थी · शनि 4 सितंबर',fest_ganesh_s:'गणपति बप्पा मोरया। फिर {g} के साथ 108।',
+  fest_pongal:'पोंगल · शुक्र 15 जनवरी',fest_pongal_s:'पोंगलो पोंगल। उफान से पहले एक माला।',
+  japa_h:'नाम जप',tap:'हर मनके के लिए कहीं भी छुएँ',done_h:'माला सम्पूर्ण',done_s:'108 नाम, पूरे मन से।',
+  ff:'मनका 104 पर जाएँ',ff2:'फिर से',
+  setu_h:'सेतु के लिए 108 पत्थर',setu_s:'रामायण में राम-नाम लिखे पत्थर पानी पर तैरे, और वानरों ने लंका तक सेतु बनाया। आज का हर "राम" एक और पत्थर है।',
+  aarti_e:'संकल्प · 21 में से 21वाँ दिन',aarti_h:'21 दिन, वचन निभाया',aarti_s:'एक पल खड़े हो जाइए। आरती आपकी है।',aarti_btn:'आरती करें',aarti_done:'ॐ जय जगदीश हरे',aarti_next:'अगला संकल्प: 51 दिन',
+  jr_h:'यात्रा',jr_streak:'दिन लगातार',jr_total:'नाम लिए',pr_h:'प्रसाद की थाली',pr_s:'माला के साथ मनाए हर त्योहार की एक छोटी याद।',pr_tap:'कोई कटोरी छुएँ',pr_next:'उस दिन की माला के साथ',
+  bed_e:'सोने से पहले · बच्चों के साथ',bed_h:'रामस्कन्दं',bed_tap:'अगली पंक्ति के लिए छुएँ। साथ में बोलिए।',bed_who:'ये कौन हैं?',
+  who:['<b>राम</b>, दयालु और सच्चे राजा','<b>स्कन्द</b>, कार्तिकेय, वीर युवा देव','<b>हनुमान</b>, सबसे बलवान सहायक','<b>गरुड़</b>, विष्णु जी को ले जाने वाले पक्षीराज','<b>भीम</b>, बलवान पांडव भाई'],
+  bed_mean:'श्लोक कहता है: जो सोते समय इन्हें याद करता है, उसे बुरे सपने नहीं आते।',bed_done:'शुभ रात्रि',
+  off_e:'ऑफ़िस में शांत जाप',off_h:'दो मिनट, 27 मनके',off_s:'स्क्रीन धीमी रहेगी, आवाज़ बंद। अँगूठे के नीचे बस हल्की टिक।',off_go:'शुरू करें',off_done:'27 नाम। हल्के मन से काम पर लौटिए।',
+  ul_pre_h:'माला सम्पूर्ण',ul_pre:'आपके दर्शन तैयार हैं।',ul_tap:'खोलने के लिए छुएँ',ul_h:'दर्शन',ul_today:'आज',ul_total:'कुल नाम',ul_days:'दिन',ul_open:'खोलें · 15 मिनट',ul_stay:'एक पल रुकें',
+  st_sound:'आवाज़ और स्पर्श',st_temple:'मंदिर की ध्वनियाँ',st_temple_s:'घंटी, घंटा, मंजीरा। धीमी, और साइलेंट मोड में बंद।',st_done:'माला पूरी होने पर',st_shankh:'शंख',st_bell:'घंटी',st_none:'कुछ नहीं',st_hap:'माला का कंपन',st_hap_s:'हर मनके पर टिक, मेरु पर थोड़ा ज़ोर।',st_kids:'घर में बच्चे',st_kids_s:'रात 8:30 के बाद सोने का श्लोक।',st_silent:'फ़ोन साइलेंट या डू नॉट डिस्टर्ब पर हो तो Prayer Lock भी चुप रहेगा।',st_icons:'आइकन',
+  st_e_h:'आपकी थाली तैयार है',st_e_s:'पहला प्रसाद पहले त्योहार की माला के साथ आएगा। दीपावली 8 नवंबर को है।',st_e_b:'आज की माला शुरू करें',
+  st_l_h:'लॉक रुक गया है',st_l_s:'बैटरी बचाने के लिए फ़ोन ने Prayer Lock बंद कर दिया। एक टैप में वापस चालू।',st_l_b:'लॉक फिर चालू करें',
+  st_o_h:'अभी इंटरनेट नहीं है',st_o_s:'माला, पाठ और लगातार दिन सब बिना इंटरनेट चलते हैं। सिर्फ़ ख़रीदारी के लिए इंटरनेट चाहिए।',st_o_b:'बिना इंटरनेट जारी रखें',
+  st_p_h:'भुगतान नहीं हो पाया',st_p_s:'कोई पैसा नहीं कटा। Google Play के अनुसार कार्ड अस्वीकार हुआ।',st_p_b:'फिर से कोशिश करें',st_p_l:'Google Play में दूसरा तरीका चुनें',st_ok:'हो गया',
+  tabs:['आज','पढ़ें','यात्रा','मैं']},
+ ta:{gm:'காலை வணக்கம்',his:'இன்று அவரது நாள்',start:'ஜபம் தொடங்கு',jai_btn:'ஜெய்',streak:'{n} நாட்கள், விளக்கு எரிகிறது',hold:'ஸ்லோகத்திற்கு தரிசனத்தை அழுத்திப் பிடிக்கவும்',
+  days:['ஞாயிறு · சூரிய பகவானின் நாள்','திங்கள் · சிவபெருமானின் நாள்','செவ்வாய் · முருகனின் நாள்','புதன் · விநாயகரின் நாள்','வியாழன் · குரு, தட்சிணாமூர்த்தி, சாய்பாபா','வெள்ளி · அம்மனின் நாள்','சனி · பெருமாளின் நாள்'],
+  dayname:['ஞாயிறு','திங்கள்','செவ்வாய்','புதன்','வியாழன்','வெள்ளி','சனி'],
+  daysub:['ஒரு நொடி காலை வெயிலைப் பாருங்கள்.','பல வீடுகளில் திங்கள் சிவனுக்கு.','பல வீடுகளில் செவ்வாய் முருகனுக்கு.','புதிதாக எதையும் தொடங்க நல்ல நாள்.','பல வீடுகளில் வியாழன் குருவுக்கு.','இன்று பல வீடுகளில் அம்மனுக்கு விளக்கு.','பல வீடுகளில் சனிக்கிழமை பெருமாளுக்கு.'],
+  t_nav:'நவராத்திரி · {n}ஆம் நாள் · {c}',t_nav_s:'கொலு, சுண்டல். இன்றைய நிறம் உங்கள் ஜபமாலையின் நூலில்.',
+  t_ek:'{w} {x}',t_ek_s:'பலர் விரதம் இருப்பார்கள். ஒரு ஜபமாலை போதும்.',
+  t_pur:'{w} பௌர்ணமி',t_pur_s:'ஜபத்திற்குப் பிறகு முழு நிலவைப் பாருங்கள்.',
+  t_ama:'{w} அமாவாசை',t_ama_s:'குடும்பப் பெரியோரை நினைக்கும் அமைதியான நாள்.',
+  t_pra:'{w} பிரதோஷம்',t_pra_s:'மாலை நேரம் ஓம் நமசிவாய.',
+  today:'இன்று',tomorrow:'நாளை',
+  dawn_e:'பிரம்ம முகூர்த்தம்',dawn_h:'நாளின் மிக அமைதியான நேரம் உங்களுடையது.',dawn_s:'போனைப் பார்ப்பதற்கு முன் உள்ளங்கைகளைப் பாருங்கள்.',dawn_tr:'விரல் நுனியில் லட்சுமி, உள்ளங்கையில் சரஸ்வதி, அடியில் கோவிந்தன். காலையில் கைகளைப் பாருங்கள்.',dawn_btn:'{gw} தொடங்கு',
+  fest_diwali:'தீபாவளி · ஞாயிறு 8 நவ',fest_diwali_s:'நரக சதுர்தசி. எண்ணெய்க் குளியல், விளக்கு, பிறகு {gw} 108.',
+  fest_karthigai:'கார்த்திகை தீபம் · 24 நவ',fest_karthigai_s:'மாலையில் அகல் விளக்கேற்றி, {gw} 108.',fest_sashti:'கந்த சஷ்டி · நவ 10–15',fest_sashti_s:'ஆறு நாள் கவசம். சூரசம்ஹாரம் ஞாயிறு 15 நவம்பர்.',
+  fest_janm:'கிருஷ்ண ஜெயந்தி · 25 ஆக',fest_janm_s:'{gw} 108; விழித்திருந்தால் நள்ளிரவில் 1008.',
+  fest_ganesh:'விநாயகர் சதுர்த்தி · சனி 4 செப்',fest_ganesh_s:'பிள்ளையாருக்குக் கொழுக்கட்டை, பிறகு {gw} 108.',
+  fest_pongal:'பொங்கல் · 15 ஜன',fest_pongal_s:'பொங்கலோ பொங்கல். பானை பொங்கும் முன் ஒரு ஜபமாலை.',
+  japa_h:'நாம ஜபம்',tap:'ஒவ்வொரு மணிக்கும் எங்கும் தொடவும்',done_h:'ஜபமாலை நிறைவு',done_s:'108 நாமங்கள், முழு மனதுடன்.',
+  ff:'மணி 104க்குச் செல்',ff2:'மீண்டும்',
+  setu_h:'சேதுவுக்கு 108 கற்கள்',setu_s:'ராமாயணத்தில் ராம நாமம் எழுதிய கற்கள் மிதந்தன; வானரர்கள் இலங்கைக்குப் பாலம் கட்டினர். இன்றைய ஒவ்வொரு "ராம"வும் இன்னொரு கல்.',
+  aarti_e:'சங்கல்பம் · 21இல் 21ஆம் நாள்',aarti_h:'21 நாட்கள், வாக்கு காத்தீர்கள்',aarti_s:'ஒரு நொடி எழுந்து நில்லுங்கள். ஆரத்தி உங்களுடையது.',aarti_btn:'ஆரத்தி காட்டு',aarti_done:'ஓம் ஜெய் ஜகதீஷ ஹரே',aarti_next:'அடுத்த சங்கல்பம்: 51 நாட்கள்',
+  jr_h:'பயணம்',jr_streak:'தொடர் நாட்கள்',jr_total:'நாமங்கள்',pr_h:'பிரசாதத் தட்டு',pr_s:'ஜபமாலையுடன் கொண்டாடிய ஒவ்வொரு பண்டிகையின் சிறு நினைவு.',pr_tap:'ஒரு கிண்ணத்தைத் தொடவும்',pr_next:'அன்றைய ஜபமாலையுடன்',
+  bed_e:'தூங்கும் முன் · குழந்தைகளுடன்',bed_h:'ராமஸ்கந்தம்',bed_tap:'அடுத்த வரிக்குத் தொடவும். சேர்ந்து சொல்லுங்கள்.',bed_who:'இவர்கள் யார்?',
+  who:['<b>ராமர்</b>, கருணையும் சத்தியமும் உள்ள அரசர்','<b>ஸ்கந்தன்</b>, நம் முருகன், வீர இளம் தெய்வம்','<b>ஆஞ்சநேயர்</b>, மிக வலிமையான உதவியாளர்','<b>கருடன்</b>, விஷ்ணுவைச் சுமக்கும் பறவை','<b>பீமன்</b>, வலிமையான பாண்டவ சகோதரன்'],
+  bed_mean:'இவர்களைத் தூங்கும் முன் நினைப்பவருக்குக் கெட்ட கனவு வராது என்கிறது ஸ்லோகம்.',bed_done:'இனிய இரவு',
+  off_e:'அலுவலகத்தில் அமைதியான ஜபம்',off_h:'இரண்டு நிமிடம், 27 மணிகள்',off_s:'திரை மங்கலாக இருக்கும், ஒலி இருக்காது. கட்டைவிரலின் கீழ் மென்மையான டிக் மட்டும்.',off_go:'தொடங்கு',off_done:'27 நாமங்கள். லேசான மனதுடன் வேலைக்குத் திரும்புங்கள்.',
+  ul_pre_h:'ஜபமாலை நிறைவு',ul_pre:'உங்கள் தரிசனம் காத்திருக்கிறது.',ul_tap:'திறக்கத் தொடவும்',ul_h:'தரிசனம்',ul_today:'இன்று',ul_total:'மொத்த நாமங்கள்',ul_days:'நாட்கள்',ul_open:'திற · 15 நிமி.',ul_stay:'சற்று இருங்கள்',
+  st_sound:'ஒலி மற்றும் தொடுதல்',st_temple:'கோயில் ஒலிகள்',st_temple_s:'மணி, கண்டா, ஜால்ரா. மென்மையாக; சைலண்டில் ஒலிக்காது.',st_done:'ஜபமாலை நிறைவில்',st_shankh:'சங்கு',st_bell:'மணி',st_none:'வேண்டாம்',st_hap:'ஜபமாலை அதிர்வு',st_hap_s:'ஒவ்வொரு மணிக்கும் டிக், மேருவில் சற்று அழுத்தம்.',st_kids:'வீட்டில் குழந்தைகள்',st_kids_s:'இரவு 8:30க்குப் பின் தூங்கும் ஸ்லோகம்.',st_silent:'போன் சைலண்ட் அல்லது தொந்தரவு வேண்டாம் நிலையில் இருந்தால் Prayer Lock-உம் அமைதியாக இருக்கும்.',st_icons:'ஐகான்கள்',
+  st_e_h:'உங்கள் தட்டு தயார்',st_e_s:'முதல் பண்டிகை ஜபமாலையுடன் முதல் பிரசாதம் வரும். தீபாவளி நவம்பர் 8.',st_e_b:'இன்றைய ஜபமாலையைத் தொடங்கு',
+  st_l_h:'லாக் நின்றுவிட்டது',st_l_s:'பேட்டரியைச் சேமிக்க போன் Prayer Lock-ஐ மூடிவிட்டது. ஒரு தொடுதலில் மீண்டும் இயங்கும்.',st_l_b:'லாக்கை மீண்டும் இயக்கு',
+  st_o_h:'இப்போது இணையம் இல்லை',st_o_s:'ஜபமாலை, பாடல்கள், தொடர் நாட்கள் எல்லாம் இணையம் இல்லாமலே இயங்கும். வாங்குவதற்கு மட்டும் இணையம் தேவை.',st_o_b:'இணையம் இல்லாமல் தொடர்',
+  st_p_h:'பணம் செலுத்த முடியவில்லை',st_p_s:'எந்தப் பணமும் எடுக்கப்படவில்லை. கார்டு நிராகரிக்கப்பட்டதாக Google Play சொல்கிறது.',st_p_b:'மீண்டும் முயல்க',st_p_l:'Google Play-இல் வேறு வழியில் செலுத்து',st_ok:'முடிந்தது',
+  tabs:['இன்று','படி','பயணம்','நான்']}
+};
+const t=(k,v={})=>{let s=(T[ST.lang][k]??T.en[k]);if(typeof s!=='string')return s;for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s};
+const pick=o=>o[ST.lang]??o.en;
+const G=()=>D[ST.deity];
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+// The day line's deity per weekday (0=Sun). Tamil homes differ on Tue (Murugan), Fri (Amman), Sat (Perumal).
+const DAYGOD={en:[[],['shiva'],['hanuman'],['ganesha'],['vishnu','sai'],['devi','lakshmi'],['hanuman']],ta:[[],['shiva'],['murugan'],['ganesha'],['vishnu','sai'],['devi','lakshmi'],['venkatesha','vishnu']]};
+
+/* ================= icon set: 24px grid, 1.75 stroke, round caps/joins, currentColor (cream #F4EBD9, gold #E9B949 when active) ================= */
+const IC={
+ today:'<circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="4.5" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="2.2"/>',
+ read:'<path d="M4 6.5c2.7-1.3 5.3-1.3 8 0v12c-2.7-1.3-5.3-1.3-8 0z"/><path d="M12 6.5c2.7-1.3 5.3-1.3 8 0v12c-2.7-1.3-5.3-1.3-8 0z"/>',
+ journey:'<path d="M5 19c3 0 3-4 6-4s3 4 6 4"/><path d="M7 11c2.5 0 2.5-3 5-3s2.5 3 5 3"/><circle cx="12" cy="4.5" r="1.4"/>',
+ me:'<circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.3-3.4 4-5 7-5s5.7 1.6 7 5"/>',
+ back:'<path d="M14.5 5.5 8 12l6.5 6.5"/>',next:'<path d="M9.5 5.5 16 12l-6.5 6.5"/>',close:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ lock:'<rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/><circle cx="12" cy="15" r="1.2" fill="currentColor"/>',
+ unlock:'<rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 6.8-1.2"/>',
+ diya:'<path d="M3.5 13.5c4.5 1.5 12.5 1.5 17 0-.8 3.6-4.2 5.5-8.5 5.5s-7.7-1.9-8.5-5.5z"/><path d="M12 3.5c1.6 2 2.6 3.6 2.6 5.1A2.6 2.6 0 0 1 12 11.2a2.6 2.6 0 0 1-2.6-2.6c0-1.5 1-3.1 2.6-5.1z"/>',
+ lotus:'<path d="M12 19c-3.5 0-7-2.2-8-5.5 2.8-.4 5.8.6 8 3 2.2-2.4 5.2-3.4 8-3-1 3.3-4.5 5.5-8 5.5z"/><path d="M12 16.5c-1.8-2-2.5-5-1.5-9 .5-.9 1-1.6 1.5-2.2.5.6 1 1.3 1.5 2.2 1 4 .3 7-1.5 9z"/>',
+ bell:'<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 1.5h-14z"/><path d="M10 20.5a2 2 0 0 0 4 0"/><path d="M12 3.5v2"/>',
+ shankh:'<path d="M4.5 19.5C3 15 6 8.5 12 6c3-1.2 6-1.5 8-2-.5 2-.8 5-2 8-2.5 5.5-9 9-13.5 7.5z"/><path d="M14.5 5.3c1 1.7 2 3.2 4.1 3.7"/><path d="M10.5 7.2c1.5 2.8 4 4.8 7.5 5"/><path d="M6.5 17.5c2-1 4-3 5-5"/>',
+ flute:'<path d="M4.5 19.5 19.5 4.5"/><path d="M3.5 18.5l2 2"/><circle cx="10" cy="14" r=".8" fill="currentColor"/><circle cx="12.5" cy="11.5" r=".8" fill="currentColor"/><circle cx="15" cy="9" r=".8" fill="currentColor"/>',
+ sun:'<circle cx="12" cy="12" r="3.8"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/>',
+ vel:'<path d="M12 2.5C14.6 5.6 15 8.6 12 12.2 9 8.6 9.4 5.6 12 2.5z"/><path d="M12 12.2V21.5"/><path d="M10.6 14.2h2.8"/>',
+ warn:'<path d="M12 4 21 19.5H3z"/><path d="M12 10v4.5"/><circle cx="12" cy="17" r=".9" fill="currentColor"/>',
+ widget:'<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="16" height="7" rx="2"/>',
+ timer:'<path d="M7 3.5h10M7 20.5h10M8 3.5c0 4 8 4.5 8 8.5s-8 4.5-8 8.5M16 3.5c0 4-8 4.5-8 8.5"/>',
+ tap:'<path d="M10 20.5l-3.2-4.6a1.4 1.4 0 0 1 2.2-1.7l1.2 1.4V8.5a1.4 1.4 0 0 1 2.8 0v4.8l4.4.9c1 .2 1.6 1.1 1.5 2.1l-.6 4.2"/><path d="M8 6.5a4 4 0 0 1 8 0M5.5 6.5a6.5 6.5 0 0 1 13 0" opacity=".6"/>',
+ offline:'<path d="M3.5 9a13 13 0 0 1 17 0M6.5 12.5a8.5 8.5 0 0 1 11 0M9.5 16a4 4 0 0 1 5 0"/><path d="M4 4l16 16"/>',
+ vibrate:'<rect x="8" y="4" width="8" height="16" rx="2"/><path d="M4.5 9v6M19.5 9v6"/>',
+ plus:'<path d="M12 5.5v13M5.5 12h13"/>',minus:'<path d="M5.5 12h13"/>'};
+const ic=(k,s=22,st='')=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="${st}" aria-hidden="true">${IC[k]}</svg>`;
+
+/* ================= sound + haptics ================= */
+const SFX={};['bell','ghanta','shankh','manjira'].forEach(k=>{const a=new Audio('assets/sfx/'+k+'.mp3');a.preload='auto';SFX[k]=a});
+const VOL={bell:.55,ghanta:.45,shankh:.55,manjira:.5};
+function play(k,user){if(!ST.sound||!ST.ringer||ST.m==='office')return;const hr=new Date().getHours()+new Date().getMinutes()/60;if(!user&&(hr>=21.5||ST.m==='bedtime'))return;const a=SFX[k].cloneNode();a.volume=VOL[k];a.play().catch(()=>{})}
+let hapT;
+function haptic(kind){const pat={tap:6,tick:8,meru:[22,70,38],done:[18,90,32],swell:[30,60,30,60,40,60,60],thud:28}[kind];try{navigator.vibrate&&navigator.vibrate(pat)}catch(e){}
+ const h=document.getElementById('hap');h.className='hap go'+(kind==='tick'?'':' big');document.getElementById('hapTxt').textContent='Haptic: '+({tap:'tap (every button)',tick:'tick (bead)',meru:'meru bump (two-step, stronger)',done:'confirm',swell:'swell (aarti)',thud:'press'}[kind]);clearTimeout(hapT);hapT=setTimeout(()=>h.className='hap',160)}
+function prime(){if(ST.primed)return;ST.primed=true;Object.values(SFX).forEach(a=>{a.muted=true;a.play().then(()=>{a.pause();a.currentTime=0;a.muted=false}).catch(()=>{a.muted=false})})}
+function toggleSound(){ST.sound=!ST.sound;if(ST.sound){prime();setTimeout(()=>play('bell',1),120)}rail()}
+document.addEventListener('pointerdown',prime,{once:true});
+function toggleRinger(){ST.ringer=!ST.ringer;rail()}
+
+/* ================= moments ================= */
+const M=[
+ ['home','Home: day & tithi line','Weekday darshan, Navratri colour, diya'],
+ ['dawn','Brahma muhurta','4–6 am dawn light + Karagre Vasate'],
+ ['festival','Festival skin','Diwali, Kanda Sashti, Karthigai, Pongal…'],
+ ['japa','Mala + 108','Tick per bead, meru bump, petals + shankh'],
+ ['shloka','Long-press darshan','Hold the deity → shloka & story'],
+ ['setu','Ram Setu stones','Hidden: 108th Ram japa'],
+ ['aarti','21-day sankalp aarti','Thali circles, ghanta'],
+ ['prasad','Prasad thali','Journey: one prasad per festival'],
+ ['bedtime','Bedtime shloka','Read it with the kids'],
+ ['office','2-minute desk japa','27 beads, dim, silent'],
+ ['unlock','Unlock blessing','Tap to receive darshan, not a toast'],
+ ['settings','Me › Sounds & icons','Bell / shankh / off, one icon set'],
+ ['states','Calm states','Empty, lock stopped, offline, payment']];
+const HOW={
+ home:['Every Home open','Day line under the greeting; tithi chip only on and the day before Ekadashi, Purnima, Amavasya, Pradosh; Navratri colour tints the mala thread. Tap the diya: it flickers.','none','none','Never replaces your chosen deity or mantra.'],
+ dawn:['Home opened 4:00–6:00 am local','Gold dawn wash; the morning palm shloka Karagre Vasate.','soft bell once, if ringer on','none','Shows once per day, only in that window.'],
+ festival:['Home on the festival and the 21 days before','A small ornament per festival: diyas, agal vilakku, peacock feather, modak, kolam. Dates from content.js (Drik Panchang).','none on Home; shankh at the festival 108','none','Skin sits on top of Peacock; never recolours the app.'],
+ japa:['Each bead tap; bead 108','Bead fills; at 108 a bloom, marigold and jasmine petals, and the jai line.','manjira on the meru, shankh on completion','tick per bead; two-step bump on meru','Silent mode: haptics only.'],
+ shloka:['Long-press (650 ms) on the deity image','Gold ring fills around the darshan, then a sheet with the shloka, meaning and a two-line story about the painting.','none','press bump when the sheet opens','Text from content.js stotras; no new claims.'],
+ setu:['108th bead of a Ram mantra (Ram, Shri Ram Jayam)','Stones with the name written in sindoor drop onto water and float into a bridge.','shankh','meru bump','Only for Ram japa. Never announced; found.'],
+ aarti:['The day a 21-day sankalp completes (also 51, 108)','Deity in a gold arch; the thali rises from below and circles clockwise; light follows the flame; the deity\'s own aarti line (Hanuman: Aarti kije Hanuman Lala ki; Murugan: karpoora aarti, Arohara; Ram: Shri Ramachandra kripalu).','ghanta while the thali moves','slow swell per circle','Once per sankalp.'],
+ prasad:['Completing a mala on a festival day','A brass thali in Journey; each festival leaves its own prasad in a katori.','none','tap','Called prasad received, never "unlocked" or "earned".'],
+ bedtime:['Home after 8:30 pm, if "Kids at home" is on','Night screen; the bedtime shloka line by line, and who each name is.','none','tick per line','Off by default; one card a night.'],
+ unlock:['The mala on the lock screen completes','A closed card (temple doors) with the deity behind. The user taps: doors open, the art is revealed with glow, the jai line, today and lifetime totals, then Open app.','soft bell (optional), off in silent mode','done on reveal','Replaces the "Unlocked for 15 min" toast. The user does the reveal.'],
+ settings:['Me tab','Temple sounds on/off; on completing a mala: shankh, bell or none; haptics on/off; kids at home. One line-icon set everywhere.','previews on tap','tap','Sounds also mute when the ringer is on silent or DND.'],
+ states:['Empty lists, lock service stopped, no network, failed payment','Each has a calm line, art and one clear next step. No red walls, no blame.','none','tap, then done on the fix','The mala itself always works offline.'],
+ office:['Settings › Quick japa, or a Home chip 10 am–6 pm on weekdays','Dim screen, 27 beads, a 2:00 timer.','always silent','tick per bead, meru bump at 27','For desks, metro and cabs.']};
+let mala=0,COUNT=108,timer=null;
+function setM(m){ST.m=m;mala=0;clearInterval(timer);render()}
+
+/* ================= helpers ================= */
+const img=(k,h)=>`assets/img/${k}${h?'-hero':''}.webp`;
+function ring(n,done,size,meruOn){const beads=Math.min(n,36),R=size/2-12,c=size/2,on=Math.round(done/n*beads),r=beads>30?6:beads>18?7.5:9;
+ let s=`<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="var(--accent)" stroke-opacity=".55" stroke-width="1.4"/>`;
+ for(let i=0;i<beads;i++){const a=-Math.PI/2+(i+1)/(beads+1)*Math.PI*2;s+=`<circle class="bd ${i<on?'on':''}" cx="${(c+R*Math.cos(a)).toFixed(1)}" cy="${(c+R*Math.sin(a)).toFixed(1)}" r="${r}"/>`}
+ return s+`<circle class="meru ${meruOn?'on':''}" cx="${c}" cy="${c-R}" r="${r+3}"/></svg>`}
+const diyaSVG=(w=34,cls='')=>`<svg class="diya ${cls}" width="${w}" height="${w}" viewBox="0 0 40 40" onclick="flick(this)" aria-label="diya">
+ <defs><radialGradient id="dh" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFD98A" stop-opacity=".9"/><stop offset="1" stop-color="#FFB040" stop-opacity="0"/></radialGradient>
+ <linearGradient id="df" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6D8"/><stop offset=".55" stop-color="#FFC94A"/><stop offset="1" stop-color="#E8741C"/></linearGradient>
+ <linearGradient id="dc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C8662E"/><stop offset="1" stop-color="#7A3315"/></linearGradient></defs>
+ <circle class="halo" cx="20" cy="15" r="13" fill="url(#dh)"/>
+ <g class="fl"><path d="M20 4 C23 10 25.5 13.5 25 17.5 C24.6 21 22.4 23 20 23 C17.6 23 15.4 21 15 17.5 C14.5 13.5 17 10 20 4Z" fill="url(#df)"/><ellipse cx="20" cy="19" rx="2.2" ry="3.2" fill="#FFFBEA"/></g>
+ <path d="M4 25 Q20 22 36 25 Q34 34 20 35 Q6 34 4 25Z" fill="url(#dc)"/><path d="M4 25 Q20 22 36 25" stroke="#E9B949" stroke-width="1.3" fill="none"/><path d="M34 25.2 L38.5 22.5 L37 26.5Z" fill="#9C4620"/></svg>`;
+function flick(el){haptic('tap');el.classList.remove('tap');void el.getBoundingClientRect();el.classList.add('tap')}
+const COLN={hi:{Orange:'नारंगी',White:'सफ़ेद',Red:'लाल','Royal Blue':'गहरा नीला',Yellow:'पीला',Green:'हरा',Grey:'स्लेटी',Purple:'बैंगनी','Peacock Green':'मोरपंखी हरा'},ta:{Orange:'ஆரஞ்சு',White:'வெள்ளை',Red:'சிவப்பு','Royal Blue':'அடர் நீலம்',Yellow:'மஞ்சள்',Green:'பச்சை',Grey:'சாம்பல்',Purple:'ஊதா','Peacock Green':'மயில் பச்சை'}};
+const EKN={hi:{'Papankusha Ekadashi':'पापांकुशा एकादशी','Rama Ekadashi':'रमा एकादशी','Devutthana Ekadashi':'देवउठनी एकादशी','Utpanna Ekadashi':'उत्पन्ना एकादशी','Mokshada Ekadashi':'मोक्षदा एकादशी'},ta:{'Papankusha Ekadashi':'பாபாங்குசா ஏகாதசி','Rama Ekadashi':'ரமா ஏகாதசி','Devutthana Ekadashi':'தேவுத்தான ஏகாதசி','Utpanna Ekadashi':'உத்பன்னா ஏகாதசி','Mokshada Ekadashi':'வைகுண்ட ஏகாதசி'}};
+const loc=(m,x)=>(m[ST.lang]&&m[ST.lang][x])||x;
+function tithiLine(){
+ const now=new Date();now.setHours(0,0,0,0);const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+ const wd=d=>{const dd=Math.round((new Date(d+'T00:00')-now)/864e5);return dd===0?t('today'):dd===1?t('tomorrow'):t('dayname')[new Date(d+'T00:00').getDay()]+({hi:' को',ta:' அன்று'}[ST.lang]||'')};
+ const want=ST.tithi;
+ const nv=PANCH.navratri.findIndex(x=>x[0]===iso(now));
+ if((want==='auto'&&nv>=0)||want==='navratri'){const i=nv>=0?nv:7,x=PANCH.navratri[i];document.documentElement.style.setProperty('--accent',x[2]);return {dot:x[2],h:t('t_nav',{n:i+1,c:loc(COLN,x[1])}),s:t('t_nav_s')}}
+ document.documentElement.style.setProperty('--accent','var(--god)');
+ const next=k=>PANCH[k].find(x=>x[0]>=iso(now))||PANCH[k][0];
+ const kinds={ekadashi:['t_ek','t_ek_s','#E9B949'],purnima:['t_pur','t_pur_s','#F4EBD9'],amavasya:['t_ama','t_ama_s','#4A5A5C'],pradosh:['t_pra','t_pra_s','#A9C7C4']};
+ let k=want;if(want==='auto'){k=Object.keys(kinds).find(k=>{const d=(new Date(next(k)[0]+'T00:00')-now)/864e5;return d>=0&&d<=1});if(!k)return null}
+ const x=next(k);return {dot:kinds[k][2],h:t(kinds[k][0],{x:loc(EKN,x[1]),w:wd(x[0])}),s:t(kinds[k][1])}}
+const tabs=a=>`<div class="tabs">${[['today',0,'home'],['read',1,''],['journey',2,'prasad'],['me',3,'settings']].map(([i,n,go])=>`<button class="${a===n?'on':''}" onclick="${go?`setM('${go}')`:''}">${ic(i,22)}${t('tabs')[n]}</button>`).join('')}</div>`;
+function homeCard(extra=''){const g=G();return `<div class="card home-card">${extra}
+  <div class="ringwrap">${ring(COUNT,0,206)}<div class="mid">
+   <div class="press" id="press"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45"/></svg><div class="av" style="width:84px;height:84px"><img src="${img(g.img)}" alt=""></div></div>
+   <b class="n">0/108</b></div></div>
+  <p class="mantra" style="margin-top:6px;font-size:22px">${esc(pick(g.japa))}</p>
+  <div class="streak">${diyaSVG()}<span>${t('streak',{n:20})}</span></div>
+  <button class="btn" onclick="setM('japa')">${t('start')}</button></div>`}
+function bindPress(){const p=document.getElementById('press');if(!p)return;let tm;
+ const down=e=>{e.preventDefault();p.classList.add('hold');tm=setTimeout(()=>{haptic('thud');openSheet()},650)};
+ const up=()=>{p.classList.remove('hold');clearTimeout(tm)};
+ p.addEventListener('pointerdown',down);['pointerup','pointerleave','pointercancel'].forEach(ev=>p.addEventListener(ev,up));p.addEventListener('contextmenu',e=>e.preventDefault())}
+
+/* ================= views ================= */
+const V={};
+V.home=()=>{const day=ST.day,g=G();const L=DAYGOD[ST.lang==='ta'?'ta':'en'][day];const his=L.includes(ST.deity);const tl=tithiLine();
+ return `<div class="view tabbed"><div class="glow"></div>
+ <p class="greet">${t('gm')}</p>
+ <div class="vaar"><b>${esc(t('days')[day].split(' · ')[0])}</b><span>${esc(t('days')[day].split(' · ').slice(1).join(' · '))}</span>${his?`<span class="his">${t('his')}</span>`:''}</div>
+ ${tl?`<div class="tithi"><i class="dot" style="background:${tl.dot}"></i><div>${esc(tl.h)}<small>${esc(tl.s)}</small></div></div>`:`<p class="sub" style="font-size:14px;margin:-4px 0 12px">${esc(t('daysub')[day])}</p>`}
+ ${homeCard()}
+ <p class="hint">${t('hold')}</p>
+ </div>${tabs(0)}`};
+V.shloka=V.home;
+V.dawn=()=>{const g=G();let st='';for(let i=0;i<26;i++)st+=`<i style="left:${(i*37)%100}%;top:${(i*53)%42+6}%;animation-delay:${(i%7)*.5}s"></i>`;
+ return `<div class="view dawn" style="padding-top:64px"><div class="stars">${st}</div><div class="rays"></div><div class="sun"></div>
+ <p class="eyebrow" style="text-align:center;color:#F3CD7A">${t('dawn_e')} · 4:52</p>
+ <h2 style="text-align:center;margin-top:8px;font-size:27px">${t('dawn_h')}</h2>
+ <p class="sub" style="text-align:center;color:#D9E4E0">${t('dawn_s')}</p>
+ <div class="grow" style="max-height:70px"></div>
+ <p class="palms">${ST.lang==='ta'?'கராக்ரே வஸதே லக்ஷ்மீ:<br>கரமத்யே ஸரஸ்வதீ ।<br>கரமூலே து கோவிந்த:<br>ப்ரபாதே கரதர்ஶனம் ॥':'कराग्रे वसते लक्ष्मीः<br>करमध्ये सरस्वती ।<br>करमूले तु गोविन्दः<br>प्रभाते करदर्शनम् ॥'}</p>
+ <p class="tr">${t('dawn_tr')}</p>
+ <div class="grow"></div>
+ <button class="btn" style="background:#0D3B42;color:#F4EBD9;border-color:#0D3B42;box-shadow:0 10px 24px rgba(60,30,0,.35)" onclick="setM('japa')">${t('dawn_btn',{g:esc(pick(g.name)),gw:g.gw})}</button></div>`};
+const SKINS={diwali:'Diwali',sashti:'Kanda Sashti',karthigai:'Karthigai',janm:'Janmashtami',ganesh:'Ganesh',pongal:'Pongal'};
+function toranSVG(){let s='<svg class="toran" viewBox="0 0 390 44" preserveAspectRatio="none">';s+='<path d="M0 6 Q195 30 390 6" stroke="#6B4A12" stroke-width="1.2" fill="none"/>';
+ for(let i=0;i<=26;i++){const x=i*15,y=6+24*(1-Math.pow((x-195)/195,2))*0.98;const o=i%2?'#F59E0B':'#F97316';
+  if(i%3===1){s+=`<path d="M${x} ${y} q-5 10 0 20 q5 -10 0 -20Z" fill="#3F7D2E"/>`}
+  s+=`<circle cx="${x}" cy="${y+3}" r="5.2" fill="${o}"/><circle cx="${x}" cy="${y+3}" r="2" fill="${i%2?'#FCD34D':'#FDBA74'}" opacity=".8"/>`}
+ return s+'</svg>'}
+function kolamSVG(){const C=5,R=3,g=24,ox=14,oy=12;let s=`<svg width="${2*ox+(C-1)*g}" height="${2*oy+(R-1)*g}" viewBox="0 0 ${2*ox+(C-1)*g} ${2*oy+(R-1)*g}" style="display:block;margin:10px auto 0" fill="none" stroke="#F4EBD9" stroke-width="1.4" stroke-linecap="round" opacity=".9">`;
+ for(let r=0;r<R;r++)for(let c=0;c<C;c++){const x=ox+c*g,y=oy+r*g,h=g/2;s+=`<circle cx="${x}" cy="${y}" r="1.9" fill="#F4EBD9" stroke="none"/><path d="M${x} ${y-h} Q${x+h} ${y-h} ${x+h} ${y} Q${x+h} ${y+h} ${x} ${y+h} Q${x-h} ${y+h} ${x-h} ${y} Q${x-h} ${y-h} ${x} ${y-h}Z" transform="rotate(45 ${x} ${y})"/>`}
+ for(let c=0;c<C-1;c++)for(let r=0;r<R-1;r++){const x=ox+c*g+g/2,y=oy+r*g+g/2;s+=`<circle cx="${x}" cy="${y}" r="3.2"/>`}
+ return s+'</svg>'}
+const featherSVG=`<svg width="46" height="120" viewBox="0 0 46 120" style="position:absolute;right:6px;top:8px;transform:rotate(18deg) scale(.8);transform-origin:top right;opacity:.85;z-index:3;pointer-events:none"><path d="M23 118 L23 30" stroke="#C9B37A" stroke-width="1.4"/>${Array.from({length:22},(_,i)=>`<path d="M23 ${44+i*3.3} q${-14+i*.3} -6 ${-17+i*.5} -14 M23 ${44+i*3.3} q${14-i*.3} -6 ${17-i*.5} -14" stroke="#4E8B5B" stroke-width=".9" fill="none" opacity=".75"/>`).join('')}<ellipse cx="23" cy="26" rx="15" ry="20" fill="#2F7D4F"/><ellipse cx="23" cy="27" rx="10.5" ry="14" fill="#C99A2E"/><ellipse cx="23" cy="28" rx="7.5" ry="10" fill="#1F6E7A"/><ellipse cx="23" cy="29.5" rx="4.8" ry="6.4" fill="#163C8C"/></svg>`;
+const modakSVG=(w=44)=>`<svg width="${w}" height="${w}" viewBox="0 0 44 44"><defs><radialGradient id="mk" cx="40%" cy="40%"><stop offset="0" stop-color="#FFFDF5"/><stop offset="1" stop-color="#E9DCC0"/></radialGradient></defs><path d="M22 4 C25 9 34 18 35 28 C36 36 30 39 22 39 C14 39 8 36 9 28 C10 18 19 9 22 4Z" fill="url(#mk)"/>${[-10,-5,0,5,10].map(d=>`<path d="M22 5 Q${22+d*1.3} 22 ${22+d*1.25} 38" stroke="#CDB98F" stroke-width=".9" fill="none"/>`).join('')}<ellipse cx="22" cy="39" rx="13" ry="2.2" fill="#B89B62" opacity=".45"/></svg>`;
+V.festival=()=>{const s=ST.skin,g=G();
+ const head={diwali:toranSVG()}[s]||'';
+ const ornament={diwali:`<div class="diyarow">${Array.from({length:7},(_,i)=>`<span style="animation-delay:${i*.3}s">${diyaSVG(36)}</span>`).join('')}</div>`,
+  karthigai:`<div style="margin-top:8px">${[5,4].map(n=>`<div style="display:flex;justify-content:center;gap:16px">${Array.from({length:n},()=>diyaSVG(32)).join('')}</div>`).join('')}</div>`,
+  sashti:`<div style="display:flex;justify-content:center;gap:22px;margin-top:8px;color:var(--pri);opacity:.9">${Array.from({length:6},(_,i)=>`<span style="opacity:${i<3?1:.35}">${ic('vel',26)}</span>`).join('')}</div><p class="hint" style="margin-top:4px">${ST.lang==='ta'?'சஷ்டி 3ஆம் நாள்':ST.lang==='hi'?'षष्ठी का तीसरा दिन':'Day 3 of 6'}</p>`,
+  janm:'',ganesh:`<div style="display:flex;justify-content:center;gap:10px;margin-top:8px">${modakSVG(38)}${modakSVG(44)}${modakSVG(38)}</div>`,pongal:kolamSVG()}[s];
+ const icon={sashti:`<span style="color:var(--pri)">${ic('vel',28)}</span>`,janm:`<span style="color:var(--pri)">${ic('flute',28)}</span>`,pongal:`<span style="color:var(--pri)">${ic('sun',28)}</span>`,diwali:diyaSVG(30),karthigai:diyaSVG(30),ganesh:modakSVG(30)}[s];
+ return `<div class="view tabbed">${head}<div class="glow" style="background:radial-gradient(120% 55% at 50% -12%,rgba(255,170,60,.22),transparent 62%)"></div>
+ <p class="greet" style="margin-top:${s==='diwali'?30:0}px">${t('gm')}</p>
+ <div class="fest-banner">${icon}<div><b>${t('fest_'+s)}</b><small>${t('fest_'+s+'_s',{g:esc(pick(g.name)),gw:g.gw})}</small></div></div>
+ ${homeCard(s==='janm'?featherSVG:'')}${ornament}
+ </div>${tabs(0)}`};
+V.japa=V.setu=()=>{const g=ST.m==='setu'?D.ram:G();const done=mala>=COUNT;
+ return `<div class="view japa" id="jv"><div class="glow"></div>
+ <div class="top"><button class="back" onclick="event.stopPropagation();setM('home')">${ic('back',22)}</button><span class="fine">${ST.m==='setu'?'Shri Ram':''}</span><span style="width:40px"></span></div>
+ <h2 style="margin-top:6px">${done?t('done_h'):t('japa_h')}</h2>
+ <div class="grow"></div>
+ <div class="ringbox"><div id="rg">${ring(COUNT,mala,262,done)}</div><div class="av ringav" style="width:84px;height:84px"><img src="${img(g.img)}" alt=""></div></div>
+ <p class="mantra" style="margin-top:16px">${esc(pick(g.japa))}</p>
+ <p class="cnt" id="ct" style="margin-top:6px">${mala} / ${COUNT}</p>
+ <div class="grow"></div>
+ ${done?'':`<p class="fine">${t('tap')}</p><div class="ff"><button onclick="event.stopPropagation();mala=104;render()">${t('ff')}</button></div>`}
+ </div>`};
+V.aarti=()=>{const g=G();return `<div class="view" style="text-align:center"><div class="glow"></div>
+ <p class="eyebrow">${t('aarti_e')}</p><h2 style="font-size:24px;margin-top:4px">${t('aarti_h')}</h2>
+ <div class="sk">${'<i></i>'.repeat(21)}</div>
+ <div class="arch" id="arch"><div class="pic" style="background-image:url(${img(g.img,1)})"></div><div class="lite" id="lite" style="opacity:0"></div>
+  <svg class="thali" id="thali" viewBox="0 0 96 60"><defs><radialGradient id="br" cx="50%" cy="40%"><stop offset="0" stop-color="#F8DE95"/><stop offset=".7" stop-color="#C9973A"/><stop offset="1" stop-color="#8A5E18"/></radialGradient></defs>
+   <ellipse cx="48" cy="44" rx="44" ry="13" fill="url(#br)"/><ellipse cx="48" cy="42" rx="36" ry="9" fill="#E5BC62"/>
+   <circle cx="26" cy="42" r="3" fill="#C2261C"/><circle cx="70" cy="42" r="3.2" fill="#F59E0B"/><circle cx="64" cy="45" r="2.6" fill="#F97316"/><circle cx="32" cy="45.5" r="2.2" fill="#FBBF24"/>
+   <path d="M38 40 Q48 35 58 40 Q56 47 48 47.5 Q40 47 38 40Z" fill="#B85A24"/>
+   <g class="fl" style="transform-origin:48px 38px;animation:fl 1.6s ease-in-out infinite"><path d="M48 18 C51 24 53 28 52.5 32 C52 36 50 38 48 38 C46 38 44 36 43.5 32 C43 28 45 24 48 18Z" fill="#FFC94A"/><ellipse cx="48" cy="33" rx="2" ry="3" fill="#FFF8E0"/></g></svg>
+ </div>
+ <p class="sub" id="asub" style="margin-top:4px">${t('aarti_s')}</p>
+ <div class="grow"></div>
+ <button class="btn" id="abtn" onclick="aarti()">${t('aarti_btn')}</button></div>`};
+const PSETS={
+ north:[
+  {k:'ganesh',on:1,n:{en:'Modak',hi:'मोदक'},f:{en:'Ganesh Chaturthi · 14 Sep',hi:'गणेश चतुर्थी · 14 सितंबर'}},
+  {k:'navratri',on:1,n:{en:'Halwa, chana and puri',hi:'हलवा, चना, पूरी'},f:{en:'Sharad Navratri · 11 Oct',hi:'शारदीय नवरात्रि · 11 अक्टूबर'}},
+  {k:'janm',on:1,n:{en:'Makhan mishri',hi:'माखन मिश्री'},f:{en:'Janmashtami · 4 Sep',hi:'जन्माष्टमी · 4 सितंबर'}},
+  {k:'diwali',on:0,d:'8 Nov',n:{en:'Kheel batashe',hi:'खील बताशे'},f:{en:'Diwali · 8 Nov',hi:'दीपावली · 8 नवंबर'}},
+  {k:'kartik',on:0,d:'24 Nov',n:{en:'Panchamrit',hi:'पंचामृत'},f:{en:'Kartik Purnima · 24 Nov',hi:'कार्तिक पूर्णिमा · 24 नवंबर'}},
+  {k:'sankranti',on:0,d:'15 Jan',n:{en:'Til-gud and khichdi',hi:'तिल-गुड़, खिचड़ी'},f:{en:'Makar Sankranti · 15 Jan',hi:'मकर संक्रांति · 15 जनवरी'}},
+  {k:'hjay',on:0,d:'20 Apr',n:{en:'Boondi laddu',hi:'बूंदी के लड्डू'},f:{en:'Hanuman Jayanti · 20 Apr',hi:'हनुमान जयंती · 20 अप्रैल'}}],
+ ta:[
+  {k:'ganesh',on:1,n:{ta:'கொழுக்கட்டை'},f:{ta:'விநாயகர் சதுர்த்தி · 14 செப்'}},
+  {k:'navratri',on:1,n:{ta:'சுண்டல் (கொலு)'},f:{ta:'நவராத்திரி · 11 அக்'}},
+  {k:'janm',on:1,n:{ta:'சீடை, வெண்ணெய்'},f:{ta:'கோகுலாஷ்டமி · 4 செப்'}},
+  {k:'diwali',on:0,d:'8 நவ',n:{ta:'அதிரசம், தீபாவளி மருந்து'},f:{ta:'தீபாவளி · 8 நவ'}},
+  {k:'karthigai',on:0,d:'24 நவ',n:{ta:'நெய் அப்பம், கார்த்திகைப் பொரி'},f:{ta:'கார்த்திகை தீபம் · 24 நவ'}},
+  {k:'pongal',on:0,d:'15 ஜன',n:{ta:'சர்க்கரைப் பொங்கல்'},f:{ta:'தைப் பொங்கல் · 15 ஜன'}},
+  {k:'thaipusam',on:0,d:'22 ஜன',n:{ta:'பஞ்சாமிர்தம்'},f:{ta:'தைப்பூசம் · 22 ஜன'}}]};
+const PRA=()=>ST.lang==='ta'?PSETS.ta:PSETS.north;
+const PSVG={
+ ganesh:()=>modakSVG(40),
+ navratri:()=>`<svg width="48" height="48" viewBox="0 0 48 48"><circle cx="17" cy="20" r="10" fill="#E9A23B"/><circle cx="17" cy="20" r="10" fill="url(#hw)" opacity=".5"/>${[[30,16],[34,22],[29,25],[35,29],[31,31],[27,20]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.1" fill="#8C5A2B"/>`).join('')}<ellipse cx="24" cy="36" rx="13" ry="6" fill="#E6B566"/><ellipse cx="24" cy="35" rx="10" ry="4" fill="#F1CE86"/><defs><radialGradient id="hw"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs></svg>`,
+ janm:()=>`<svg width="44" height="44" viewBox="0 0 44 44"><path d="M10 22 Q22 8 34 22 Q34 34 22 35 Q10 34 10 22Z" fill="#FFF7E2"/><path d="M14 20 Q22 12 30 20" fill="none" stroke="#F1E3BF" stroke-width="2"/>${[[16,30],[25,31],[29,27],[20,33]].map(([x,y])=>`<rect x="${x}" y="${y}" width="4" height="4" rx=".8" fill="#FFFFFF" stroke="#E2D6B8" stroke-width=".6" transform="rotate(20 ${x} ${y})"/>`).join('')}</svg>`,
+};
+V.prasad=()=>{return `<div class="view tabbed"><div class="glow"></div>
+ <h2>${t('jr_h')}</h2>
+ <div class="tiles"><div class="tile"><b>20</b><span>${t('jr_streak')}</span></div><div class="tile"><b>3,412</b><span>${t('jr_total')}</span></div></div>
+ <p style="font-weight:800;font-size:18px">${t('pr_h')}</p><p class="sub" style="font-size:14px">${t('pr_s')}</p>
+ <div class="thalis">${PRA().map((p,i)=>{const a=-90+i*360/7,r=94,x=150+r*Math.cos(a*Math.PI/180),y=150+r*Math.sin(a*Math.PI/180);return `<div class="katori ${p.on?'':'empty'}" style="left:${x}px;top:${y}px" onclick="pcap(${i})"><div class="bowl"></div>${p.on?PSVG[p.k]():`<span class="q">${p.d}</span>`}</div>`}).join('')}
+  <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">${diyaSVG(52)}</div></div>
+ <div class="pcap" id="pcap"><b>${t('pr_tap')}</b></div>
+ </div>${tabs(2)}`};
+function pcap(i){const p=PRA()[i];haptic('tick');document.querySelectorAll('.katori').forEach((k,j)=>k.classList.toggle('sel',j===i));document.getElementById('pcap').innerHTML=`<b>${esc(pick(p.n))}</b><span>${esc(pick(p.f))}${p.on?'':' · '+t('pr_next')}</span>`}
+const BED=['रामस्कन्दं हनूमन्तं','वैनतेयं वृकोदरम् ।','शयने यः स्मरेन्नित्यं','दुःस्वप्नं तस्य नश्यति ॥'];
+const BEDTA=['ராமஸ்கந்தம் ஹனூமந்தம்','வைனதேயம் வ்ருகோதரம் ।','சயனே ய: ஸ்மரேந்நித்யம்','து:ஸ்வப்னம் தஸ்ய நச்யதி ॥'];
+const BEDTR=['Rama-skandam Hanumantam','Vainateyam Vrikodaram','Shayane yah smaren-nityam','Duhsvapnam tasya nashyati'];
+let bl=0;
+V.bedtime=()=>{const L=ST.lang==='ta'?BEDTA:BED;return `<div class="view night" style="padding-top:70px" onclick="bnext()"><div class="moon"></div>
+ <p class="eyebrow" style="color:#E9C77A;padding-right:56px">${t('bed_e')}</p>
+ <div style="height:14px"></div>
+ <div>${L.map((l,i)=>`<p class="bline ${i<=bl?'on':''} ${i===bl?'cur':''}">${l}${ST.lang!=='hi'?`<small class="btr">${BEDTR[i]}</small>`:''}</p>`).join('')}</div>
+ <p class="fine" style="text-align:center;margin-top:12px">${bl<3?t('bed_tap'):''}</p>
+ ${bl>=3?`<div class="card" style="margin-top:8px;background:rgba(18,74,82,.6);animation:vin .5s both"><p style="font-weight:800">${t('bed_who')}</p><div class="who">${t('who').map(w=>`<span>${w}</span>`).join('')}</div><p class="sub" style="font-size:13.5px;margin-top:10px">${t('bed_mean')}</p></div>`:''}
+ ${bl>=3?`<button class="btn" style="margin-top:14px;animation:vin .5s .3s both" onclick="event.stopPropagation();setM('home')">${t('bed_done')}</button>`:''}<div class="grow"></div></div>`};
+function bnext(){if(bl<3){bl++;haptic('tick');render()}}
+let offStart=0;
+V.office=()=>{const done=mala>=27;return `<div class="view desk japa" id="jv" style="padding-top:60px">
+ <div class="top"><button class="back" style="background:#0E2A2E;color:#5F807D" onclick="event.stopPropagation();setM('home')">${ic('back',22)}</button><span class="timer" id="tm">${offStart?fmt():'2:00'}</span><span style="width:40px"></span></div>
+ ${offStart||done?'':`<p class="eyebrow" style="color:#8C7A4A;margin-top:18px">${t('off_e')}</p><h2 style="color:#C9D6D3;margin-top:4px">${t('off_h')}</h2><p class="sub dim" style="font-size:14.5px;padding:0 10px">${t('off_s')}</p>`}
+ <div class="grow"></div>
+ <div class="ringbox"><div id="rg">${ring(27,mala,220,done)}</div><div class="av ringav" style="width:70px;height:70px;margin:-35px 0 0 -35px;opacity:.45;filter:saturate(.5)"><img src="${img(G().img)}" alt=""></div></div>
+ <p class="mantra" style="margin-top:14px;font-size:22px;color:#B99545;opacity:.85">${esc(pick(G().japa))}</p>
+ <p class="cnt dim" id="ct" style="font-size:30px;margin-top:6px">${mala} / 27</p>
+ <div class="grow"></div>
+ ${done?`<p class="sub dim" style="text-align:center">${t('off_done')}</p>`:offStart?`<p class="fine dim" style="color:#3F5F5C">${t('tap')}</p>`:`<button class="btn ghost" style="background:#0E2A2E;color:#C9D6D3;border-color:#3F5F5C;box-shadow:none" onclick="event.stopPropagation();offGo()">${t('off_go')}</button>`}
+ </div>`};
+const fmt=()=>{const s=Math.max(0,120-Math.floor((Date.now()-offStart)/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function offGo(){offStart=Date.now();render();clearInterval(timer);timer=setInterval(()=>{const e=document.getElementById('tm');if(e)e.textContent=fmt()},500)}
+
+V.unlock=()=>{const g=G();const o=ST.unl;return `<div class="view" style="text-align:center;padding-top:60px"><div class="glow"></div>
+ <div style="display:flex;justify-content:center;gap:8px;align-items:center;color:var(--muted);font-size:14px">${ic(o?'unlock':'lock',18)}<span>Instagram</span></div>
+ <h2 style="margin-top:6px;font-size:25px">${o?t('ul_h'):t('ul_pre_h')}</h2>
+ <div class="ucard ${o?'open':''}" onclick="unl()">
+  <div class="uart" style="background-image:url(${img(g.img,1)})"></div>
+  <div class="udoor l"></div><div class="udoor r"></div><svg class="torn" viewBox="0 0 250 30" preserveAspectRatio="none">${Array.from({length:13},(_,i)=>`<circle cx="${10+i*19}" cy="${10+10*Math.sin(Math.PI*i/12)}" r="5" fill="${i%2?'#F59E0B':'#F97316'}"/>`).join('')}${Array.from({length:6},(_,i)=>`<path d="M${29+i*38} ${16+10*Math.sin(Math.PI*(2*i+1)/12)} q-4 8 0 14 q4 -6 0 -14Z" fill="#3F7D2E"/>`).join('')}</svg>
+  <div class="useal">${ic('lotus',30)}<span>${t('ul_tap')}</span></div>
+ </div>
+ ${!o?`<p class="sub ul-pre" style="margin-top:14px">${t('ul_pre')}</p>`:`<p class="mantra" style="font-size:24px;margin-top:14px;animation:vin .6s .3s both">${esc(pick(g.jai))}</p>
+  <div class="tot" style="animation:vin .6s .6s both"><div><b>108</b><span>${t('ul_today')}</span></div><div><b>3,520</b><span>${t('ul_total')}</span></div><div><b>21</b><span>${t('ul_days')}</span></div></div>`}
+ <div class="grow"></div>
+ ${o?'':`<div class="diyarow" style="justify-content:center;gap:18px;margin-top:20px">${Array.from({length:5},()=>diyaSVG(30)).join('')}</div>`}<div class="ul-cta">${o?`<div class="ulbtns"><button class="btn ghost" onclick="setM('home')">${t('ul_stay')}</button><button class="btn">${t('ul_open')}</button></div>`:''}</div>
+ </div>`};
+function unl(){if(ST.unl)return;ST.unl=1;prime();const c=document.querySelector('.ucard');c.classList.add('open');haptic('done');play('bell',1);
+ document.querySelector('.view h2').textContent=t('ul_h');setTimeout(()=>{const v=document.querySelector('.view');const g=G();
+  v.querySelector('.ul-pre').outerHTML=`<p class="mantra" style="font-size:24px;margin-top:14px;animation:vin .6s both">${esc(pick(g.jai))}</p><div class="tot" style="animation:vin .6s .3s both"><div><b>108</b><span>${t('ul_today')}</span></div><div><b>3,520</b><span>${t('ul_total')}</span></div><div><b>21</b><span>${t('ul_days')}</span></div></div>`;
+  const dr=v.querySelector('.diyarow');if(dr)dr.remove();v.querySelector('.ul-cta').innerHTML=`<div class="ulbtns" style="animation:vin .5s .6s both"><button class="btn ghost" onclick="setM('home')">${t('ul_stay')}</button><button class="btn">${t('ul_open')}</button></div>`;
+  petals(18,430)},1000)}
+const tog=(on,act)=>`<button class="tg ${on?'on':''}" onclick="${act};render()" aria-pressed="${on}"><i></i></button>`;
+V.settings=()=>`<div class="view tabbed"><div class="glow"></div><h2>${t('tabs')[3]}</h2>
+ <p class="lbl2">${t('st_sound')}</p>
+ <div class="card list">
+  <div class="row">${ic('bell')}<div><b>${t('st_temple')}</b><small>${t('st_temple_s')}</small></div>${tog(ST.sound,'toggleSound()')}</div>
+  <div class="row col">${ic('shankh')}<div><b>${t('st_done')}</b><div class="seg">${[['shankh',t('st_shankh')],['bell',t('st_bell')],['off',t('st_none')]].map(([k,l])=>`<button class="${ST.doneSnd===k?'on':''}" onclick="ST.doneSnd='${k}';if('${k}'!=='off')play('${k}');render()">${l}</button>`).join('')}</div></div></div>
+  <div class="row">${ic('vibrate')}<div><b>${t('st_hap')}</b><small>${t('st_hap_s')}</small></div>${tog(true,"haptic('meru')")}</div>
+  <div class="row">${ic('lotus')}<div><b>${t('st_kids')}</b><small>${t('st_kids_s')}</small></div>${tog(ST.kids,'ST.kids=!ST.kids')}</div>
+ </div>
+ <p class="fine" style="margin-top:8px">${t('st_silent')}</p>
+ <p class="lbl2">${t('st_icons')}</p>
+ <div class="icgrid">${Object.keys(IC).map(k=>`<div>${ic(k,24)}<span>${k}</span></div>`).join('')}</div>
+ </div>${tabs(3)}`;
+const STATES={empty:['journey','st_e_h','st_e_s','st_e_b'],lock:['warn','st_l_h','st_l_s','st_l_b'],offline:['offline','st_o_h','st_o_s','st_o_b'],pay:['warn','st_p_h','st_p_s','st_p_b']};
+V.states=()=>{const k=ST.state,x=STATES[k];return `<div class="view tabbed"><div class="glow"></div>
+ ${k==='empty'?`<h2>${t('jr_h')}</h2><div class="thalis" style="width:240px;height:240px;margin-top:10px;opacity:.9">${[-90,-30,30,90,150,210].map(a=>`<div class="katori empty" style="left:${120+82*Math.cos(a*Math.PI/180)}px;top:${120+82*Math.sin(a*Math.PI/180)}px;width:58px;height:58px;margin:-29px 0 0 -29px"><div class="bowl"></div></div>`).join('')}<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">${diyaSVG(44)}</div></div>`
+ :`<div class="stateart">${k==='lock'?`<div class="av" style="width:120px;height:120px;margin:0 auto;opacity:.8;filter:saturate(.3)"><img src="${img(G().img)}" alt=""></div>`:`<div style="width:96px;height:96px;margin:0 auto;border-radius:50%;background:var(--card);display:grid;place-items:center;color:var(--pri)">${ic(x[0],44)}</div>`}</div>`}
+ <h2 style="font-size:23px;text-align:center;margin-top:16px">${t(x[1])}</h2><p class="sub" style="text-align:center;font-size:15px">${t(x[2])}</p>
+ <div style="height:22px"></div>
+ <button class="btn" onclick="fixit(this)">${t(x[3])}</button>${k==='pay'?`<button class="link">${t('st_p_l')}</button>`:''}
+ </div>${tabs(k==='empty'?2:0)}`};
+function fixit(b){b.innerHTML=`<span style="display:inline-flex;gap:8px;align-items:center">${ic('check',22)}${t('st_ok')}</span>`;b.style.background='var(--ok)';haptic('done')}
+
+/* ================= interactions ================= */
+function bead(){const max=ST.m==='office'?27:COUNT;if(mala>=max)return;if(ST.m==='office'&&!offStart)return;mala++;
+ if(mala>=max){haptic('meru');play('manjira');if(ST.m==='office'){clearInterval(timer);render();return}render();setTimeout(()=>finish(),380);return}
+ haptic('tick');document.getElementById('rg').innerHTML=ring(max,mala,ST.m==='office'?220:262);const c=document.getElementById('ct');c.textContent=mala+' / '+max;c.classList.remove('pulse');void c.offsetWidth;c.classList.add('pulse')}
+function finish(){const s=document.getElementById('scr');haptic('done');if(ST.doneSnd!=='off')setTimeout(()=>play(ST.doneSnd),250);
+ const b=document.createElement('div');b.className='bloom';s.appendChild(b);
+ document.querySelectorAll('#jv .mantra,#jv .cnt,#jv .fine,#jv .ff').forEach(e=>{e.style.transition='opacity .6s';e.style.opacity=0});
+ if(ST.m==='setu'){const r=document.querySelector('#jv .ringbox');r.style.transition='opacity .8s';r.style.opacity=0;setu();return}
+ petals(46,640);const g=G();const m=document.createElement('div');m.className='done-msg';m.innerHTML=`<p class="jai">${esc(pick(g.jai))}</p><p>${t('done_s',{g:esc(pick(g.name))})}</p>`;s.appendChild(m);
+ setTimeout(()=>{const v=document.getElementById('jv');if(!v||document.getElementById('jdone'))return;const b=document.createElement('button');b.className='btn';b.id='jdone';b.style.cssText='position:absolute;left:22px;right:22px;bottom:30px;width:auto;z-index:40;animation:vin .5s both';b.textContent=pick(g.btn);b.onclick=e=>{e.stopPropagation();setM('home')};document.getElementById('scr').appendChild(b)},3000)}
+function petals(n=46,fy){const s=document.getElementById('scr');
+ const kinds=[['#F59E0B','#FBBF24'],['#EA580C','#F97316'],['#F97316','#FDBA74'],['#B91C1C','#DC2626'],['#FFFFFF','#F3EEDC']];
+ for(let i=0;i<n;i++){const e=document.createElement('div');e.className='petal';const k=kinds[i%5];const jas=i%5===4;const w=jas?12:10+Math.random()*6;
+  e.innerHTML=jas?`<svg width="16" height="16" viewBox="0 0 16 16">${[0,72,144,216,288].map(a=>`<ellipse cx="8" cy="4.2" rx="2.3" ry="3.8" fill="${k[0]}" transform="rotate(${a} 8 8)"/>`).join('')}<circle cx="8" cy="8" r="1.4" fill="#E8D9A0"/></svg>`:`<svg width="${w}" height="${w*1.3}" viewBox="0 0 10 13"><path d="M5 0 C9 3 10 8 5 13 C0 8 1 3 5 0Z" fill="${k[0]}"/><path d="M5 1 L5 12" stroke="${k[1]}" stroke-width=".6" opacity=".7"/></svg>`;
+  e.style.left=(3+Math.random()*90)+'%';e.style.setProperty('--dx',(Math.random()*120-60)+'px');e.style.setProperty('--rot',(Math.random()*540-270)+'deg');if(fy)e.style.setProperty('--fy',fy+'px');
+  e.style.animationDuration=(4.2+Math.random()*3)+'s';e.style.animationDelay=(Math.random()*1.6)+'s';s.appendChild(e);setTimeout(()=>e.remove(),9500)}}
+function setu(){const s=document.getElementById('scr');const sea=document.createElement('div');sea.className='sea';
+ sea.innerHTML=`<svg class="wv2" width="140%" height="60" viewBox="0 0 560 60" preserveAspectRatio="none" style="position:absolute;left:-20%;top:150px;animation:wv 7s ease-in-out infinite alternate"><path d="M0 30 C70 14 140 46 210 30 S350 14 420 30 S560 46 560 30" stroke="rgba(200,240,235,.16)" stroke-width="2" fill="none"/><path d="M0 48 C80 36 160 60 240 48 S400 36 480 48 S560 56 560 48" stroke="rgba(200,240,235,.09)" stroke-width="2" fill="none"/></svg>`;s.appendChild(sea);
+ const word=ST.lang==='ta'?'ராம':'राम';const shapes=['M4 14 C3 6 13 2 24 3 C35 4 41 8 40 15 C39 23 31 26 21 26 C10 26 5 21 4 14Z','M3 15 C4 7 14 3 25 4 C36 5 41 10 40 17 C39 24 30 26 20 26 C10 26 2 22 3 15Z','M5 12 C7 5 18 2 27 4 C37 6 42 12 39 19 C36 25 26 27 17 25 C8 23 4 18 5 12Z'];
+ const shore=document.createElement('div');shore.className='stone';shore.style.cssText='left:0;right:0;top:458px;animation-delay:.2s';shore.innerHTML=`<svg width="366" height="40" viewBox="0 0 366 40"><path d="M250 40 C262 22 278 14 292 18 C304 6 322 4 338 14 C350 10 362 14 366 18 L366 40Z" fill="#0A3238" opacity=".9"/><path d="M0 40 L0 26 C14 20 30 22 40 30 L46 40Z" fill="#0A3238" opacity=".9"/></svg>`;s.appendChild(shore);
+ const N=11;for(let i=0;i<N;i++){const t0=i/(N-1),x=Math.round(22+t0*270),y=Math.round(560-60*Math.sin(Math.PI*t0*.9)-40*t0)+((i%2)?-2:2);const st=document.createElement('div');st.className='stone';st.style.left=x+'px';st.style.top=y+'px';st.style.animationDelay=(.3+i*.2)+'s';st.style.zIndex=15+i;
+  st.innerHTML=`<div style="animation-delay:${i*.35}s"><svg width="${54-i*1.6}" height="${36-i*1.1}" viewBox="0 0 44 29"><defs><radialGradient id="sg${i}" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#B8AC98"/><stop offset=".6" stop-color="#8A7E6C"/><stop offset="1" stop-color="#5E5446"/></radialGradient></defs><path d="${shapes[i%3]}" fill="url(#sg${i})"/><path d="${shapes[i%3]}" fill="none" stroke="#3E362B" stroke-opacity=".35"/><text x="22" y="18.5" text-anchor="middle" font-family="Tiro Devanagari Hindi, Tiro Tamil, serif" font-size="${ST.lang==='ta'?9.5:11.5}" font-weight="700" fill="#B3261E">${word}</text></svg></div>`;
+  s.appendChild(st);if(i===N-1)setTimeout(()=>haptic('meru'),(.3+i*.2)*1000+900)}
+ setTimeout(()=>{const v=document.getElementById('jv');if(!v||document.getElementById('jdone'))return;const b=document.createElement('button');b.className='btn';b.id='jdone';b.style.cssText='position:absolute;left:22px;right:22px;bottom:30px;width:auto;z-index:40;animation:vin .5s both';b.textContent=pick(D.ram.btn);b.onclick=e=>{e.stopPropagation();setM('home')};document.getElementById('scr').appendChild(b)},3600);
+ const m=document.createElement('div');m.className='done-msg';m.style.bottom='auto';m.style.top='150px';m.style.animationDelay='2.4s';m.innerHTML=`<p class="jai">${t('setu_h')}</p><p style="color:#D9E4E0">${t('setu_s')}</p>`;s.appendChild(m)}
+function openSheet(){const g=G(),sh=g.shloka;const s=document.getElementById('scr');
+ const scrim=document.createElement('div');scrim.className='scrim';const el=document.createElement('div');el.className='sheet';
+ const text=ST.lang==='ta'?sh.ta:sh.dev;
+ el.innerHTML=`<div class="grab"></div><div class="art" style="background-image:url(${img(g.img,1)})"></div><div class="body">
+  <p class="shl">${esc(text)}</p><p class="trn">${esc(sh.tr)}</p><p class="mean">${esc(pick(sh.mean))}</p><p class="story">${pick(sh.story)}</p><p class="src">${esc(sh.src)}</p></div>`;
+ const close=()=>{scrim.remove();el.remove()};scrim.onclick=close;el.querySelector('.grab').onclick=close;s.appendChild(scrim);s.appendChild(el)}
+let aOn=false;
+function aarti(){if(aOn)return;prime();aOn=true;const a=document.getElementById('arch'),btn=document.getElementById('abtn'),lite=document.getElementById('lite');a.classList.add('aarti-on');btn.disabled=true;btn.style.opacity=.5;lite.style.opacity=1;
+ play('ghanta',1);haptic('swell');let n=0;const th=document.getElementById('thali');
+ const track=setInterval(()=>{const r=th.getBoundingClientRect(),ar=a.getBoundingClientRect();lite.style.setProperty('--lx',(r.left+r.width/2-ar.left-18)+'px');lite.style.setProperty('--ly',(r.top-ar.top-10)+'px')},60);
+ const loop=setInterval(()=>{n++;if(n<3){play('ghanta',1);haptic('swell')}else{clearInterval(loop);setTimeout(()=>{clearInterval(track);a.classList.remove('aarti-on');lite.style.opacity=0;aOn=false;petals(24);haptic('done');
+  document.getElementById('asub').innerHTML=`<span style="font-family:var(--scr);font-size:21px;color:var(--pri)">${esc(pick(G().aarti))}</span><br>${t('aarti_next')}`;btn.disabled=false;btn.style.opacity=1;btn.textContent=pick(G().btn);btn.onclick=()=>setM('home')},2400)}},2400)}
+
+/* ================= render ================= */
+function rail(){
+ document.getElementById('mlist').innerHTML=M.map(([k,h,s],i)=>`<li><button class="${ST.m===k?'on':''}" onclick="bl=0;offStart=0;setM('${k}')"><i>${i+1}</i><div><b>${h}</b><span>${s}</span></div></button></li>`).join('');
+ document.getElementById('cDeity').innerHTML=[['hanuman','Hanuman'],['murugan','Murugan'],['ram','Ram']].map(([k,l])=>`<button class="chip ${ST.deity===k?'on':''}" onclick="ST.deity='${k}';render()">${l}</button>`).join('');
+ document.getElementById('cLang').innerHTML=[['en','English'],['hi','हिन्दी'],['ta','தமிழ்']].map(([k,l])=>`<button class="chip ${ST.lang===k?'on':''}" onclick="ST.lang='${k}';render()">${l}</button>`).join('')+
+  (ST.m==='festival'?`<div style="width:100%;height:4px"></div>`+Object.entries(SKINS).map(([k,l])=>`<button class="chip ${ST.skin===k?'on':''}" onclick="ST.skin='${k}';render()">${l}</button>`).join(''):'')+
+  (ST.m==='states'?`<div style="width:100%;height:4px"></div>`+[['empty','Empty'],['lock','Lock stopped'],['offline','Offline'],['pay','Payment failed']].map(([k,l])=>`<button class="chip ${ST.state===k?'on':''}" onclick="ST.state='${k}';render()">${l}</button>`).join(''):'')+
+  (ST.m==='home'||ST.m==='shloka'?`<div style="width:100%;height:4px"></div>`+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((d,i)=>`<button class="chip ${ST.day===i?'on':''}" onclick="ST.day=${i};render()">${d}</button>`).join('')+`<div style="width:100%;height:4px"></div>`+[['auto','Today'],['navratri','Navratri'],['ekadashi','Ekadashi'],['purnima','Purnima'],['amavasya','Amavasya'],['pradosh','Pradosh']].map(([k,l])=>`<button class="chip ${ST.tithi===k?'on':''}" onclick="ST.tithi='${k}';render()">${l}</button>`).join(''):'');
+ const sb=document.getElementById('cSound');sb.textContent='Sound: '+(ST.sound?'on':'off');sb.classList.toggle('on',ST.sound);
+ const rb=document.getElementById('cRinger');rb.textContent=ST.ringer?'Phone: ringer on':'Phone: silent mode';rb.classList.toggle('on',!ST.ringer);
+ const h=HOW[ST.m];document.getElementById('how').innerHTML=`<div><span class="k">Trigger</span>${h[0]}</div><div><span class="k">Visual</span>${h[1]}</div><div><span class="k">Sound</span>${h[2]}${ST.ringer?'':' <b>(muted: silent mode)</b>'}</div><div><span class="k">Haptic</span>${h[3]}</div><div><span class="k">Rule</span>${h[4]}</div>`}
+function render(){
+ document.querySelectorAll('#scr #jdone,#scr .petal,#scr .bloom,#scr .done-msg,#scr .sea,#scr .stone,#scr .sheet,#scr .scrim').forEach(e=>e.remove());
+ if(ST.m==='setu'&&ST.deity!=='ram'){}
+ document.documentElement.style.setProperty('--god',`color-mix(in srgb, ${(ST.m==='setu'?D.ram:G()).col} 20%, #F6D58E)`);
+ document.documentElement.lang=ST.lang;
+ document.getElementById('clock').textContent={dawn:'4:52',bedtime:'21:05',office:'15:20',aarti:'7:10',festival:'8:15'}[ST.m]||'8:40';
+ document.getElementById('view').innerHTML=V[ST.m]();
+ const jv=document.getElementById('jv');if(jv)jv.addEventListener('click',bead);
+ if(ST.m==='japa'||ST.m==='setu'){if(mala>=COUNT){}}
+ bindPress();rail();
+ if(ST.m==='shloka'&&!Q.get('noauto')){setTimeout(()=>{const p=document.getElementById('press');if(p&&ST.m==='shloka'&&!document.querySelector('.sheet')){p.classList.add('hold');setTimeout(()=>{p.classList.remove('hold');if(ST.m==='shloka')openSheet()},700)}},500)}
+ if(Q.get('fin')&&(ST.m==='japa'||ST.m==='setu')){Q.delete('fin');mala=COUNT;render();finish()}
+ if(Q.get('fin')&&ST.m==='aarti'){Q.delete('fin');aarti()}
+ if(Q.get('bl')){bl=+Q.get('bl');Q.delete('bl');render()}
+ if(Q.get('open')&&ST.m==='unlock'){Q.delete('open');setTimeout(unl,500)}
+}
+document.getElementById('scr').addEventListener('pointerdown',e=>{const b=e.target.closest('button,[role=button],.opt,.li,.katori,.ucard');if(b&&!b.closest('#jv'))haptic('tap')});
+document.addEventListener('keydown',e=>{if(e.key===' '&&document.getElementById('jv')){e.preventDefault();bead()}});
+render();
+</script>
+</body>
+</html>
