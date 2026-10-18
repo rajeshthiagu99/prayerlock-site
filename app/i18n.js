@@ -256,7 +256,7 @@ en:{
  hero_streak:"{n}-day streak",
  wd_left:"japa left",
  wd_days:"days",
- wd_done:"Jai ho · today’s japa done",
+ wd_done:"Jai ho · japa done",
  wd_sankalp:"{n}-day sankalp ✦"
 },
 hi:{
@@ -514,7 +514,7 @@ hi:{
  hero_streak:"{n} दिन लगातार",
  wd_left:"जप बाकी",
  wd_days:"दिन लगातार",
- wd_done:"जय हो · आज का जप पूरा",
+ wd_done:"जय हो · जप पूरा",
  wd_sankalp:"{n} दिन संकल्प ✦"
 }
 };
