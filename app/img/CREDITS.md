@@ -24,7 +24,7 @@ Licence references:
 | lakshmi, lakshmi-hero | https://commons.wikimedia.org/wiki/File:Raja_Ravi_Varma,_Goddess_Lakshmi,_1896.jpg | Raja Ravi Varma (d. 1906) | Public domain | Painted in 1896; the copyright term has expired |
 | sai, sai-hero | https://commons.wikimedia.org/wiki/File:Shirdi_sai2.jpg | Unknown photographer in Shirdi, c. 1915 | Public domain | Photograph taken before 1918 (Sai Baba died in 1918); the copyright term has expired in India and the US |
 | saraswati, saraswati-hero | https://commons.wikimedia.org/wiki/File:Saraswati_by_Raja_Ravi_Varma.jpg | Raja Ravi Varma (d. 1906) | Public domain | Painted in 1894; the copyright term has expired |
-| *(ayyappa: no image)* | n/a | n/a | n/a | No clearly licensed image was found. The only candidate on Commons is 1950s bazaar art, which may still be under US copyright. The app falls back to the glyph |
+| ayyappa | see "Added 18 Oct 2026" below | | | |
 
 ## Story photos (`story/<name>.webp`, 720 px wide)
 
@@ -44,3 +44,19 @@ Most are 720×960. `family-puja` is 720×540 because the family spans the whole 
 Note: Unsplash and Pexels do not provide model releases. Using these photos inside the app is fine. Do not use photos with identifiable people (scroll-night, family-puja, crowd-phones) in ads in a way that implies the person endorses Prayer Lock.
 
 All images were cropped, resized and re-encoded to WebP. The derivatives keep the same licence as their sources.
+
+## Added 18 Oct 2026 (found via Google Images › Usage rights: Creative Commons; licence verified on each source page)
+
+| File(s) | Source page | Author | Licence |
+|---|---|---|---|
+| ayyappa, ayyappa-hero | https://commons.wikimedia.org/wiki/File:Idol_of_Lord_Ayyappa_in_a_Hall_at_Sabarimala.jpg | Chinnareddy435 | CC BY 4.0 |
+| venkatesha, venkatesha-hero | https://commons.wikimedia.org/wiki/File:Lord_Venkateswara.jpg | Kalyan Kanuri (via Flickr) | CC BY-SA 2.0 |
+| saraswati, saraswati-hero (replaced, higher res) | https://commons.wikimedia.org/wiki/File:Raja_Ravi_Varma,_Goddess_Saraswati.jpg | Raja Ravi Varma | Public domain |
+| lakshmi, lakshmi-hero (replaced, higher res) | https://commons.wikimedia.org/wiki/File:Lakshmi_by_Raja_Ravi_Varma.jpg | Raja Ravi Varma | Public domain |
+| story/scroll-night (replaced) | https://unsplash.com/photos/man-using-mobile-phone-while-covering-his-body-of-blanket-iF8sPfprfWY | Dipqi Ghozali | Unsplash License |
+| story/ghat-sunrise (replaced) | https://commons.wikimedia.org/wiki/File:Diya_Pujan_at_Ganga_Aarti_at_Dashashwamedh_Ghat,_Varanasi.jpg | Chetanbtc | CC BY-SA 4.0 |
+| story/family-puja (replaced) | https://www.pexels.com/photo/a-family-praying-together-7685995/ | RDNE Stock project | Pexels License |
+| story/temple-morning | https://commons.wikimedia.org/wiki/File:Thiruvannamalai_Annamalaiyar_Temple_Gopuram_and_Mandapam_View.jpg | KARTY JazZ | CC BY-SA 4.0 |
+| story/young-pray | https://www.pexels.com/photo/woman-in-traditional-dress-praying-8819422/ | Yan Krukau | Pexels License |
+
+CC BY / BY-SA credits are shown in-app under Settings › © Credits. No AI-generated images are used anywhere.
