@@ -104,6 +104,9 @@ en:{
  p_notif:"Notifications",
  p_notif_s:"For your morning reminder",
  set_find:"Find Prayer Lock and turn it on, then come back.",
+ perm_on:"✓ {perm} on",
+ perm_hint:"Find Prayer Lock → turn it ON",
+ perm_back:"Tap to continue setup",
  rep_h:"Yesterday, {name}",
  rep_phone:"on your phone",
  rep_god:"with {god}",
@@ -478,7 +481,8 @@ en:{
  fest_one:"{f} tomorrow",
  dl_fest_d_one:"1 day to go.",
  wd_days_one:"day",
- dl_ul_days_one:"day"
+ dl_ul_days_one:"day",
+ jr_ci:"check-ins"
 },
 hi:{
  paying:"भुगतान हो रहा है…",
@@ -583,6 +587,9 @@ hi:{
  p_notif:"सूचनाएँ",
  p_notif_s:"सुबह की याद दिलाने के लिए",
  set_find:"Prayer Lock ढूँढें, चालू करें, फिर वापस आएँ।",
+ perm_on:"✓ {perm} चालू",
+ perm_hint:"Prayer Lock ढूँढें → चालू करें",
+ perm_back:"सेटअप जारी रखने के लिए टैप करें",
  rep_h:"कल, {name}",
  rep_phone:"फ़ोन पर",
  rep_god:"{god} के साथ",
@@ -957,6 +964,7 @@ hi:{
  dl_fest_d_one:"कल है।",
  dl_streak_one:"{n} दिन, दीया जलता रहे",
  wd_days_one:"दिन लगातार",
- dl_ul_days_one:"दिन"
+ dl_ul_days_one:"दिन",
+ jr_ci:"दैनिक चेक-इन"
 }
 };

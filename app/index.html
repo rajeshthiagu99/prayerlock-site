@@ -139,6 +139,10 @@ body.dark .perm{border-width:1px}
 .perm .go{margin-left:auto;flex:0 1 auto;max-width:44%;white-space:normal;line-height:1.15;padding:8px 14px;border-radius:999px;border:none;background:var(--pri);color:var(--priInk);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
 .perm.ok .go{background:none;color:var(--ok);pointer-events:none}
 .perm.wait .go{opacity:.35}
+.perm.focus{border-color:var(--pri);box-shadow:0 0 0 3px color-mix(in srgb,var(--pri) 25%,transparent)}
+.perm.focus .go,.btn.nudge{opacity:1;animation:nudge 1.2s ease-in-out 4}
+@keyframes nudge{0%,100%{transform:none;box-shadow:0 0 0 0 color-mix(in srgb,var(--pri) 55%,transparent)}50%{transform:scale(1.08);box-shadow:0 0 0 8px transparent}}
+.toast.chip{left:16px;right:16px;margin:0 auto;width:max-content;max-width:calc(100% - 32px);top:calc(env(safe-area-inset-top) + 16px);bottom:auto;background:var(--ok);font-weight:700;border-radius:999px;padding:10px 18px}
 .trust{display:flex;gap:10px;font-size:13px;color:var(--muted);line-height:1.35;padding:10px 12px;border-radius:var(--r);background:var(--tint);margin-bottom:12px}
 .vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 6px}
 .vs div{border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);padding:14px 12px}
@@ -154,6 +158,7 @@ body.dark .perm{border-width:1px}
 .ring .bd{fill:var(--bead);transition:fill .15s}
 .ring .bd.on{fill:var(--god)}
 .ring .meru{fill:none;stroke:var(--god);stroke-width:3;stroke-dasharray:3 3}
+html[lang=ta] .mantra,html[lang=ta] .verse{font-family:'Baloo Thambi 2','Tiro Tamil',serif;font-weight:600}
 .mantra{font-family:var(--scr);font-size:30px;line-height:1.3;text-align:center}
 .cnt{font-weight:800;font-size:44px;font-variant-numeric:tabular-nums;text-align:center;line-height:1}
 .pulse{animation:pl .18s}
@@ -274,7 +279,7 @@ const Mock=(()=>{const g={usage:false,overlay:false,popup:false,battery:false,no
  const autoNeeded=()=>['xiaomi','vivo','oppo','realme','oneplus'].includes(brand);
  return{_mock:true,setBrand(b){brand=b},
   perms:()=>JSON.stringify({...g,brand,popupKnown:brand==='xiaomi',autostartKnown:brand==='xiaomi',autostartOk:autoNeeded()?g.autostart:true,popupNeeded:['xiaomi','vivo','oppo','realme','oneplus'].includes(brand),autostart:autoNeeded()?g.autostart:true}),
-  openPerm(n){g.test='untested';mockSheet(n,()=>{g[n]=true;setTimeout(()=>window.plResume&&plResume(),50)})},
+  openPerm(n){g.test='untested';mockSheet(n,()=>{g[n]=true;setTimeout(()=>{window.plResume&&plResume();if(['usage','overlay'].includes(n)&&window.plGranted)plGranted(n)},50)})},
   apps:()=>JSON.stringify(A.map(([pkg,label,col,min])=>({pkg,label,icon:'',col,min}))),
   usage:()=>JSON.stringify({totalMin:A.reduce((s,a)=>s+a[3],0)+40,apps:A.slice(0,8).map(([pkg,label,,min])=>({pkg,label,min}))}),
   setLock(j){lock=j},setLockOn(v){on=!!v},getLock:()=>JSON.stringify({...JSON.parse(lock||'{}'),on}),lockStatus:()=>JSON.stringify({running:!!lock&&on,on,permsOk:g.usage&&g.overlay,popupOk:g.popup||!['xiaomi','vivo','oppo','realme','oneplus'].includes(brand),selfTest:g.test||'untested'}),confirmPerm(k,v){g[k]=v},testLock(){setTimeout(()=>{g.test='pass';window.plResume&&plResume()},1500)},
@@ -429,7 +434,7 @@ V.journey=()=>{const ch=Object.values(S.checks||{});const avg=k=>ch.length?(ch.r
  const days=[...Array(30)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return (S.japHist||{})[d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()]||0});const mx=Math.max(S.count,...days);
  const tile=(v,l,c)=>`<div style="border-radius:var(--r);padding:16px 12px;background:${c};color:#fff"><b style="display:block;font-size:34px;line-height:1">${v}</b><span style="font-size:13px;opacity:.9">${l}</span></div>`;
  return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('jr_h')}</h1>
- <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px">${tile(streak(),t('jr_streak'),'#C2410C')}${tile(S.japTotal,t('jr_total'),'#3F5A8A')}${tile(ch.length,t('ci_btn'),'#A16207')}${tile(S.days.length,t('jr_days'),'#2F6B2F')}</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px">${tile(streak(),t('jr_streak'),'#C2410C')}${tile(S.japTotal,t('jr_total'),'#3F5A8A')}${tile(ch.length,t('jr_ci'),'#A16207')}${tile(S.days.length,t('jr_days'),'#2F6B2F')}</div>
  ${window.DL?DL.thali():''}
  <div class="card"><div class="lbl" style="margin:0 0 8px">${t('jr_30')}</div><div style="display:flex;align-items:flex-end;gap:3px;height:110px">${days.map(v=>`<i style="flex:1;border-radius:3px 3px 0 0;background:${v?'var(--god)':'var(--tint)'};height:${Math.max(4,v/mx*100)}%"></i>`).join('')}</div></div>
  <button class="btn ghost" onclick="openCheckin()">${t('ci_btn')}</button>
@@ -442,7 +447,7 @@ function syncWidget(){try{if(!PL.syncWidget)return;const wk=[...Array(7)].map((_
   pill:fest?pick(fe.f.name):'',badge:sk>=21&&done?t('wd_sankalp',{n:sk>=108?108:sk>=51?51:21}):'',deity:S.deity,
   streak:sk,japToday:S.japToday,mantra:japa(),label:t('streak'),japLabel:t('japtoday'),color:god().color||'#D9560B',week:wk,deityImg:S.deity?img(S.deity):'',deityHero:S.deity?img(S.deity,1):''}))}catch(e){}}
 window.openTo=k=>{if(k==='japa'&&S.done&&S.plus){startJapa()}else if(S.plus&&k&&k.startsWith('pp_')&&V[k])go(k)};
-const CREDITS=[['Shiva','"Luna Park from brooklyn" (Flickr), Wikimedia Commons, CC BY-SA 2.0 · Unsplash: Baatcheet Films, Gúŕú śàí Pŕàkèśh'],['Ganesha','Pexels: Sonika Agarwal, Sourabh Narwade, S Rajesh'],['Murugan','CEphoto, Uwe Aranas, Wikimedia Commons, CC BY-SA 3.0 · Pexels: GOWTHAM AGM'],['Hanuman','Pexels: DARKMODE CINEMA, Santhapeta Saibaba Temple Ongole, MikeGz'],['Krishna, Radha Krishna','Pexels: Sharath G., VipinVihari Murari Das, Renuka'],['Ram','Prime Minister\'s Office, Government of India, GODL-India · Anushka10patel, Wikimedia Commons, CC BY-SA 4.0 · Pexels: Ramakant'],['Venkateswara','Pexels: Ram Kondisetti'],['Lakshmi','Wikimedia Commons: Nishu0246, CC BY-SA 4.0 · Pratishkhedekar, CC BY-SA 4.0 · Marajozkee, CC BY 4.0'],['Saraswati','Pexels: Monojit Dutta, Sayoni Manna'],['Devi','Pexels: GOWTHAM AGM, Anubhav Choudhary, kesavan ks'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0 · Pexels: yogeshwar y'],['Shirdi Sai Baba','Prime Minister\'s Office, Government of India, GODL-India · Pexels: Santhapeta Saibaba Temple Ongole'],['Vishnu','chromolithograph; Wellcome Collection, CC BY 4.0'],['Varanasi Ganga aarti at sunrise','jeminichronicles, Wikimedia Commons, CC BY-SA 2.0'],['Photos','Unsplash: VD Photography · Pexels: cottonbro studio, Ram Iyengar, Ventara Films']];
+const CREDITS=[['Shiva','"Luna Park from brooklyn" (Flickr), Wikimedia Commons, CC BY-SA 2.0 · Unsplash: Baatcheet Films, Gúŕú śàí Pŕàkèśh'],['Ganesha','Pexels: Sonika Agarwal, Sourabh Narwade, S Rajesh'],['Murugan','CEphoto, Uwe Aranas, Wikimedia Commons, CC BY-SA 3.0 · Pexels: GOWTHAM AGM'],['Hanuman','Pexels: DARKMODE CINEMA, Santhapeta Saibaba Temple Ongole, MikeGz'],['Krishna, Radha Krishna','Pexels: Sharath G., VipinVihari Murari Das, Renuka'],['Ram','Prime Minister\'s Office, Government of India, GODL-India · Anushka10patel, Wikimedia Commons, CC BY-SA 4.0 · Pexels: Ramakant'],['Venkateswara','Pexels: Ram Kondisetti'],['Lakshmi','Wikimedia Commons: Nishu0246, CC BY-SA 4.0 · Pratishkhedekar, CC BY-SA 4.0 · Marajozkee, CC BY 4.0'],['Saraswati','Pexels: Monojit Dutta, Sayoni Manna'],['Devi','Pexels: GOWTHAM AGM, Anubhav Choudhary, kesavan ks'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0 · Pexels: yogeshwar y'],['Shirdi Sai Baba','Prime Minister\'s Office, Government of India, GODL-India · Pexels: Santhapeta Saibaba Temple Ongole'],['Vishnu','Pexels: Anand Pathak, Ram Kondisetti'],['Varanasi Ganga aarti at sunrise','jeminichronicles, Wikimedia Commons, CC BY-SA 2.0'],['Photos','Unsplash: VD Photography · Pexels: cottonbro studio, Ram Iyengar, Ventara Films']];
 V.credits=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('settings')" aria-label="${t('back')}">${ic('back',24)}</button></div><h1>${t('credits')}</h1>${[...CREDITS,...(window.DL?DL.credits():[])].map(([a,b])=>`<div class="li" style="cursor:default"><span>${a}<small>${b}</small></span></div>`).join('')}</div>`;
 V.rate=()=>{return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div>
  <h1 style="margin-top:14px">${t('rate_h')}</h1><p class="sub" style="font-size:17px">${t('rate_s')}</p><div class="grow"></div>
@@ -481,7 +486,7 @@ V.perms=()=>{if(!S.plus){setTimeout(()=>go('pay'));return '<div class="scr"></di
  return `<div class="scr">${topBar()}
  <h1>${t('perm_h')}</h1><p class="sub">${t('perm_s')}</p>
  <div class="trust"><span>${ic('lock',18)}</span><span>${t('trust')}</span></div>
- ${list.map((k,i)=>`<div class="perm ${p[k]?'ok':first===k?'':'wait'}"><span class="n">${p[k]?ic('check',16):i+1}</span><div><b>${t('p_'+k)}</b><span class="s">${t('p_'+k+'_s',{brand})}</span></div>
+ ${list.map((k,i)=>`<div class="perm ${p[k]?'ok':first===k?'':'wait'}${nextPerm===k&&!p[k]?' focus':''}"><span class="n">${p[k]?ic('check',16):i+1}</span><div><b>${t('p_'+k)}</b><span class="s">${t('p_'+k+'_s',{brand})}</span></div>
   <button class="go" onclick="askPerm('${k}')">${p[k]?t('done'):t('allow')}</button></div>`).join('')}
  ${(()=>{const unk=lastPerm&&(lastPerm==='popup'&&p.popupKnown===false||lastPerm==='autostart'&&p.autostartKnown===false);
   if(unk)return `<div class="trust" style="flex-direction:column;background:var(--tint)"><b style="color:var(--ink)">${t('conf_q')} · ${t('p_'+lastPerm)}</b><div style="display:flex;gap:8px;width:100%"><button class="btn ghost" style="min-height:44px;font-size:15px" onclick="confirmPerm(true)">${t('yes_on')}</button><button class="btn ghost" style="min-height:44px;font-size:15px" onclick="confirmPerm(false)">${t('no_again')}</button></div></div>`;
@@ -491,9 +496,19 @@ V.perms=()=>{if(!S.plus){setTimeout(()=>go('pay'));return '<div class="scr"></di
   if(st==='pass')return `<div class="trust" style="color:var(--ok);font-weight:700">${ic('check',18)} ${t('test_pass')}</div>`;
   if(st==='fail')return `<div class="banner warn" onclick="askPerm('popup')">${ic('warn',20)} ${t('test_fail')}</div><button class="btn ghost" style="min-height:48px" onclick="testLock()">${t('test_btn')}</button>`;
   return `<button class="btn ghost" style="min-height:48px;margin-bottom:8px" onclick="testLock()">${t('test_btn')}</button>`})()}
- <div class="grow"></div><button class="btn stick" ${p.need.every(k=>p[k])?'':'disabled'} onclick="track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else if(S.inSetup)go('report');else go(S.done?'settings':'home')">${t('cont')}</button></div>`};
+ <div class="grow"></div><button class="btn stick${nextPerm==='cont'&&p.need.every(k=>p[k])?' nudge':''}" ${p.need.every(k=>p[k])?'':'disabled'} onclick="nextPerm='';track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else if(S.inSetup)go('report');else go(S.done?'settings':'home')">${t('cont')}</button></div>`};
 let lastPerm='',testing=false;
-function askPerm(k){if(!S.plus)return go('pay');track('perm_'+k);lastPerm=k;PL.openPerm(k)}
+function askPerm(k){if(!S.plus)return go('pay');track('perm_'+k);lastPerm=k;nextPerm='';
+ const x={hint:t('perm_hint'),title:t('perm_on',{perm:t('p_'+k)}),text:t('perm_back')};try{PL.openPerm(k,JSON.stringify(x))}catch(e){PL.openPerm(k)}}
+/* Auto-return (PermWatch.kt): Android brought us back because Usage access / Display over other apps was switched on.
+   Confirm with a chip + haptic, then put the next pending row in focus and pulse its Allow button (or Continue when
+   everything required is on). We do NOT open the next settings page by ourselves: a settings screen appearing without
+   a tap feels like the phone acting on its own, and the user should see what the next switch is for first. */
+let nextPerm='';
+window.plGranted=k=>{if(cur!=='perms')return;lastPerm='';try{PL.haptic('done',60)}catch(e){}
+ const d=document.createElement('div');d.className='toast chip';d.textContent=t('perm_on',{perm:t('p_'+k)});document.body.appendChild(d);setTimeout(()=>d.remove(),2200);
+ setTimeout(()=>{if(cur!=='perms')return;const {p,L}=permList();nextPerm=L.find(x=>!p[x])||'cont';render();
+  const el=document.querySelector(nextPerm==='cont'?'.btn.stick':'.perm.focus');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},800)};
 function confirmPerm(ok){try{PL.confirmPerm(lastPerm,!!ok)}catch(e){}const k=lastPerm;lastPerm='';if(!ok)return askPerm(k);render()}
 function testLock(){testing=true;try{PL.testLock()}catch(e){}render()}
 window.plResume=()=>{setTimeout(()=>{try{syncWidget()}catch(e){}},300);if(testing){const st=(J(PL.lockStatus(),{})).selfTest;if(st&&st!=='untested')testing=false}Object.assign(S,J(localStorage.getItem('pl'),{}));lockLook();if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};

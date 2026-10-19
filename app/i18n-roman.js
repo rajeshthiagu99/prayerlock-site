@@ -5,6 +5,7 @@
    Loaded after i18n*.js and delight-data.js (it adds Roman names to CONTENT and DLD). */
 Object.assign(window.I18N,{
 hi_en:{
+ jr_ci:"daily check-in",
  paying:"Payment ho raha hai…",
  prev_lbl:"Preview: kuch bhi unlock nahi hoga",
  prev_done:"Lock aise kaam karta hai. Kuch bhi unlock nahi hua.",
@@ -107,6 +108,9 @@ hi_en:{
  p_notif:"Notifications",
  p_notif_s:"Subah ke reminder ke liye",
  set_find:"Prayer Lock dhoondhein, on karein, phir wapas aayein.",
+ perm_on:"✓ {perm} on ho gaya",
+ perm_hint:"Prayer Lock dhoondhein → on karein",
+ perm_back:"Setup aage badhane ke liye tap karein",
  rep_h:"Kal, {name}",
  rep_phone:"phone par",
  rep_god:"{god} ke saath",
@@ -499,6 +503,7 @@ hi_en:{
  n_off:"Band karein"
 },
 ta_en:{
+ jr_ci:"daily check-in",
  paying:"Payment process aagudhu…",
  prev_lbl:"Preview: edhuvum unlock aagadhu",
  prev_done:"Lock ippadi dhaan velai seiyum. Edhuvum unlock aagala.",
@@ -601,6 +606,9 @@ ta_en:{
  p_notif:"Notifications",
  p_notif_s:"Kaalai reminder-kaaga",
  set_find:"Prayer Lock-ai kandupidichu on pannittu, thirumba vaanga.",
+ perm_on:"✓ {perm} on aayiduchu",
+ perm_hint:"Prayer Lock-ai thedunga → on pannunga",
+ perm_back:"Setup-ai thodara tap pannunga",
  rep_h:"Netru, {name}",
  rep_phone:"phone-la",
  rep_god:"{god} poojaila",
@@ -993,6 +1001,7 @@ ta_en:{
  n_off:"Off pannu"
 },
 te_en:{
+ jr_ci:"daily check-in",
  paying:"Payment jarugutondi…",
  prev_lbl:"Preview: emi unlock kaadu",
  prev_done:"Lock ila pani chestundi. Emi unlock kaaledu.",
@@ -1095,6 +1104,9 @@ te_en:{
  p_notif:"Notifications",
  p_notif_s:"Mee morning reminder kosam",
  set_find:"Prayer Lock ni vetiki on cheyyandi, tarvata tirigi randi.",
+ perm_on:"✓ {perm} on ayindi",
+ perm_hint:"Prayer Lock ni vetakandi → on cheyyandi",
+ perm_back:"Setup konasaginchadaniki tap cheyyandi",
  rep_h:"Ninna, {name}",
  rep_phone:"phone lo",
  rep_god:"{god} tho",
@@ -1487,6 +1499,7 @@ te_en:{
  n_off:"Off cheyyi"
 },
 kn_en:{
+ jr_ci:"daily check-in",
  paying:"Payment aagtide…",
  prev_lbl:"Preview: yaavudu unlock aagalla",
  prev_done:"Lock heege kelsa maadutte. Yaavudu unlock aagilla.",
@@ -1589,6 +1602,9 @@ kn_en:{
  p_notif:"Notifications",
  p_notif_s:"Beligina reminder gaagi",
  set_find:"Prayer Lock hudki on maadi, aamele vaapas banni.",
+ perm_on:"✓ {perm} on aaytu",
+ perm_hint:"Prayer Lock hudki → on maadi",
+ perm_back:"Setup munduvareesalu tap maadi",
  rep_h:"Ninne, {name}",
  rep_phone:"phone alli",
  rep_god:"{god} poojeyalli",
@@ -1981,6 +1997,7 @@ kn_en:{
  n_off:"Off maadi"
 },
 ml_en:{
+ jr_ci:"daily check-in",
  paying:"Payment nadakkunnu…",
  prev_lbl:"Preview: onnum unlock aakilla",
  prev_done:"Lock ingane aanu work cheyyunnathu. Onnum unlock aayilla.",
@@ -2083,6 +2100,9 @@ ml_en:{
  p_notif:"Notifications",
  p_notif_s:"Raavilathe reminderinu vendi",
  set_find:"Prayer Lock kandupidichu on aakkiyittu thirike vaa.",
+ perm_on:"✓ {perm} on aayi",
+ perm_hint:"Prayer Lock kandupidikku → on aakku",
+ perm_back:"Setup thudaraan tap cheyyuka",
  rep_h:"Innale, {name}",
  rep_phone:"phonil",
  rep_god:"{god} prarthanayil",

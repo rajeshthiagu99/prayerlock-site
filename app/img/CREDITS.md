@@ -12,7 +12,7 @@ Licence references:
 
 ## Deity photos (founder's picks, 19 Oct 2026)
 
-`deity/<id>.webp` is 480×480 and face-centred (Home ring, widget, paywall). `deity/<id>-hero.webp` is 720×960 with the face at (50%, 26%). `deity/<id>-2.webp` and `-3.webp` are 720×960 variants: the darshan sheet and the unlock doors rotate daily through [hero, -2, -3]. All are real photographs of murtis and temple idols, with no AI. The exception is Vishnu, which keeps its earlier chromolithograph because the founder picked no Vishnu photo. Each licence was read on the photo's own page. Shop, product, news and TripAdvisor photos were never shipped; `docs/photo-permissions.md` lists the ones that need permission. CC BY-SA crops keep their CC BY-SA licence.
+`deity/<id>.webp` is 480×480 and face-centred (Home ring, widget, paywall). `deity/<id>-hero.webp` is 720×960 with the face at (50%, 26%). The Vishnu hero has its face at (50%, 35%) so that the crown stays in frame. `deity/<id>-2.webp` and `-3.webp` are 720×960 variants: the darshan sheet and the unlock doors rotate daily through [hero, -2, -3]. All are real photographs of murtis and temple idols, with no AI. There are no paintings, oleographs or calendar prints anywhere in the app. Each licence was read on the photo's own page. Shop, product, news and TripAdvisor photos were never shipped; `docs/photo-permissions.md` lists the ones that need permission. CC BY-SA crops keep their CC BY-SA licence.
 
 | File(s) | Source page | Author | Licence |
 |---|---|---|---|
@@ -48,7 +48,8 @@ Licence references:
 | ayyappa-2 (brass) | https://www.pexels.com/photo/golden-hindu-statue-with-floral-garland-35339691/ | yogeshwar y | Pexels License |
 | sai (main, Shirdi Samadhi Mandir) | https://commons.wikimedia.org/wiki/File:Samadhi_Mandir_of_Shirdi_Sai_Baba.jpg | Prime Minister's Office, Government of India | **GODL-India**: attribution required: "Source: Prime Minister's Office, Government of India (GODL-India)" |
 | sai-2 | https://www.pexels.com/photo/figurine-of-a-king-on-a-throne-13725452/ | Santhapeta Saibaba Temple Ongole | Pexels License |
-| vishnu (main, unchanged) | https://commons.wikimedia.org/wiki/File:Vishnu_flanked_by_two_wives_resting_on_Shesa,_the_serpent_on_Wellcome_V0045133.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045133), CC BY 4.0" |
+| vishnu (main, thumb + hero: brass Vishnu under Adisesha's hood) | https://www.pexels.com/photo/lord-vishnu-golden-brass-12556091/ | Anand Pathak | Pexels License |
+| vishnu-2 (Perumal utsavar with Sridevi and Bhudevi, alankaram) | https://www.pexels.com/photo/ornate-hindu-deities-decorated-with-garland-39650021/ | Ram Kondisetti | Pexels License |
 
 Some heroes were lightly smoothed (Gaussian blur, radius 0.6 to 1.2 px) so they fit under 90 KB.
 
@@ -101,3 +102,7 @@ Licences were checked on each Commons page's licence templates. Every file below
 | story/scroll-night | https://www.pexels.com/photo/a-man-lying-down-while-using-the-phone-6943437/ | cottonbro studio | Pexels License |
 | story/temple-morning | https://www.pexels.com/photo/srikanteshwara-swami-temple-nanjangudu-in-nanjagud-in-india-22890480/ | Ram Iyengar | Pexels License |
 | story/young-pray | https://www.pexels.com/photo/man-praying-with-devotional-mark-in-profile-35672087/ | Ventara Films | Pexels License |
+
+## No paintings, 19 Oct 2026
+
+The Vishnu chromolithograph (Wellcome Collection V0045133) was replaced by the two Pexels photos in the Vishnu rows above, and it is no longer shipped. The widget picker previews (`res/drawable-nodpi/widget_preview_wide.png` and `widget_preview_small.png`) showed a painted Hanuman. They were redrawn from `deity/hanuman-hero.webp` (Pexels, DARKMODE CINEMA). Every image under `img/` and `res/` was checked by eye, and all are real photographs.

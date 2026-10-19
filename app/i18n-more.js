@@ -103,6 +103,9 @@ ta:{
  p_notif:"அறிவிப்புகள்",
  p_notif_s:"காலை நினைவூட்டலுக்காக",
  set_find:"Prayer Lock-ஐக் கண்டுபிடித்து இயக்கிவிட்டு, திரும்பி வாருங்கள்.",
+ perm_on:"✓ {perm} இயக்கப்பட்டது",
+ perm_hint:"Prayer Lock-ஐத் தேடுங்கள் → இயக்குங்கள்",
+ perm_back:"அமைப்பைத் தொடர தட்டவும்",
  rep_h:"நேற்று, {name}",
  rep_phone:"போனில்",
  rep_god:"{god} வழிபாட்டில்",
@@ -477,7 +480,8 @@ ta:{
  fest_one:"{f} – நாளை",
  dl_fest_d_one:"நாளை.",
  wd_days_one:"நாள்",
- dl_ul_days_one:"நாள்"
+ dl_ul_days_one:"நாள்",
+ jr_ci:"தினசரி பதிவு"
 },
 te:{
  paying:"చెల్లింపు జరుగుతోంది…",
@@ -582,6 +586,9 @@ te:{
  p_notif:"నోటిఫికేషన్లు",
  p_notif_s:"మీ ఉదయం రిమైండర్ కోసం",
  set_find:"Prayer Lock ను వెతికి ఆన్ చేసి, తిరిగి రండి.",
+ perm_on:"✓ {perm} ఆన్ అయింది",
+ perm_hint:"Prayer Lock ను వెతకండి → ఆన్ చేయండి",
+ perm_back:"సెటప్ కొనసాగించడానికి నొక్కండి",
  rep_h:"నిన్న, {name}",
  rep_phone:"ఫోన్‌లో",
  rep_god:"{god} ప్రార్థనలో",
@@ -956,7 +963,8 @@ te:{
  fest_one:"{f} – రేపే",
  dl_fest_d_one:"రేపే.",
  wd_days_one:"రోజు",
- dl_ul_days_one:"రోజు"
+ dl_ul_days_one:"రోజు",
+ jr_ci:"రోజువారీ చెక్-ఇన్"
 },
 kn:{
  paying:"ಪಾವತಿ ಆಗುತ್ತಿದೆ…",
@@ -1061,6 +1069,9 @@ kn:{
  p_notif:"ನೋಟಿಫಿಕೇಶನ್‌ಗಳು",
  p_notif_s:"ಬೆಳಗಿನ ರಿಮೈಂಡರ್‌ಗಾಗಿ",
  set_find:"Prayer Lock ಹುಡುಕಿ ಆನ್ ಮಾಡಿ, ನಂತರ ಹಿಂದಿರುಗಿ.",
+ perm_on:"✓ {perm} ಆನ್ ಆಗಿದೆ",
+ perm_hint:"Prayer Lock ಹುಡುಕಿ → ಆನ್ ಮಾಡಿ",
+ perm_back:"ಸೆಟಪ್ ಮುಂದುವರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ",
  rep_h:"ನಿನ್ನೆ, {name}",
  rep_phone:"ಫೋನ್‌ನಲ್ಲಿ",
  rep_god:"{god} ಪ್ರಾರ್ಥನೆಯಲ್ಲಿ",
@@ -1435,7 +1446,8 @@ kn:{
  dl_ul_days_one:"ದಿನ",
  fest_one:"{f} – ನಾಳೆ",
  dl_fest_d_one:"ನಾಳೆ.",
- dl_streak_one:"{n} ದಿನ, ದೀಪ ಬೆಳಗುತ್ತಲೇ ಇದೆ"
+ dl_streak_one:"{n} ದಿನ, ದೀಪ ಬೆಳಗುತ್ತಲೇ ಇದೆ",
+ jr_ci:"ದೈನಂದಿನ ಚೆಕ್-ಇನ್"
 },
 ml:{
  paying:"പണമടയ്ക്കൽ നടക്കുന്നു…",
@@ -1540,6 +1552,9 @@ ml:{
  p_notif:"അറിയിപ്പുകൾ",
  p_notif_s:"രാവിലത്തെ ഓർമ്മപ്പെടുത്തലിനായി",
  set_find:"Prayer Lock കണ്ടെത്തി ഓണാക്കിയ ശേഷം തിരികെ വരൂ.",
+ perm_on:"✓ {perm} ഓണായി",
+ perm_hint:"Prayer Lock കണ്ടെത്തുക → ഓണാക്കുക",
+ perm_back:"സെറ്റപ്പ് തുടരാൻ ടാപ്പ് ചെയ്യുക",
  rep_h:"ഇന്നലെ, {name}",
  rep_phone:"ഫോണിൽ",
  rep_god:"{god} പ്രാർത്ഥനയിൽ",
@@ -1914,7 +1929,8 @@ ml:{
  dl_fest_d_one:"നാളെ.",
  dl_streak_one:"{n} ദിവസം, വിളക്ക് തെളിഞ്ഞുതന്നെ",
  wd_days_one:"ദിവസം",
- dl_ul_days_one:"ദിവസം"
+ dl_ul_days_one:"ദിവസം",
+ jr_ci:"ദിവസേനയുള്ള ചെക്ക്-ഇൻ"
 },
 mr:{
  paying:"पेमेंट होत आहे…",
@@ -2019,6 +2035,9 @@ mr:{
  p_notif:"सूचना",
  p_notif_s:"सकाळच्या आठवणीसाठी",
  set_find:"Prayer Lock शोधा, सुरू करा आणि परत या.",
+ perm_on:"✓ {perm} सुरू झाले",
+ perm_hint:"Prayer Lock शोधा → सुरू करा",
+ perm_back:"सेटअप पुढे सुरू ठेवण्यासाठी टॅप करा",
  rep_h:"काल, {name}",
  rep_phone:"फोनवर",
  rep_god:"{god} नामस्मरणात",
@@ -2393,7 +2412,8 @@ mr:{
  dl_fest_d_one:"उद्या.",
  dl_streak_one:"{n} दिवस, दिवा तेवत राहो",
  wd_days_one:"दिवस",
- dl_ul_days_one:"दिवस"
+ dl_ul_days_one:"दिवस",
+ jr_ci:"दैनंदिन चेक-इन"
 },
 bn:{
  paying:"পেমেন্ট হচ্ছে…",
@@ -2498,6 +2518,9 @@ bn:{
  p_notif:"নোটিফিকেশন",
  p_notif_s:"সকালের রিমাইন্ডারের জন্য",
  set_find:"Prayer Lock খুঁজে চালু করুন, তারপর ফিরে আসুন।",
+ perm_on:"✓ {perm} চালু হয়েছে",
+ perm_hint:"Prayer Lock খুঁজুন → চালু করুন",
+ perm_back:"সেটআপ চালিয়ে যেতে ট্যাপ করুন",
  rep_h:"গতকাল, {name}",
  rep_phone:"ফোনে",
  rep_god:"{god} পুজোয়",
@@ -2872,7 +2895,8 @@ bn:{
  dl_fest_d_one:"আগামীকাল।",
  dl_streak_one:"{n} দিন, প্রদীপ জ্বলছে",
  wd_days_one:"দিন",
- dl_ul_days_one:"দিন"
+ dl_ul_days_one:"দিন",
+ jr_ci:"দৈনিক চেক-ইন"
 },
 gu:{
  paying:"ચુકવણી થઈ રહી છે…",
@@ -2977,6 +3001,9 @@ gu:{
  p_notif:"નોટિફિકેશન",
  p_notif_s:"સવારના રિમાઇન્ડર માટે",
  set_find:"Prayer Lock શોધો, ચાલુ કરો, પછી પાછા આવો.",
+ perm_on:"✓ {perm} ચાલુ થયું",
+ perm_hint:"Prayer Lock શોધો → ચાલુ કરો",
+ perm_back:"સેટઅપ ચાલુ રાખવા ટૅપ કરો",
  rep_h:"ગઈકાલે, {name}",
  rep_phone:"ફોન પર",
  rep_god:"{god} સાથે",
@@ -3351,7 +3378,8 @@ gu:{
  dl_fest_d_one:"આવતીકાલે.",
  dl_streak_one:"{n} દિવસ, દીવો ઝળહળે છે",
  wd_days_one:"દિવસ",
- dl_ul_days_one:"દિવસ"
+ dl_ul_days_one:"દિવસ",
+ jr_ci:"દૈનિક ચેક-ઇન"
 },
 pa:{
  paying:"ਭੁਗਤਾਨ ਹੋ ਰਿਹਾ ਹੈ…",
@@ -3456,6 +3484,9 @@ pa:{
  p_notif:"ਸੂਚਨਾਵਾਂ",
  p_notif_s:"ਸਵੇਰ ਦੀ ਯਾਦ ਲਈ",
  set_find:"Prayer Lock ਲੱਭੋ, ਚਾਲੂ ਕਰੋ, ਫਿਰ ਵਾਪਸ ਆਓ।",
+ perm_on:"✓ {perm} ਚਾਲੂ ਹੋ ਗਿਆ",
+ perm_hint:"Prayer Lock ਲੱਭੋ → ਚਾਲੂ ਕਰੋ",
+ perm_back:"ਸੈੱਟਅੱਪ ਜਾਰੀ ਰੱਖਣ ਲਈ ਟੈਪ ਕਰੋ",
  rep_h:"ਕੱਲ੍ਹ, {name}",
  rep_phone:"ਫ਼ੋਨ ਉੱਤੇ",
  rep_god:"{god} ਨਾਲ",
@@ -3830,6 +3861,7 @@ pa:{
  dl_fest_d_one:"ਕੱਲ੍ਹ।",
  dl_streak_one:"{n} ਦਿਨ, ਦੀਵਾ ਜਗਦਾ ਰਹੇ",
  wd_days_one:"ਦਿਨ",
- dl_ul_days_one:"ਦਿਨ"
+ dl_ul_days_one:"ਦਿਨ",
+ jr_ci:"ਰੋਜ਼ਾਨਾ ਚੈੱਕ-ਇਨ"
 }
 });

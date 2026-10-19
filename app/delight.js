@@ -357,7 +357,7 @@ DL.dawn=()=>{S.dawnDay=today();save();let st='';for(let i=0;i<26;i++)st+=`<i sty
 
 /* Daily darshan art: the darshan sheet and the unlock doors rotate through the deity's photos
    ([hero, -2, -3], one per local day). Home, widget and paywall keep the main hero. */
-const HERO_N={shiva:3,ganesha:3,murugan:2,hanuman:3,krishna:2,radha_krishna:2,ram:3,venkatesha:2,lakshmi:3,saraswati:2,devi:3,ayyappa:2,sai:2};
+const HERO_N={shiva:3,ganesha:3,murugan:2,hanuman:3,krishna:2,radha_krishna:2,ram:3,venkatesha:2,lakshmi:3,saraswati:2,devi:3,ayyappa:2,sai:2,vishnu:2};
 const heroFor=k=>{const n=HERO_N[k]||1,d=new Date(),i=Math.floor((d-d.getTimezoneOffset()*6e4)/864e5)%n;return i?`img/deity/${k}-${i+1}.webp`:img(k,1)};
 DL.heroFor=heroFor;
 
