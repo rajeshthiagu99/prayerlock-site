@@ -112,8 +112,16 @@ body.dark .opt.on{outline:2px solid var(--pri);outline-offset:-2px}
 .input{width:100%;font:inherit;font-size:22px;font-weight:600;padding:14px;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none}
 .langs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .langs .opt{margin:0;justify-content:center;font-size:21px;padding:14px 6px}
+/* language picker: one row per language, native script + "X in English" */
+.lgrp{display:grid;grid-template-columns:1fr 1.25fr;gap:8px;margin-bottom:9px}.lgrp.one{grid-template-columns:1fr}
+.lgrp .opt{margin:0;justify-content:center;text-align:center;font-size:20px;padding:12px 8px;min-height:56px;line-height:1.2}.lgrp .opt.rom{font-size:16px}
+.globe{margin-left:auto;margin-right:-8px;color:var(--muted)}
+/* romanised modes: the Roman line under a native mantra / verse */
+.mtr{font-size:15px;font-weight:600;line-height:1.3;text-align:center;color:var(--muted);margin-top:2px}
+.vtr{font-size:14.5px;font-style:italic;line-height:1.5;text-align:center;color:var(--muted);margin:0 0 10px;white-space:pre-line}
 .gods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .god{overflow-wrap:anywhere;min-width:0}
+body.roman .god{overflow-wrap:break-word}
 .god{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;border:var(--bw) solid transparent;border-radius:var(--r);background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:700;line-height:1.15;cursor:pointer;text-align:center}
 .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--scr);font-size:26px;color:#fff;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15);flex:none}
 .god.on{border-color:var(--line);background:var(--card);box-shadow:var(--sh)}
@@ -244,6 +252,7 @@ select.sel{font:inherit;font-size:14px;font-weight:600;color:var(--ink);backgrou
 <script src="i18n-more.js" onerror="0"></script>
 <script src="i18n-fgs.js"></script>
 <script src="delight-data.js" onerror="0"></script>
+<script src="i18n-roman.js" onerror="0"></script>
 <script src="delight.js" onerror="0"></script>
 <script>
 "use strict";
@@ -254,7 +263,8 @@ if(!window.CONTENT){window.CONTENT={deities:{
  ram:{name:{en:'Ram',hi:'राम'},honorific:{en:'Shri Ram',hi:'श्री राम'},japa:{en:'Ram',hi:'राम'},glyph:'रा',color:'#C2410C',texts:[],regions:['hi']}
 },texts:{},festivals:[]}}
 const C=window.CONTENT,I=window.I18N;
-const LANGS=['hi','ta','te','kn','ml','mr','bn','gu','pa','en'].filter(l=>I[l]);
+const LANGS=['hi','hi_en','ta','ta_en','te','te_en','kn','kn_en','ml','ml_en','mr','bn','gu','pa','en'].filter(l=>I[l]);
+const INDIC=['hi','ta','te','kn','ml','mr','bn','gu','pa'];
 const REVIEW_HASH=27246139; // set at build time from keystore/reviewer-code.txt
 
 /* ============ bridge (native PL or browser mock) ============ */
@@ -270,7 +280,7 @@ const Mock=(()=>{const g={usage:false,overlay:false,popup:false,battery:false,no
   setLock(j){lock=j},setLockOn(v){on=!!v},getLock:()=>JSON.stringify({...JSON.parse(lock||'{}'),on}),lockStatus:()=>JSON.stringify({running:!!lock&&on,on,permsOk:g.usage&&g.overlay,popupOk:g.popup||!['xiaomi','vivo','oppo','realme','oneplus'].includes(brand),selfTest:g.test||'untested'}),confirmPerm(k,v){g[k]=v},testLock(){setTimeout(()=>{g.test='pass';window.plResume&&plResume()},1500)},
   unlocked(p){go('home');toast(t('unlocked',{app:lockLabel,m:S.unlockMin}))},prayed(){},goHome(){go('home')},
   track(){},buy(p){setTimeout(()=>{plus=true;window.onPurchase&&onPurchase(true,+p,'')},700)},restore(){toast(t('no_purchase'))},isPlus:()=>plus,
-  haptic(k,ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}},reminders(){},share(){},openUrl(u){window.open(u,'_blank')},version:()=>1}})();
+  haptic(k,ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}},reminders(){},share(){},openUrl(u){window.open(u,'_blank')},version:()=>1,locale:()=>JSON.stringify({lang:(navigator.language||'en').split('-')[0],country:((navigator.language||'').split('-')[1]||'').toLowerCase(),simCountry:'',langs:(navigator.languages||[]).map(x=>x.split('-')[0])})}})();
 const PL=window.PL||Mock;
 const J=(s,d)=>{try{return JSON.parse(s)}catch(e){return d}};
 const track=(e,p)=>{try{p?PL.track(e,JSON.stringify(p)):PL.track(e)}catch(x){}};
@@ -289,35 +299,47 @@ const LOCK=q.get('lock');let lockLabel=q.get('label')||'';
 
 /* ============ text helpers ============ */
 const L=()=>S.lang||'en';
-const pick=(o,l=L())=>o?(o[l]??o.hi??o.en??Object.values(o)[0]):'';
+/** Romanised modes (ta_en, hi_en …): UI strings follow the full mode (L), content and regional behaviour follow the base
+    language (baseLang: deity order, festivals, prasad, Kanda Sashti, native mantra script). Dates, plurals and lang= use 'en'. */
+const isRoman=(l=L())=>/_en$/.test(l);
+const baseLang=(l=L())=>l.replace(/_en$/,'');
+const uiLoc=()=>isRoman()?'en':L();
+/** Content text: in a romanised mode its own Roman form (i18n-roman.js), else content's en. */
+const pick=(o,l=L())=>o?(o[l]??(isRoman(l)?o.en??o[baseLang(l)]:o.hi??o.en)??Object.values(o)[0]):'';
 const god=()=>C.deities[S.deity]||C.deities[Object.keys(C.deities)[0]];
 const godName=()=>pick(god().honorific)||pick(god().name);
-function t(k,v={}){let s=(I[L()]&&I[L()][k])??I.en[k]??k;v={god:godName(),name:S.name||'',...v};for(const x in v)s=s.split('{'+x+'}').join(v[x]);const lead=/^,\s*/.test(s);s=s.replace(/^,\s*|\s*,\s*$/g,'').replace(/\s+,/g,',');return lead&&s?s[0].toUpperCase()+s.slice(1):s}
-const japa=()=>pick(god().japa);
-function glyph(k){k=k||S.deity;const d=C.deities[k]||god();if(k==='murugan'&&L()==='ta')return 'வேல்';if(['hi','mr','en'].includes(L()))return k==='murugan'?'स्कं':(d.glyph||'ॐ');const nm=pick(d.name).replace(/^(ஸ்ரீ|శ్రీ|ಶ್ರೀ|ശ്രീ|শ্রী|શ્રી|ਸ਼੍ਰੀ)\s*/,'');try{return [...new Intl.Segmenter(L(),{granularity:'grapheme'}).segment(nm)][0].segment}catch(e){return nm[0]}}
+function t(k,v={}){const cnt=v._n??v.n??v.d;if(typeof cnt==='number'){let one=false;try{one=new Intl.PluralRules(uiLoc()).select(cnt)==='one'}catch(e){one=cnt===1}if(one&&I[L()]&&I[L()][k+'_one'])k=k+'_one'}let s=(I[L()]&&I[L()][k])??I.en[k]??k;v={god:godName(),name:S.name||'',...v};for(const x in v)s=s.split('{'+x+'}').join(v[x]);const lead=/^,\s*/.test(s);s=s.replace(/^,\s*|\s*,\s*$/g,'').replace(/\s+,/g,',');return lead&&s?s[0].toUpperCase()+s.slice(1):s}
+/** japa(): the mantra in its own script (base language). japaR(): its Roman line, only in a romanised mode. */
+const japa=()=>pick(god().japa,baseLang());
+const japaR=()=>{if(!isRoman())return '';const r=pick(god().japa);return r&&r!==japa()?r:''};
+/** A mantra block: native script, and in a romanised mode the Roman line under it. */
+const mantraH=(st='')=>`<p class="mantra" style="${st}">${esc(japa())}</p>${japaR()?`<p class="mtr">${esc(japaR())}</p>`:''}`;
+function glyph(k){k=k||S.deity;const d=C.deities[k]||god(),bl=baseLang();if(k==='murugan'&&bl==='ta')return 'வேல்';if(['hi','mr','en'].includes(bl))return k==='murugan'?'स्कं':(d.glyph||'ॐ');const nm=pick(d.name,bl).replace(/^(ஸ்ரீ|శ్రీ|ಶ್ರೀ|ശ്രീ|শ্রী|શ્રી|ਸ਼੍ਰੀ)\s*/,'');try{return [...new Intl.Segmenter(bl,{granularity:'grapheme'}).segment(nm)][0].segment}catch(e){return nm[0]}}
 const hm=m=>m>=60?t('u_h',{n:Math.floor(m/60)})+' '+t('u_m',{n:m%60}):t('u_m',{n:m});
 /** Line icons (delight.js); plain glyphs if that file is missing. */
 const ic=(k,s=22,st='')=>window.DL?DL.ic(k,s,st):({back:'‹',next:'›',check:'✓',close:'✕'}[k]||'');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LEAD={hi:['ram','hanuman','shiva','krishna','radha_krishna','devi'],ta:['murugan','shiva','devi','vishnu','ganesha','venkatesha','ayyappa'],te:['venkatesha','shiva','ram','hanuman','devi','ganesha'],kn:['venkatesha','shiva','ganesha','hanuman','devi','vishnu'],ml:['ayyappa','krishna','devi','shiva','ganesha','murugan'],mr:['ganesha','vishnu','shiva','ram','hanuman','devi'],bn:['devi','krishna','shiva','radha_krishna','ganesha','lakshmi'],gu:['krishna','hanuman','devi','shiva','ganesha','ram'],pa:['devi','shiva','hanuman','ram','krishna','ganesha'],en:['ram','hanuman','shiva','krishna','devi','ganesha']};
-function godOrder(){const base=(C.deityOrder||Object.keys(C.deities)).filter(k=>C.deities[k]);const lead=(LEAD[L()]||[]).filter(k=>C.deities[k]);return [...lead,...base.filter(k=>!lead.includes(k))]}
+function godOrder(){const base=(C.deityOrder||Object.keys(C.deities)).filter(k=>C.deities[k]);const lead=(LEAD[baseLang()]||[]).filter(k=>C.deities[k]);return [...lead,...base.filter(k=>!lead.includes(k))]}
 const DARK=['sandhya','peacock','swarna'];
 const GF={anek:'Anek+Latin:wght@500;700;800&family=Anek+Devanagari:wght@500;700;800&family=Anek+Tamil:wght@500;700;800&family=Anek+Telugu:wght@500;700;800&family=Anek+Kannada:wght@500;700;800&family=Anek+Malayalam:wght@500;700;800&family=Anek+Bangla:wght@500;700;800&family=Anek+Gujarati:wght@500;700;800&family=Anek+Gurmukhi:wght@500;700;800',noto:'Noto+Sans:wght@500;700;800&family=Noto+Sans+Devanagari:wght@500;700;800&family=Noto+Sans+Tamil:wght@500;700;800&family=Noto+Sans+Telugu:wght@500;700;800&family=Noto+Sans+Kannada:wght@500;700;800&family=Noto+Sans+Malayalam:wght@500;700;800&family=Noto+Sans+Bengali:wght@500;700;800&family=Noto+Sans+Gujarati:wght@500;700;800&family=Noto+Sans+Gurmukhi:wght@500;700;800'};
-function applyGod(){const b=document.body;b.dataset.theme=S.theme;b.dataset.font=S.font;b.dataset.btn=S.btn||'chunky';b.classList.toggle('dark',DARK.includes(S.theme));
+function applyGod(){const b=document.body;b.dataset.theme=S.theme;b.dataset.font=S.font;b.dataset.btn=S.btn||'chunky';b.classList.toggle('dark',DARK.includes(S.theme));b.classList.toggle('roman',isRoman());
  if(GF[S.font]&&!document.getElementById('gf-'+S.font)){const l=document.createElement('link');l.id='gf-'+S.font;l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+GF[S.font]+'&display=swap';document.head.appendChild(l)}
- const gc=god().color||'#D9560B';document.documentElement.style.setProperty('--god',DARK.includes(S.theme)?`color-mix(in srgb, ${gc} 20%, #F6D58E)`:gc);document.documentElement.lang=L()}
+ const gc=god().color||'#D9560B';document.documentElement.style.setProperty('--god',DARK.includes(S.theme)?`color-mix(in srgb, ${gc} 20%, #F6D58E)`:gc);document.documentElement.lang=uiLoc()}
 const img=(k,hero)=>`img/deity/${k}${hero?'-hero':''}.webp`;
 const avatar=(k,sz)=>`<span class="av" style="background:${C.deities[k].color};${sz?`width:${sz}px;height:${sz}px;font-size:${sz*.42}px`:''}">${esc(glyph(k))}<img src="${img(k)}" alt="" onerror="this.remove()"></span>`;
 const heroBg=(cls='')=>`<div class="hero ${cls}" style="background-color:var(--god);background-position:50% 18%;background-image:url(${img(S.deity,1)}),url(${img(S.deity)})"></div>`;
 const storyBg=n=>`<div class="hero" style="background-image:url(img/story/${n}.webp)"></div>`;
 const HRS=[2,4,6,8];const hrsN=()=>S.realH||HRS[S.hours]||4;const daysN=()=>Math.round(hrsN()*365/24);const savedH=()=>Math.max(0.5,hrsN()-1);
-const planDate=()=>{const d=new Date();d.setDate(d.getDate()+21);return d.toLocaleDateString((L()==='en'?'en':L())+'-IN',{day:'numeric',month:'long'})};
+const planDate=()=>{const d=new Date();d.setDate(d.getDate()+21);return d.toLocaleDateString(uiLoc()+'-IN',{day:'numeric',month:'long'})};
 function petals(n=36){const c=['#F59E0B','#EA580C','#FBBF24','#DC2626','#F97316'];for(let i=0;i<n;i++){const e=document.createElement('i');e.className='petal';e.style.left=Math.random()*100+'vw';e.style.background=c[i%c.length];e.style.setProperty('--dx',(Math.random()*120-60)+'px');e.style.setProperty('--r2',(Math.random()*720)+'deg');e.style.animationDuration=(2.2+Math.random()*1.8)+'s';e.style.animationDelay=(Math.random()*.6)+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),5000)}}
 
 /* ============ pieces ============ */
 const OB=['deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','plan','prayer','sankalp'];
 const SETUP=['ovprev','perms','report','apps'];
-function topBar(){const i=OB.indexOf(cur);return `<div class="top">${cur==='ovprev'?'<span style="width:40px"></span>':`<button class="back" onclick="back()" aria-label="${t('back')}">${ic('back',24)}</button>`}${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}</div>`}
+function topBar(){const i=OB.indexOf(cur);return `<div class="top">${cur==='ovprev'?'<span style="width:40px"></span>':`<button class="back" onclick="back()" aria-label="${t('back')}">${ic('back',24)}</button>`}${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}${S.done?'':globeBtn()}</div>`}
+/** Onboarding: reopens the language picker and comes back to this step. */
+const globeBtn=()=>`<button class="back globe" onclick="event.stopPropagation();langFrom=cur;go('lang')" aria-label="${t('st_lang')}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/></svg></button>`;
 function ring(n,done,size,meruOn){const beads=Math.min(n,36),R=size/2-12,c=size/2,on=Math.round(done/n*beads),r=beads>30?6:beads>18?7.5:9;
  let s=`<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle class="thr" cx="${c}" cy="${c}" r="${R}"/>`;
  for(let i=0;i<beads;i++){const a=-Math.PI/2+(i+1)/(beads+1)*Math.PI*2;s+=`<circle class="bd ${i<on?'on':''}" cx="${(c+R*Math.cos(a)).toFixed(1)}" cy="${(c+R*Math.sin(a)).toFixed(1)}" r="${r}"/>`}
@@ -330,17 +352,23 @@ const tabs=a=>`<div class="tabs">${[['home','today','◎','tab_today'],['read','
 
 /* ============ screens ============ */
 const V={};let cur='';
-V.lang=()=>`<div class="scr"><div style="height:24px"></div>
- <h1>${t('lang_h')}</h1><div style="height:10px"></div>
- <div class="langs">${LANGS.map(l=>`<button class="opt ${S.lang===l?'on':''}" onclick="S.lang='${l}';save();go('welcome')">${I[l]._name}</button>`).join('')}</div>
- <div class="grow"></div></div>`;
-V.welcome=()=>`<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center;align-items:center">${godOrder().slice(0,5).map((k,i)=>`<span style="margin:0 -10px;transform:scale(${[0.8,0.92,1.15,0.92,0.8][i]});z-index:${[1,2,3,2,1][i]};border-radius:50%;box-shadow:0 0 0 4px var(--bg)">${avatar(k,96)}</span>`).join('')}</div><div style="height:26px"></div>
- <h1 style="margin-top:24px">${t('wel_h',{god:'🙏'}).replace('🙏',L()==='en'?'God':pick({hi:'भगवान',mr:'देव',gu:'ભગવાન',bn:'ভগবান',pa:'ਪ੍ਰਭੂ',ta:'இறைவன்',te:'దేవుడు',kn:'ದೇವರು',ml:'ദൈവം'}))}</h1>
+/** Device language → pre-selected mode: the native script of an Indian device language (any in the phone's list), else English. */
+function defLang(){const lc=J(PL.locale?PL.locale():'{}',{});const ls=[lc.lang,...(lc.langs||[])].map(x=>String(x||'').toLowerCase()).map(x=>x==='in'?'':x);return ls.find(x=>INDIC.includes(x)&&I[x])||'en'}
+let langFrom='';
+function setLang(l){S.lang=l;save();track('lang',{l});lockText();if(S.done){applyGod();pushLock()}const to=langFrom&&langFrom!=='lang'?langFrom:'welcome';langFrom='';go(to)}
+V.lang=()=>{const sel=S.lang||defLang(),first=baseLang(sel);const groups=[first,...[...INDIC,'en'].filter(b=>b!==first)].filter(b=>I[b]);
+ return `<div class="scr"><div class="top">${langFrom?`<button class="back" onclick="const f=langFrom;langFrom='';go(f)" aria-label="${t('back')}">${ic('back',24)}</button>`:''}</div>
+ <h1>${t('lang_h')}</h1><div style="height:6px"></div>
+ ${groups.map(b=>{const r=I[b+'_en']?b+'_en':'';const btn=(l,cls)=>`<button class="opt ${cls} ${sel===l?'on':''}" lang="${l==='en'||/_en$/.test(l)?'en':l}" onclick="setLang('${l}')">${esc(I[l]._name)}</button>`;
+  return `<div class="lgrp ${r?'':'one'}">${btn(b,'')}${r?btn(r,'rom'):''}</div>`}).join('')}
+ <div class="grow"></div></div>`};
+V.welcome=()=>`<div class="scr c">${S.done?'':`<div class="top">${globeBtn()}</div>`}<div class="grow"></div><div style="display:flex;justify-content:center;align-items:center">${godOrder().slice(0,5).map((k,i)=>`<span style="margin:0 -10px;transform:scale(${[0.8,0.92,1.15,0.92,0.8][i]});z-index:${[1,2,3,2,1][i]};border-radius:50%;box-shadow:0 0 0 4px var(--bg)">${avatar(k,96)}</span>`).join('')}</div><div style="height:26px"></div>
+ <h1 style="margin-top:24px">${t('wel_h',{god:'🙏'}).replace('🙏',L()==='en'?'God':pick({hi:'भगवान',mr:'देव',gu:'ભગવાન',bn:'ভগবান',pa:'ਪ੍ਰਭੂ',ta:'இறைவன்',te:'దేవుడు',kn:'ದೇವರು',ml:'ദൈവം',hi_en:'Bhagwan',ta_en:'Kadavul',te_en:'Devudu',kn_en:'Devaru',ml_en:'Daivam'}))}</h1>
  <p class="sub">${t('wel_s')}</p><div class="grow"></div>
  ${foot(`<button class="btn" onclick="track('ob_start');go('deity')">${t('begin')}</button>`)}</div>`;
 V.deity=()=>`<div class="scr">${topBar()}
  <h1>${t('deity_h')}</h1><p class="sub">${t('deity_s')}</p>
- <div class="gods">${godOrder().map(k=>{const d=C.deities[k];return `<button class="god ${S.deity===k?'on':''}" onclick="pickGod('${k}',this)">${avatar(k)}${esc(pick(d.name))}</button>`}).join('')}</div>
+ <div class="gods">${godOrder().map(k=>{const d=C.deities[k];return `<button class="god ${S.deity===k?'on':''}" onclick="pickGod('${k}',this)">${avatar(k)}${(n=>isRoman()&&n.split(' ').some(w=>w.length>11)?`<span style="font-size:12px">${esc(n)}</span>`:esc(n))(pick(d.name))}</button>`}).join('')}</div>
  <div class="grow"></div>${foot(`<button class="btn" id="dg-go" ${S.deity?'':'disabled'} onclick="track('ob_deity');go(S.done?'settings':'name')">${t(S.done?'done':'cont')}</button>`)}</div>`;
 function pickGod(k,el){S.deity=k;save();applyGod();document.querySelectorAll('.gods .god').forEach(b=>b.classList.toggle('on',b===el));const g=document.getElementById('dg-go');if(g)g.disabled=false}
 V.name=()=>`<div class="scr">${topBar()}
@@ -369,7 +397,7 @@ V.st3=()=>`<div class="scr c">${topBar()}<div class="grow"></div>${ring(108,108,
 V.ovprev=()=>{const a=(APPS||J(PL.apps(),[])).find(x=>DISTRACT.includes(x.pkg))||{label:'Instagram',col:'#D6249F'};const lbl=a.label;
  return `<div class="scr c">${topBar()}<h1>${t('ov_h')}</h1><p class="sub">${t('ov_s')}</p>
  <div class="mini"><div class="mini-in"><div class="lockapp">${appIcon(a,30)}</div><h1 class="c" style="font-size:24px;margin-top:8px">${t('lock_h',{app:esc(lbl)})}</h1>
- <p class="sub" style="font-size:14px">${t('lock_s',{n:S.count})}</p>${ring(S.count,3,170)}<p class="mantra" style="font-size:22px;color:var(--god);margin-top:8px">${esc(japa())}</p><p class="cnt" style="font-size:30px">3 / ${S.count}</p></div></div>
+ <p class="sub" style="font-size:14px">${t('lock_s',{n:S.count})}</p>${ring(S.count,3,170)}${mantraH('font-size:22px;color:var(--god);margin-top:8px')}<p class="cnt" style="font-size:30px">3 / ${S.count}</p></div></div>
  <div class="grow"></div>${foot(`<button class="btn" onclick="go('perms')">${t('cont')}</button>`)}</div>`};
 const firstApp=()=>{const a=(APPS||J(PL.apps(),[])).find(x=>S.apps.includes(x.pkg))||(APPS||[]).find(x=>DISTRACT.includes(x.pkg))||{label:'Instagram',col:'#D6249F'};return a};
 V.imp1=()=>{const a=firstApp();const row=(n,ic,txt)=>`<div style="display:flex;align-items:center;gap:14px;margin:14px 0"><span style="width:34px;height:34px;border-radius:50%;background:var(--tint);display:grid;place-items:center;font-weight:800;flex:none">${n}</span><span style="flex:none">${ic}</span><b style="font-size:17px;line-height:1.3">${txt}</b></div>`;
@@ -379,9 +407,9 @@ V.imp1=()=>{const a=firstApp();const row=(n,ic,txt)=>`<div style="display:flex;a
  ${row(2,avatar(S.deity,44),t('imp_2',{n:S.count}))}
  <div style="width:2px;height:22px;background:var(--tint);margin-left:16px"></div>
  ${row(3,`<span style="width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:22px">${ic('check',26)}</span>`,t('imp_3',{app:esc(a.label),m:S.unlockMin}))}
- <p class="mantra" style="color:var(--god);margin-top:18px">${esc(japa())}</p>
+ ${mantraH('color:var(--god);margin-top:18px')}
  <div class="grow"></div>${foot(`<button class="btn" onclick="track('imp1');go('imp2')">${t('cont')}</button>`)}</div>`};
-V.imp2=()=>`<div class="scr">${storyBg(['ta','te','kn','ml'].includes(L())?'temple-morning':S.morn==='tea'?'morning-tea':'young-pray')}<div class="grow"></div>
+V.imp2=()=>`<div class="scr">${storyBg(['ta','te','kn','ml'].includes(baseLang())?'temple-morning':S.morn==='tea'?'morning-tea':'young-pray')}<div class="grow"></div>
  <div class="lbl" style="font-size:15px;color:var(--god)">${t('imp7_h')}</div><h1>${t('imp7_s')}</h1>
  <div class="big-n" style="font-size:52px;margin:8px 0">${t('imp7_n',{h:t('u_h',{n:savedH()*7})})}</div><p class="fine" style="text-align:left;margin:0 0 6px">(${t('u_h',{n:hrsN()})} − ${t('u_h',{n:hrsN()-savedH()})}) × 7</p>
  ${foot(`<button class="btn" onclick="track('imp2');go('imp3')">${t('cont')}</button>`)}</div>`;
@@ -410,11 +438,11 @@ function openCheckin(){const c=(S.checks||{})[today()];ci=c?{...c}:{r:0,m:0};go(
 function syncWidget(){try{if(!PL.syncWidget)return;const wk=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return S.days.includes(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate())});
  const fe=nextFest();const fest=fe&&fe.dd===0;const need=fest?(fe.f.japaCount||108):S.count;const done=S.japToday>=need;const sk=streak();
  const state=fest&&!done?'festival':done?(sk>=21?'streak':'done'):'pending';
- PL.syncWidget(JSON.stringify({state,num:done?sk:Math.max(0,need-S.japToday),numLabel:done?t('wd_days'):t('wd_left'),line:done?t('wd_done'):japa(),
+ PL.syncWidget(JSON.stringify({state,num:done?sk:Math.max(0,need-S.japToday),numLabel:done?t('wd_days',{_n:sk}):t('wd_left'),line:done?t('wd_done'):japa(),
   pill:fest?pick(fe.f.name):'',badge:sk>=21&&done?t('wd_sankalp',{n:sk>=108?108:sk>=51?51:21}):'',deity:S.deity,
   streak:sk,japToday:S.japToday,mantra:japa(),label:t('streak'),japLabel:t('japtoday'),color:god().color||'#D9560B',week:wk,deityImg:S.deity?img(S.deity):'',deityHero:S.deity?img(S.deity,1):''}))}catch(e){}}
 window.openTo=k=>{if(k==='japa'&&S.done&&S.plus){startJapa()}else if(S.plus&&k&&k.startsWith('pp_')&&V[k])go(k)};
-const CREDITS=[['Ram, Saraswati','Raja Ravi Varma — public domain'],['Hanuman, Ganesha','Ravi Varma Press — public domain'],['Murugan','print after Raja Ravi Varma — public domain'],['Shiva, Radha Krishna','early popular prints — public domain'],['Krishna','after Raja Ravi Varma; Wellcome Collection, CC BY 4.0'],['Devi, Vishnu, Lakshmi','chromolithographs; Wellcome Collection, CC BY 4.0'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0'],['Venkateswara','Tshiv, Wikimedia Commons, CC BY-SA 4.0'],['Shirdi Sai Baba','photograph before 1918 — public domain'],['Varanasi Ganga aarti at sunrise','jeminichronicles, Wikimedia Commons, CC BY-SA 2.0'],['Photos','Unsplash: VD Photography · Pexels: cottonbro studio, Ram Iyengar, Ventara Films']];
+const CREDITS=[['Shiva','"Luna Park from brooklyn" (Flickr), Wikimedia Commons, CC BY-SA 2.0 · Unsplash: Baatcheet Films, Gúŕú śàí Pŕàkèśh'],['Ganesha','Pexels: Sonika Agarwal, Sourabh Narwade, S Rajesh'],['Murugan','CEphoto, Uwe Aranas, Wikimedia Commons, CC BY-SA 3.0 · Pexels: GOWTHAM AGM'],['Hanuman','Pexels: DARKMODE CINEMA, Santhapeta Saibaba Temple Ongole, MikeGz'],['Krishna, Radha Krishna','Pexels: Sharath G., VipinVihari Murari Das, Renuka'],['Ram','Prime Minister\'s Office, Government of India, GODL-India · Anushka10patel, Wikimedia Commons, CC BY-SA 4.0 · Pexels: Ramakant'],['Venkateswara','Pexels: Ram Kondisetti'],['Lakshmi','Wikimedia Commons: Nishu0246, CC BY-SA 4.0 · Pratishkhedekar, CC BY-SA 4.0 · Marajozkee, CC BY 4.0'],['Saraswati','Pexels: Monojit Dutta, Sayoni Manna'],['Devi','Pexels: GOWTHAM AGM, Anubhav Choudhary, kesavan ks'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0 · Pexels: yogeshwar y'],['Shirdi Sai Baba','Prime Minister\'s Office, Government of India, GODL-India · Pexels: Santhapeta Saibaba Temple Ongole'],['Vishnu','chromolithograph; Wellcome Collection, CC BY 4.0'],['Varanasi Ganga aarti at sunrise','jeminichronicles, Wikimedia Commons, CC BY-SA 2.0'],['Photos','Unsplash: VD Photography · Pexels: cottonbro studio, Ram Iyengar, Ventara Films']];
 V.credits=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('settings')" aria-label="${t('back')}">${ic('back',24)}</button></div><h1>${t('credits')}</h1>${[...CREDITS,...(window.DL?DL.credits():[])].map(([a,b])=>`<div class="li" style="cursor:default"><span>${a}<small>${b}</small></span></div>`).join('')}</div>`;
 V.rate=()=>{return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div>
  <h1 style="margin-top:14px">${t('rate_h')}</h1><p class="sub" style="font-size:17px">${t('rate_s')}</p><div class="grow"></div>
@@ -485,7 +513,7 @@ function lockText(){try{PL.lockText(JSON.stringify({t:t('n_title'),x:t('n_text')
 function toggleLock(){if(lockOn()){PL.setLockOn(false);track('lock_off');toast(t('lk_off_t'));return render()}
  if(!S.plus)return go('pay');if(!S.agreed)return go('perms');
  PL.setLockOn(true);track('lock_on');pushLock();if(!S.apps.length)return go('apps');const p=J(PL.perms(),{});p.usage&&p.overlay?render():go('perms')}
-V.report=()=>{const u=J(PL.usage(),{totalMin:0,apps:[]});if(!u.totalMin)return `<div class="scr">${topBar()}<div class="grow"></div><div style="display:flex;justify-content:center"><span style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div><h1 class="c" style="margin-top:20px">${esc(japa())}</h1><p class="sub c" style="font-size:18px">${t('rep_s',{days:'0'}).split(/[.।]\s+/).slice(1).join(' ')}</p><div class="grow"></div>${foot(`<button class="btn" onclick="go('apps')">${t('cont')}</button>`)}</div>`;const dm=u.apps.filter(a=>DISTRACT.includes(a.pkg)||S.apps.includes(a.pkg)).reduce((x,a)=>x+(a.min||0),0);if(dm>=30){S.realH=Math.round(dm/30)/2;save()}const days=daysN();const g=S.japToday?1:0;
+V.report=()=>{const u=J(PL.usage(),{totalMin:0,apps:[]});if(!u.totalMin)return `<div class="scr">${topBar()}<div class="grow"></div><div style="display:flex;justify-content:center"><span style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div><h1 class="c" style="margin-top:20px">${esc(japa())}</h1>${japaR()?`<p class="mtr">${esc(japaR())}</p>`:''}<p class="sub c" style="font-size:18px">${t('rep_s',{days:'0'}).split(/[.।]\s+/).slice(1).join(' ')}</p><div class="grow"></div>${foot(`<button class="btn" onclick="go('apps')">${t('cont')}</button>`)}</div>`;const dm=u.apps.filter(a=>DISTRACT.includes(a.pkg)||S.apps.includes(a.pkg)).reduce((x,a)=>x+(a.min||0),0);if(dm>=30){S.realH=Math.round(dm/30)/2;save()}const days=daysN();const g=S.japToday?1:0;
  return `<div class="scr">${topBar()}
  <h1>${t('rep_h',{name:S.name})}</h1>
  <div class="vs"><div><b>${hm(u.totalMin)}</b><span>${t('rep_phone')}</span></div><div class="god-side"><b>${g}m</b><span>${t('rep_god')}</span></div></div>
@@ -505,13 +533,13 @@ V.prayer=()=>`<div class="scr">${topBar()}
  <h1>${t('pr_h')}</h1><div style="height:6px"></div>
  ${['jap','read'].map(k=>`<button class="opt ${S.prayer===k?'on':''}" onclick="pickPrayer('${k}',this)"><span>${t('pr_'+k)}<small>${t('pr_'+k+'_s')}</small></span><span class="chk">${S.prayer===k?ic('check',14):''}</span></button>`).join('')}
  <div id="pr-cnt" style="${S.prayer==='jap'?'':'display:none'}"><div class="lbl">${t('count')}</div><div class="seg">${[11,21,108].map(n=>`<button class="${S.count===n?'on':''}" onclick="S.count=${n};save();this.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${n}</button>`).join('')}</div>
- <p class="mantra" style="margin-top:16px;color:var(--god)">${esc(japa())}</p></div>
+ ${mantraH('margin-top:16px;color:var(--god)')}</div>
  <div class="grow"></div>${foot(`<button class="btn" onclick="track('ob_prayer',{p:S.prayer,n:S.count});go(S.done?'settings':'sankalp')">${t(S.done?'done':'cont')}</button>`)}</div>`;
 function pickPrayer(k,el){S.prayer=k;save();el.parentNode.querySelectorAll('.opt').forEach(o=>{const on=o===el;o.classList.toggle('on',on);o.querySelector('.chk').innerHTML=on?ic('check',14):''});const c=document.getElementById('pr-cnt');if(c)c.style.display=k==='jap'?'':'none'}
 V.sankalp=()=>`<div class="scr c">${topBar()}
  <h1>${t('snk_h')}</h1><p class="mantra" style="font-size:24px;margin-top:8px">${t('snk_t')}</p>
  <div class="grow"></div><div class="hold" id="hold">${ring(36,0,190)}<span>${t('hold')}</span></div>
- <p class="mantra" style="font-size:20px;color:var(--god)">${esc(japa())}</p><div class="grow"></div></div>`;
+ ${mantraH('font-size:20px;color:var(--god)')}<div class="grow"></div></div>`;
 function remPayload(){const n=S.notif||{am:true,pm:true,fest:true};const now=new Date();now.setHours(0,0,0,0);
  const fest=(C.festivals||[]).filter(f=>{const d=(new Date(f.date)-now)/864e5;return d>=0&&d<=60}).map(f=>({date:f.date,title:pick(f.name),body:t('n_fest_b',{f:pick(f.name),n:f.japaCount||108})}));
  return{am:S.rem.am,pm:S.rem.pm||'19:00',amOn:n.am,pmOn:n.pm,festOn:n.fest,
@@ -642,7 +670,7 @@ V.home=()=>{if(!S.plus&&S.done&&!S.exitDone){S.exitDone=true;S.freeHome=true;sav
  <div class="card c" style="padding:18px 16px 16px;position:relative">${fs&&fs.feather?fs.feather:''}
   <div style="position:relative;width:200px;height:200px;margin:0 auto" onclick="startJapa()">${ring(S.count,Math.min(S.japToday,S.count),200,done)}
    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">${D?DL.press(70):avatar(S.deity,70)}<b style="font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums">${Math.min(S.japToday,S.count)}/${S.count}</b></div></div>
-  <p class="mantra" style="font-size:22px;margin-top:8px;color:var(--god)">${esc(japa())}</p>
+  ${mantraH('font-size:22px;margin-top:8px;color:var(--god)')}
   ${D?DL.streakLine(streak()):`<p class="sub" style="margin:2px 0 12px">${t('hero_streak',{n:streak()})}${S.japTotal?` · ${t('total')}: ${S.japTotal}`:''}</p>`}
   <button class="btn" onclick="startJapa()">${done?((D&&DL.btn())||t('jai')):t('do_japa')}</button></div>
  ${D?DL.holdHint():''}${fs?fs.orn:''}
@@ -656,16 +684,19 @@ function shlokaOfDay(){const g=gitaList();if(!g.length)return null;const d=Math.
 V.read=()=>{const mine=(god().texts||[]).filter(id=>C.texts[id]);const all=Object.keys(C.texts||{}).filter(id=>!mine.includes(id)&&C.texts[id].kind!=='shloka');const sd=shlokaOfDay();
  const row=id=>{const x=C.texts[id];return `<div class="li" onclick="openText('${id}')"><span>${esc(pick(x.title))}<small>${t('verses',{n:(x.verses||[]).length})} · ${t('kind_'+(x.kind||'mantra'))}</small></span><span class="r">${ic('next',18)}</span></div>`};
  return `<div class="scr tabbed"><h1 style="margin-top:8px">${t('read_h')}</h1>
- ${sd?`<div class="card c" onclick="openText('__sd')" style="cursor:pointer"><div class="lbl" style="margin:0">${t('shloka_day')}</div><p class="verse" style="font-size:19px">${esc(verseText(sd.verses?sd.verses[0]:sd))}</p></div>`:''}
+ ${sd?`<div class="card c" onclick="openText('__sd')" style="cursor:pointer"><div class="lbl" style="margin:0">${t('shloka_day')}</div>${verseH(sd.verses?sd.verses[0]:sd,'font-size:19px')}</div>`:''}
  ${mine.length?`<h3>${t('read_for')}</h3>${mine.map(row).join('')}`:''}
  ${all.length?`<h3>${t('read_all')}</h3>${all.map(row).join('')}`:''}
  </div>${tabs('read')}`};
-function verseText(v){if(!v)return'';const l=L();if(v.tr&&v.tr[l])return v.tr[l];if(['hi','mr'].includes(l)||!v.tr)return v.dev||v.text||'';return v.tr.en||v.dev}
+/** A verse in the base language's script (Devanagari for hi/mr). verseR: its Roman line, only in a romanised mode. */
+function verseText(v){if(!v)return'';const l=baseLang();if(v.tr&&v.tr[l])return v.tr[l];if(['hi','mr'].includes(l)||!v.tr)return v.dev||v.text||'';return v.tr.en||v.dev}
+function verseR(v){if(!isRoman()||!v||!v.tr||!v.tr.en)return '';return v.tr.en!==verseText(v)?v.tr.en:''}
+const verseH=(v,st='')=>`<p class="verse" style="${st}">${esc(verseText(v))}</p>${verseR(v)?`<p class="vtr">${esc(verseR(v))}</p>`:''}`;
 let openId='';function openText(id){openId=id;go('reader')}
 V.reader=()=>{const x=openId==='__sd'?shlokaOfDay():C.texts[openId];if(!x)return V.read();const vs=x.verses||[x];
  return `<div class="scr"><div class="top"><button class="back" onclick="go('read')" aria-label="${t('back')}">${ic('back',24)}</button></div>
  <h1 class="c">${esc(pick(x.title)||t('shloka_day'))}</h1>
- ${vs.map((v,i)=>`${i?'<div class="vdiv"></div>':''}<p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}`).join('')}
+ ${vs.map((v,i)=>`${i?'<div class="vdiv"></div>':''}${verseH(v)}${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}`).join('')}
  ${x.meaning?`<div class="lbl c">${t('meaning')}</div><p class="mean">${esc(pick(x.meaning))}</p>`:''}
  <div style="height:20px;flex:none"></div></div>`};
 
@@ -700,7 +731,7 @@ function lockReading(){const sd=shlokaOfDay();if(sd)return sd.verses?sd.verses[0
 function lockHead(done){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `${previewing?`<div class="c"><span class="prevtag">${t('prev_lbl')}</span></div>`:''}<div class="lockapp" style="${previewing?'margin-top:8px':''}">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${done?t('mala_done'):t('lock_h',{app:esc(lockLabel)})}</h1>`}
 V.lock=()=>{if(!previewing)track('lock_shown');if(S.prayer==='read'){const v=lockReading();readWait=8;setTimeout(tickRead,1000);
  return `<div class="scr c"><div style="height:20px;flex:none"></div>${lockHead()}<p class="sub">${t('lock_read')}</p>
- <div class="grow"></div><p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}<div class="grow"></div>
+ <div class="grow"></div>${verseH(v)}${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}<div class="grow"></div>
  <button class="btn" id="rd" disabled onclick="finish()">${t('wait_s',{s:readWait})}</button>
  <button class="link" onclick="leave()">${t('goback')}</button></div>`}
  return japaView(true)};
@@ -709,9 +740,9 @@ function japaView(isLock){const done=mala>=S.count;const D=window.DL;
  return `<div class="scr c" id="jw" ${done?'':'onclick="bead()"'}>
  ${isLock?`<div style="height:12px;flex:none"></div>${lockHead(done)}<p class="sub">${done?(D?'':t('unlocked',{app:esc(lockLabel),m:S.unlockMin})):t('lock_s',{n:S.count})}</p>`:`<div class="top"><button class="back" onclick="event.stopPropagation();go('home')" aria-label="${t('back')}">${ic('back',24)}</button></div><h1>${done?(D?t('dl_done_h'):t('mala_done')):t('pr_jap')}</h1>`}
  <div class="grow"></div><div><div class="ringbox" style="${D?'':'display:block'}"><div id="rg">${ring(S.count,mala,250,done)}</div>${D?`<span class="ringav">${avatar(S.deity,isLock?72:84)}</span>`:''}</div></div>
- <p class="mantra" style="margin-top:14px;color:var(--god)">${esc(japa())}</p>
+ ${mantraH('margin-top:14px;color:var(--god)')}
  <p class="cnt" id="ct">${mala} / ${S.count}</p><div id="dmsg"></div><div class="grow"></div>
- ${done?(isLock?`<button class="btn" onclick="finish()">${t('open',{app:esc(lockLabel)})}</button>`:(D?'<div style="height:64px;flex:none"></div>':`<button class="btn" onclick="go('home')">${t('jai')}</button>`)):`<p class="fine" style="margin-bottom:6px">${t('tap')}</p>`}
+ ${done?(isLock?`<button class="btn" onclick="finish()">${previewing?t('done'):t('open',{app:esc(lockLabel)})}</button>`:(D?'<div style="height:64px;flex:none"></div>':`<button class="btn" onclick="go('home')">${t('jai')}</button>`)):`<p class="fine" style="margin-bottom:6px">${t('tap')}</p>`}
  ${isLock&&!done?`<button class="link" onclick="event.stopPropagation();leave()">${t('goback')}</button>`:''}</div>`}
 function bead(){if(mala>=S.count)return;mala++;if(!previewing){S.japToday++;S.japTotal++;S.japHist=S.japHist||{};S.japHist[today()]=(S.japHist[today()]||0)+1;save()}
  const D=window.DL;

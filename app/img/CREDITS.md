@@ -1,30 +1,56 @@
 # Image credits — Prayer Lock
 
-Every image here is either public domain, CC0, Unsplash/Pexels licensed, or CC BY 4.0. CC BY 4.0 images need attribution, and this file records it. Ship this file, or show its CC BY lines on an in-app "Credits / Licences" screen, to meet the attribution requirement.
+Every image here is either public domain, CC0, Unsplash/Pexels licensed, GODL-India, CC BY or CC BY-SA. CC BY, CC BY-SA and GODL-India images need attribution, and this file records it. Ship this file, or show its CC BY lines on an in-app "Credits / Licences" screen, to meet the attribution requirement.
 
 Licence references:
 - Unsplash License: https://unsplash.com/license (commercial use allowed, no attribution required, do not sell unaltered copies)
 - Pexels License: https://www.pexels.com/license/ (same terms)
 - CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ (commercial use allowed; credit the source)
+- CC BY-SA 2.0 / 3.0 / 4.0: https://creativecommons.org/licenses/by-sa/4.0/ (commercial use allowed; credit the author; adaptations keep the same licence)
+- GODL-India: https://data.gov.in/government-open-data-license-india (commercial use allowed; credit the source)
 - CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
 
-## Deity portraits (`deity/<id>.webp` 480×480, `deity/<id>-hero.webp` 720×960)
+## Deity photos (founder's picks, 19 Oct 2026)
 
-| File(s) | Source page | Author | Licence | Why it's OK |
-|---|---|---|---|---|
-| ram, ram-hero | https://commons.wikimedia.org/wiki/File:Ramapanchayan,_Raja_Ravi_Varma_(Lithograph).jpg | Raja Ravi Varma (d. 1906) | Public domain | Lithograph made before 1906; the artist died more than 60 years ago (India) and it was published before 1931 (US) |
-| hanuman, hanuman-hero | https://commons.wikimedia.org/wiki/File:Hanuman_fetches_the_herb-bearing_mountain,_in_a_print_from_the_Ravi_Varma_Press,_1910%27s.jpg | Ravi Varma Press, Malavli | Public domain | Press print from the 1910s; the copyright term has expired in India and the US |
-| shiva, shiva-hero | https://commons.wikimedia.org/wiki/File:Shiva_as_an_ascetic,_with_a_disciple.jpg | Ravi Varma Press | Public domain | Print from the 1910s; the copyright term has expired |
-| krishna, krishna-hero | https://commons.wikimedia.org/wiki/File:Krishna_playing_the_flute_to_a_dancing_Radha,_two_holy_cows_Wellcome_V0045087.jpg | Chromolithograph after R. Varma; photo: Wellcome Collection | **CC BY 4.0** | Commercial use is allowed. **Attribution required:** "Wellcome Collection (V0045087), CC BY 4.0" |
-| radha_krishna, radha_krishna-hero | https://commons.wikimedia.org/wiki/File:Radha_listening_to_Krishna%27s_flute_playing_seated_by_a_shore_Wellcome_V0045056.jpg | Chromolithograph after R. Varma; photo: Wellcome Collection | **CC BY 4.0** | Commercial use is allowed. **Attribution required:** "Wellcome Collection (V0045056), CC BY 4.0" |
-| devi, devi-hero | https://commons.wikimedia.org/wiki/File:Durga_by_Raja_Ravi_Varma.jpg | Raja Ravi Varma (d. 1906) | Public domain | The artist died in 1906, so the term has expired |
-| ganesha, ganesha-hero | https://commons.wikimedia.org/wiki/File:Ganesh_himself_has_two_wives,_Riddhi_and_Siddhi,_as_in_this_domestic_pose_from_the_Ravi_Varma_Press,_c.1910.jpg | Ravi Varma Press | Public domain | Print from about 1910; the copyright term has expired |
-| murugan, murugan-hero | https://commons.wikimedia.org/wiki/File:Murugan_by_Raja_Ravi_Varma.jpg | Raja Ravi Varma (d. 1906) | Public domain | The artist died in 1906, so the term has expired |
-| vishnu, vishnu-hero | https://commons.wikimedia.org/wiki/File:Vishnu_Laxmi_and_Serpent_Anant.jpg | Ravi Varma Press, Malavli (German lithographic press) | Public domain | Early Ravi Varma Press lithograph; the copyright term has expired |
-| lakshmi, lakshmi-hero | https://commons.wikimedia.org/wiki/File:Raja_Ravi_Varma,_Goddess_Lakshmi,_1896.jpg | Raja Ravi Varma (d. 1906) | Public domain | Painted in 1896; the copyright term has expired |
-| sai, sai-hero | https://commons.wikimedia.org/wiki/File:Shirdi_sai2.jpg | Unknown photographer in Shirdi, c. 1915 | Public domain | Photograph taken before 1918 (Sai Baba died in 1918); the copyright term has expired in India and the US |
-| saraswati, saraswati-hero | https://commons.wikimedia.org/wiki/File:Saraswati_by_Raja_Ravi_Varma.jpg | Raja Ravi Varma (d. 1906) | Public domain | Painted in 1894; the copyright term has expired |
-| ayyappa | see "Added 18 Oct 2026" below | | | |
+`deity/<id>.webp` is 480×480 and face-centred (Home ring, widget, paywall). `deity/<id>-hero.webp` is 720×960 with the face at (50%, 26%). `deity/<id>-2.webp` and `-3.webp` are 720×960 variants: the darshan sheet and the unlock doors rotate daily through [hero, -2, -3]. All are real photographs of murtis and temple idols, with no AI. The exception is Vishnu, which keeps its earlier chromolithograph because the founder picked no Vishnu photo. Each licence was read on the photo's own page. Shop, product, news and TripAdvisor photos were never shipped; `docs/photo-permissions.md` lists the ones that need permission. CC BY-SA crops keep their CC BY-SA licence.
+
+| File(s) | Source page | Author | Licence |
+|---|---|---|---|
+| shiva (main, thumb + hero) | https://commons.wikimedia.org/wiki/File:Siva_statue_Bangalore.jpg | "Luna Park from brooklyn -- new york city" (Flickr), via Wikimedia Commons | **CC BY-SA 2.0**: the cropped files stay CC BY-SA 2.0 |
+| shiva-2 | https://unsplash.com/photos/a-statue-of-a-person-sitting-in-a-lotus-position-aW6rNqhQzi4 | Baatcheet Films | Unsplash License |
+| shiva-3 | https://unsplash.com/photos/gray-concrete-buddha-statue-during-daytime-RvQpr47ckUE | Gúŕú śàí Pŕàkèśh (@gurusaiprakesh123) | Unsplash License |
+| ganesha (main) | https://www.pexels.com/photo/colorful-lord-ganesha-idol-for-ganesh-chaturthi-35692132/ | Sonika Agarwal | Pexels License |
+| ganesha-2 (Dagdusheth Ganpati) | https://www.pexels.com/photo/hindu-lord-ganesha-on-ganesh-chaturthi-28288477/ | Sourabh Narwade | Pexels License |
+| ganesha-3 (marble) | https://www.pexels.com/photo/detailed-statue-of-lord-ganesha-in-decorated-room-36780456/ | S Rajesh | Pexels License |
+| murugan (main, Batu Caves) | https://commons.wikimedia.org/wiki/File:Gombak_Selangor_Batu-Caves-01.jpg | CEphoto, Uwe Aranas | **CC BY-SA 3.0**: the cropped files stay CC BY-SA 3.0 |
+| murugan-2 | https://www.pexels.com/photo/golden-statue-of-hindu-deity-with-garland-36076780/ | GOWTHAM AGM | Pexels License |
+| hanuman (main, Sarangpur) | https://www.pexels.com/photo/golden-statue-in-hindu-temple-in-sarangpur-18296591/ | DARKMODE CINEMA | Pexels License |
+| hanuman-2 | https://www.pexels.com/photo/gold-and-red-statue-with-floral-decorations-7024393/ | Santhapeta Saibaba Temple Ongole | Pexels License |
+| hanuman-3 (brass) | https://www.pexels.com/photo/intricate-brass-hanuman-statue-with-mace-30269059/ | MikeGz | Pexels License |
+| krishna (main, brass) | https://www.pexels.com/photo/detailed-brass-statue-of-hindu-deity-playing-flute-31477842/ | Sharath G. | Pexels License |
+| krishna-2 | https://www.pexels.com/photo/intricate-krishna-statue-in-tirupati-temple-36887682/ | VipinVihari Murari Das | Pexels License |
+| radha_krishna (main, marble) | https://www.pexels.com/photo/intricate-radha-krishna-deities-in-tirupati-temple-36868448/ | VipinVihari Murari Das | Pexels License |
+| radha_krishna-2 | https://www.pexels.com/photo/vibrant-statues-of-krishna-and-radha-in-temple-courtyard-39597585/ | Renuka | Pexels License |
+| ram (main, Ayodhya Ram Lalla) | https://commons.wikimedia.org/wiki/File:PM_at_the_Pran_Pratishtha_ceremony_of_Shree_Ram_Janmaboomi_Temple_in_Ayodhya,_Uttar_Pradesh_on_January_22,_2024_(cropped).jpg | Prime Minister's Office, Government of India | **GODL-India**: attribution required: "Source: Prime Minister's Office, Government of India (GODL-India)" |
+| ram-2 (Ram Lalla, Prayagraj) | https://commons.wikimedia.org/wiki/File:Statue_of_Ram_lalla_in_prayagraj_mahakhumb.jpg | Anushka10patel | **CC BY-SA 4.0**: the cropped file stays CC BY-SA 4.0 |
+| ram-3 (Ram and Sita, Jaipur) | https://www.pexels.com/photo/intricate-hindu-deities-statue-in-jaipur-temple-38412930/ | Ramakant | Pexels License |
+| venkatesha (main) | https://www.pexels.com/photo/venkateswara-deity-richly-adorned-in-temple-setting-39650019/ | Ram Kondisetti | Pexels License |
+| venkatesha-2 | https://www.pexels.com/photo/decorated-hindu-deity-statue-with-flowers-39650035/ | Ram Kondisetti | Pexels License |
+| lakshmi (main) | https://commons.wikimedia.org/wiki/File:Shree_Lakshmi_Maa.jpg | Nishu0246 | **CC BY-SA 4.0**: the cropped files stay CC BY-SA 4.0 |
+| lakshmi-2 (Mahalakshmi, Bhuinj) | https://commons.wikimedia.org/wiki/File:Idol_of_Mahalakshmi,_Bhuinj_02.jpg | Pratishkhedekar | **CC BY-SA 4.0** |
+| lakshmi-3 | https://commons.wikimedia.org/wiki/File:Lakshmi_Puja_Odisha_India_MB02.jpg | Marajozkee | **CC BY 4.0** |
+| saraswati (main, marble) | https://www.pexels.com/photo/beautiful-statue-of-goddess-saraswati-in-kolkata-30550233/ | Monojit Dutta | Pexels License |
+| saraswati-2 | https://www.pexels.com/photo/colorful-idol-of-goddess-saraswati-in-kolkata-35698236/ | Sayoni Manna | Pexels License |
+| devi (main, Amman alankaram) | https://www.pexels.com/photo/intricate-goddess-statue-in-floral-garland-33895612/ | GOWTHAM AGM | Pexels License |
+| devi-2 (Durga Puja) | https://www.pexels.com/photo/intricate-durga-puja-idol-with-decorative-details-34153858/ | Anubhav Choudhary | Pexels License |
+| devi-3 (Sivakasi) | https://www.pexels.com/photo/traditional-hindu-goddess-idol-with-floral-garland-36623487/ | kesavan ks | Pexels License |
+| ayyappa (main, unchanged) | https://commons.wikimedia.org/wiki/File:Idol_of_Lord_Ayyappa_in_a_Hall_at_Sabarimala.jpg | Chinnareddy435 | **CC BY 4.0** |
+| ayyappa-2 (brass) | https://www.pexels.com/photo/golden-hindu-statue-with-floral-garland-35339691/ | yogeshwar y | Pexels License |
+| sai (main, Shirdi Samadhi Mandir) | https://commons.wikimedia.org/wiki/File:Samadhi_Mandir_of_Shirdi_Sai_Baba.jpg | Prime Minister's Office, Government of India | **GODL-India**: attribution required: "Source: Prime Minister's Office, Government of India (GODL-India)" |
+| sai-2 | https://www.pexels.com/photo/figurine-of-a-king-on-a-throne-13725452/ | Santhapeta Saibaba Temple Ongole | Pexels License |
+| vishnu (main, unchanged) | https://commons.wikimedia.org/wiki/File:Vishnu_flanked_by_two_wives_resting_on_Shesa,_the_serpent_on_Wellcome_V0045133.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045133), CC BY 4.0" |
+
+Some heroes were lightly smoothed (Gaussian blur, radius 0.6 to 1.2 px) so they fit under 90 KB.
 
 ## Story photos (`story/<name>.webp`, 720 px wide)
 
@@ -49,10 +75,6 @@ All images were cropped, resized and re-encoded to WebP. The derivatives keep th
 
 | File(s) | Source page | Author | Licence |
 |---|---|---|---|
-| ayyappa, ayyappa-hero | https://commons.wikimedia.org/wiki/File:Idol_of_Lord_Ayyappa_in_a_Hall_at_Sabarimala.jpg | Chinnareddy435 | CC BY 4.0 |
-| venkatesha, venkatesha-hero | https://commons.wikimedia.org/wiki/File:Lord_Venkateswara.jpg | Kalyan Kanuri (via Flickr) | CC BY-SA 2.0 |
-| saraswati, saraswati-hero (replaced, higher res) | https://commons.wikimedia.org/wiki/File:Raja_Ravi_Varma,_Goddess_Saraswati.jpg | Raja Ravi Varma | Public domain |
-| lakshmi, lakshmi-hero (replaced, higher res) | https://commons.wikimedia.org/wiki/File:Lakshmi_by_Raja_Ravi_Varma.jpg | Raja Ravi Varma | Public domain |
 | story/scroll-night (replaced) | https://unsplash.com/photos/man-using-mobile-phone-while-covering-his-body-of-blanket-iF8sPfprfWY | Dipqi Ghozali | Unsplash License |
 | story/ghat-sunrise (replaced) | https://commons.wikimedia.org/wiki/File:Diya_Pujan_at_Ganga_Aarti_at_Dashashwamedh_Ghat,_Varanasi.jpg | Chetanbtc | CC BY-SA 4.0 |
 | story/family-puja (replaced) | https://www.pexels.com/photo/a-family-praying-together-7685995/ | RDNE Stock project | Pexels License |
@@ -71,23 +93,11 @@ Sounds are listed separately in `assets/sfx/CREDITS.md` (4 CC0 recordings from f
 
 ## Image refresh, 19 Oct 2026
 
-Licences were checked on each Commons page's licence templates. Every file below **replaces** the earlier file of the same name, and the rows above for those files are now superseded. The story photos `diya`, `mala`, `temple-bells`, `family-puja` and `crowd-phones` were deleted because no code referenced them. Ram, Krishna, Ganesha, Ayyappa and `story/morning-tea` are unchanged.
+Licences were checked on each Commons page's licence templates. Every file below **replaces** the earlier file of the same name, and the rows above for those files are now superseded. The story photos `diya`, `mala`, `temple-bells`, `family-puja` and `crowd-phones` were deleted because no code referenced them. `story/morning-tea` is unchanged. The deity rows of this refresh were superseded the same day by "Deity photos (founder's picks)" above.
 
 | File(s) | Source page | Author | Licence |
 |---|---|---|---|
-| hanuman, hanuman-hero | https://commons.wikimedia.org/wiki/File:Ravivarmapress.jpg | Ravi Varma Press | Public domain (PD-Art, PD-old) |
-| shiva, shiva-hero | https://commons.wikimedia.org/wiki/File:Popular_print,_album_(BM_2003,1022,0.29).jpg | Unknown printer (print in the British Museum) | Public domain (PD-old) |
-| radha_krishna, radha_krishna-hero | https://commons.wikimedia.org/wiki/File:Popular_print,_album_(BM_2003,1022,0.63_1).jpg | Unknown printer (print in the British Museum) | Public domain (PD-old) |
-| devi, devi-hero | https://commons.wikimedia.org/wiki/File:Durga_slaying_the_Buffalo_Demon_on_a_stand_within_a_torana_s_Wellcome_V0045020.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045020), CC BY 4.0" |
-| murugan, murugan-hero | https://commons.wikimedia.org/wiki/File:Devasenapati.jpg | Print after Raja Ravi Varma | Public domain (PD-India) |
-| venkatesha, venkatesha-hero | https://commons.wikimedia.org/wiki/File:Lord_Balaji_Ashland.jpg | Tshiv | **CC BY-SA 4.0** |
-| vishnu, vishnu-hero | https://commons.wikimedia.org/wiki/File:Vishnu_flanked_by_two_wives_resting_on_Shesa,_the_serpent_on_Wellcome_V0045133.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045133), CC BY 4.0" |
-| lakshmi, lakshmi-hero | https://commons.wikimedia.org/wiki/File:Lakshmi_on_her_lotus_in_the_water_with_elephant._Chromolitho_Wellcome_V0045127.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045127), CC BY 4.0" |
-| sai, sai-hero | https://commons.wikimedia.org/wiki/File:Shirdi_Sai_close-up.jpg | Unknown photographer, before 1918 | Public domain (PD-old) |
-| saraswati, saraswati-hero | https://commons.wikimedia.org/wiki/File:Saraswati_Print.jpg | Raja Ravi Varma | Public domain (PD-Art, PD-India) |
 | story/ghat-sunrise | https://commons.wikimedia.org/wiki/File:Morning_Aarti_of_the_Ganges_at_sunrise,_Varanasi.jpg | jeminichronicles | **CC BY-SA 2.0** |
 | story/scroll-night | https://www.pexels.com/photo/a-man-lying-down-while-using-the-phone-6943437/ | cottonbro studio | Pexels License |
 | story/temple-morning | https://www.pexels.com/photo/srikanteshwara-swami-temple-nanjangudu-in-nanjagud-in-india-22890480/ | Ram Iyengar | Pexels License |
 | story/young-pray | https://www.pexels.com/photo/man-praying-with-devotional-mark-in-profile-35672087/ | Ventara Films | Pexels License |
-
-Cropping: the face is placed at (50%, 26%) of each 720×960 hero, and the square 480×480 thumbs are cropped around the face. The Devi, Venkatesha and Vishnu heroes were lightly smoothed (Gaussian blur, radius 0.6 to 1.2 px) so they fit under 90 KB.

@@ -200,11 +200,14 @@ const D=()=>window.DLD||{};
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const day0=s=>{const d=new Date(s+'T00:00');d.setHours(0,0,0,0);return d};
 const ddays=s=>{const n=new Date();n.setHours(0,0,0,0);return Math.round((day0(s)-n)/864e5)};
-const loc=()=>L()==='en'?'en-IN':L()+'-IN';
+const loc=()=>uiLoc()+'-IN';
 const fmtD=(s,o)=>{try{return day0(s).toLocaleDateString(loc(),o)}catch(e){return s}};
 const dd=k=>{const x=(D().deity||{})[S.deity]||{};return x[k]||{}};
-const dpick=(o)=>o[L()]??o.hi??o.en??'';
-DL.jai=()=>dpick(dd('jai'));DL.btn=()=>dpick(dd('btn'));DL.aartiLine=()=>dpick(dd('aarti'));
+/** dpick: verses and the like, in the base language's script (ta_en → ta). rpick: jai / button / aarti lines, which a
+    romanised mode shows in its Roman form (i18n-roman.js, else en). */
+const dpick=(o)=>o[L()]??o[baseLang()]??o.hi??o.en??'';
+const rpick=(o)=>isRoman()?(o[L()]??o.en??dpick(o)):dpick(o);
+DL.jai=()=>rpick(dd('jai'));DL.btn=()=>rpick(dd('btn'));DL.aartiLine=()=>rpick(dd('aarti'));
 /** "with <deity>": Tamil uses the deity's own form (முருகனுடன்), every other language the dl_gw template. */
 const gw=DL.gw=()=>{const x=(D().deity||{})[S.deity];return L()==='ta'&&x&&x.gw?x.gw:t('dl_gw')};
 const FEMALE=['devi','lakshmi','saraswati'];
@@ -284,12 +287,12 @@ function tithi(){const P=D().panch;if(!P)return null;const now=new Date();let td
  const K=[['ekadashi','dl_t_ek','#E9B949'],['purnima','dl_t_pur','#F4EBD9'],['amavasya','dl_t_ama','#4A5A5C'],['pradosh','dl_t_pra','#A9C7C4']];
  let best=null;for(const [k,key,dot] of K){const x=DL._tithi===k?(P[k]||[]).find(r=>ddays(r[0])>=0):(P[k]||[]).find(r=>{const d=ddays(r[0]);return d===0||d===1});if(x&&(!best||ddays(x[0])<ddays(best.x[0])))best={k,key,dot,x}}
  if(!best)return null;const d=DL._tithi?0:ddays(best.x[0]);const w=t(d?'dl_w_tom':'dl_w_today');
- const nm=best.k==='ekadashi'?(((D().ekn||{})[best.x[1]]||{})[L()]||t('dl_ekadashi')):'';
+ const nm=best.k==='ekadashi'?((ek=>ek[L()]||(isRoman()&&ek.en)||t('dl_ekadashi'))((D().ekn||{})[best.x[1]]||{})):'';
  return{dot:best.dot,h:t(best.key,{x:nm,w}),s:t(best.key+'_s')}}
 /** Weekday name + line, the HIS/HER DAY pill, and one context line: Navratri > tithi > weekday sub-line.
     On a festival day the festival banner is the context line, so only the weekday name shows. */
 DL.dayLine=(festDay)=>{const wd=new Date().getDay(),parts=t('dl_day_'+wd).split(' · ');
- const map=DAYGOD[L()]||DAYGOD.def;
+ const map=DAYGOD[baseLang()]||DAYGOD.def;
  const his=map[wd].includes(S.deity);const tl=festDay?null:tithi();
  return `<div class="vaar"><b>${esc(parts[0])}</b>${parts[1]?`<span>${esc(parts.slice(1).join(' · '))}</span>`:''}${his?`<span class="his">${t(FEMALE.includes(S.deity)?'dl_her':'dl_his')}</span>`:''}</div>
  ${festDay?'':tl?`<div class="tithi"><i class="dot" style="background:${tl.dot}"></i><div>${esc(tl.h)}<small>${esc(tl.s)}</small></div></div>`:`<p class="daysub">${esc(t('dl_daysub_'+wd))}</p>`}`};
@@ -304,7 +307,7 @@ DL.bind=()=>{const p=document.getElementById('press');if(!p||p._b)return;p._b=1;
  p.addEventListener('contextmenu',e=>e.preventDefault());p.addEventListener('click',e=>{if(fired){e.stopPropagation();e.preventDefault();fired=false}},true)};
 
 /* ---------------- festival skins ---------------- */
-const sashti=()=>{const P=D().panch;if(!P||!P.sashti)return null;if(DL._fest==='sashti')return{date:P.sashti[0],day:3};if(DL._fest)return null;if(S.deity!=='murugan'&&L()!=='ta')return null;
+const sashti=()=>{const P=D().panch;if(!P||!P.sashti)return null;if(DL._fest==='sashti')return{date:P.sashti[0],day:3};if(DL._fest)return null;if(S.deity!=='murugan'&&baseLang()!=='ta')return null;
  for(const s of P.sashti){const d=ddays(s);if(d>=0&&d<=5)return{date:s,day:6-d}}return null};
 const FICON={diwali:()=>diya(30),karthigai_deepam:()=>diya(30),ganesh_chaturthi:()=>modak(30),janmashtami:()=>ic('flute',28),pongal:()=>ic('sun',28)};
 const wkd=s=>t('dl_day_'+day0(s).getDay()).split(' · ')[0];
@@ -346,17 +349,23 @@ DL.dawn=()=>{S.dawnDay=today();save();let st='';for(let i=0;i<26;i++)st+=`<i sty
  <h1 class="c" style="margin-top:8px;font-size:27px">${t('dl_dawn_h')}</h1>
  <p class="sub c" style="color:#D9E4E0">${t('dl_dawn_s')}</p>
  <div class="grow" style="max-height:60px"></div>
- <p class="palms">${esc(dpick(D().dawn||{}))}</p>
+ <p class="palms">${esc(dpick(D().dawn||{}))}</p>${isRoman()&&(D().dawn||{}).en?`<p class="vtr" style="color:#D9E4E0;margin-top:6px">${esc(D().dawn.en)}</p>`:''}
  <p class="tr">${t('dl_dawn_tr')}</p>
  <div class="grow"></div>
  <button class="btn" onclick="DL.play('bell',1);startJapa()">${t('dl_dawn_btn',{gw:gw()})}</button>
  <button class="link" style="color:#3a2a10" onclick="go('home')">${t('notnow')}</button></div>`};
 
+/* Daily darshan art: the darshan sheet and the unlock doors rotate through the deity's photos
+   ([hero, -2, -3], one per local day). Home, widget and paywall keep the main hero. */
+const HERO_N={shiva:3,ganesha:3,murugan:2,hanuman:3,krishna:2,radha_krishna:2,ram:3,venkatesha:2,lakshmi:3,saraswati:2,devi:3,ayyappa:2,sai:2};
+const heroFor=k=>{const n=HERO_N[k]||1,d=new Date(),i=Math.floor((d-d.getTimezoneOffset()*6e4)/864e5)%n;return i?`img/deity/${k}-${i+1}.webp`:img(k,1)};
+DL.heroFor=heroFor;
+
 /* ---------------- long-press darshan sheet ---------------- */
 DL.sheet=(k=S.deity)=>{const x=(D().deity||{})[k];if(!x)return;const shl=dpick(x.shl);const tr=['hi','mr'].includes(L())?'':x.tr;
- DL.open(`<div class="dsheet"><div class="grab" onclick="DL.close()"><i></i></div><div class="art" style="background-image:url(${img(k,1)}),url(${img(k)})"></div><div class="body">
+ DL.open(`<div class="dsheet"><div class="grab" onclick="DL.close()"><i></i></div><div class="art" style="background-image:url(${heroFor(k)}),url(${img(k,1)})"></div><div class="body">
  <p class="shl">${esc(shl)}</p>${tr?`<p class="trn">${esc(tr)}</p>`:''}<p class="mean2">${t('dl_sm_'+k)}</p>
- <p class="story"><b>${t('dl_inpic')}</b> ${t('dl_ss_'+k)}</p><p class="srcl">${t('dl_sc_'+k)}</p></div></div>`,'sheetov');
+ </div></div>`,'sheetov');
  const o=stack[stack.length-1].el;o.addEventListener('click',e=>{if(e.target===o)DL.close()})};
 
 /* ---------------- mala completion: 108 flower shower, Ram Setu, unlock doors ---------------- */
@@ -387,15 +396,15 @@ DL.setu=()=>{const rg=document.getElementById('rg');if(rg){rg.style.transition='
 DL.unlock=()=>{const app=esc(lockLabel||'');const tor=`<svg class="torn" viewBox="0 0 250 30" preserveAspectRatio="none">${Array.from({length:13},(_,i)=>`<circle cx="${10+i*19}" cy="${10+10*Math.sin(Math.PI*i/12)}" r="5" fill="${i%2?'#F59E0B':'#F97316'}"/>`).join('')}${Array.from({length:6},(_,i)=>`<path d="M${29+i*38} ${16+10*Math.sin(Math.PI*(2*i+1)/12)} q-4 8 0 14 q4 -6 0 -14Z" fill="#3F7D2E"/>`).join('')}</svg>`;
  DL.open(`<div style="height:20px;flex:none"></div><div style="display:flex;justify-content:center;gap:8px;align-items:center;color:var(--muted);font-size:14px">${ic('lock',18)}<span>${app}</span></div>
  <h1 class="c" id="ulh" style="margin-top:6px;font-size:25px">${t('mala_done')}</h1>
- <div class="ucard" id="ucard" onclick="DL.reveal()"><div class="uart" style="background-image:url(${img(S.deity,1)}),url(${img(S.deity)})"></div><div class="udoor l"></div><div class="udoor r"></div>${tor}
+ <div class="ucard" id="ucard" onclick="DL.reveal()"><div class="uart" style="background-image:url(${heroFor(S.deity)}),url(${img(S.deity,1)})"></div><div class="udoor l"></div><div class="udoor r"></div>${tor}
  <div class="useal">${ic('lotus',30)}<span>${t('dl_ul_tap')}</span></div></div>
  <div id="ulmid"><p class="sub c" style="margin-top:14px">${t('dl_ul_pre')}</p></div>
  <div class="grow"></div><div id="ulcta"><div class="diyarow" style="justify-content:center;gap:18px;margin-top:20px">${Array.from({length:5},()=>diya(30,false)).join('')}</div></div>`)};
 DL.reveal=()=>{const c=document.getElementById('ucard');if(!c||c.classList.contains('open'))return;c.classList.add('open');DL.hap('done');DL.play('bell',1);track('unlock_reveal');
  document.getElementById('ulh').textContent=t('dl_ul_h');
  setTimeout(()=>{const mid=document.getElementById('ulmid'),cta=document.getElementById('ulcta');if(!mid)return;
-  mid.innerHTML=`<p class="mantra" style="font-size:24px;margin-top:14px;color:var(--pri);animation:up .6s both">${esc(DL.jai())}</p><div class="tot" style="animation:up .6s .3s both"><div><b>${S.japToday}</b><span>${t('dl_ul_today')}</span></div><div><b>${S.japTotal.toLocaleString('en-IN')}</b><span>${t('dl_ul_total')}</span></div><div><b>${S.days.length}</b><span>${t('dl_ul_days')}</span></div></div>`;
-  cta.innerHTML=`<div class="ulbtns" style="animation:up .5s .6s both;margin-top:14px"><button class="btn ghost" onclick="DL.sheet()">${t('dl_ul_stay')}</button><button class="btn" onclick="finish()">${t('open',{app:esc(lockLabel||'')})}<small>${t('min',{m:S.unlockMin})}</small></button></div>`;
+  mid.innerHTML=`<p class="mantra" style="font-size:24px;margin-top:14px;color:var(--pri);animation:up .6s both">${esc(DL.jai())}</p><div class="tot" style="animation:up .6s .3s both"><div><b>${S.japToday}</b><span>${t('dl_ul_today')}</span></div><div><b>${S.japTotal.toLocaleString('en-IN')}</b><span>${t('dl_ul_total')}</span></div><div><b>${S.days.length}</b><span>${t('dl_ul_days',{_n:S.days.length})}</span></div></div>`;
+  cta.innerHTML=`<div class="ulbtns" style="animation:up .5s .6s both;margin-top:14px"><button class="btn ghost" onclick="DL.sheet()">${t('dl_ul_stay')}</button><button class="btn" onclick="finish()">${previewing?t('done'):`${t('open',{app:esc(lockLabel||'')})}<small>${t('min',{m:S.unlockMin})}</small>`}</button></div>`;
   shower(18,Math.max(200,(cta.getBoundingClientRect().top||innerHeight-120)-30))},1000)};
 
 /* ---------------- sankalp aarti (21 / 51 / 108 days) ---------------- */
@@ -421,7 +430,7 @@ DL.doAarti=()=>{const a=document.getElementById('arch'),btn=document.getElementB
   btn.disabled=false;btn.textContent=DL.btn()||t('jai');btn.onclick=()=>{clearFx();go('home')}},2400)}},2400)};
 
 /* ---------------- prasad thali (Journey) ---------------- */
-function slots(){const reg=L()==='en'?'hi':L();const fs=(C.festivals||[]).filter(f=>(f.regions||[]).includes(reg)).sort((a,b)=>a.date<b.date?-1:1);
+function slots(){const bl=baseLang(),reg=bl==='en'?'hi':bl;const fs=(C.festivals||[]).filter(f=>(f.regions||[]).includes(reg)).sort((a,b)=>a.date<b.date?-1:1);
  const past=fs.filter(f=>ddays(f.date)<0&&ddays(f.date)>=-330),up=fs.filter(f=>ddays(f.date)>=0);
  const nu=Math.min(up.length,Math.max(3,7-past.length));return [...past.slice(-(7-nu)),...up.slice(0,nu)].slice(0,7)}
 DL.thali=()=>{const got=S.prasad||{},sl=slots();if(!sl.length)return '';
@@ -460,7 +469,7 @@ function deskDraw(el){const done=dm>=27;
  el.innerHTML=`<div class="dtop"><button class="dback" style="background:#0E2A2E;color:#5F807D" onclick="DL.close()" aria-label="${t('back')}">${ic('back',22)}</button><span class="dtimer" id="dtm">${dstart?dfmt():'2:00'}</span><span style="width:40px"></span></div>
  ${dstart||done?'':`<p class="eyebrow c" style="color:#8C7A4A;margin-top:18px">${t('dl_off_e')}</p><h1 class="c" style="color:#C9D6D3;margin-top:4px;font-size:26px">${t('dl_off_h')}</h1><p class="sub c dim" style="font-size:14.5px;padding:0 10px">${t('dl_off_s')}</p>`}
  <div class="grow"></div><div class="c"><div class="ringbox"><div id="drg">${ring(27,dm,220,done)}</div><span class="ringav" style="opacity:.45;filter:saturate(.5)">${avatar(S.deity,70)}</span></div></div>
- <p class="mantra" style="margin-top:14px;font-size:22px;color:#B99545;opacity:.85">${esc(japa())}</p>
+ ${mantraH('margin-top:14px;font-size:22px;color:#B99545;opacity:.85')}
  <p class="cnt dim" id="dct" style="font-size:30px;margin-top:6px">${dm} / 27</p><div class="grow"></div>
  ${done?`<p class="sub c dim">${t('dl_off_done')}</p><button class="btn ghost" style="background:#0E2A2E;color:#C9D6D3;border-color:#3F5F5C;box-shadow:none" onclick="DL.close()">${t('done')}</button>`:dstart?`<p class="fine c" style="color:#3F5F5C">${t('tap')}</p>`:`<button class="btn ghost" style="background:#0E2A2E;color:#C9D6D3;border-color:#3F5F5C;box-shadow:none" onclick="DL.deskGo()">${t('dl_off_go')}</button>`}`}
 DL.deskGo=()=>{dstart=Date.now();const el=stack[stack.length-1].el;deskDraw(el);clearInterval(dtimer);dtimer=setInterval(()=>{const e=document.getElementById('dtm');if(e)e.textContent=dfmt()},500)};
