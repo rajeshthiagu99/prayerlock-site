@@ -68,3 +68,26 @@ No new raster images were added. The delight moments reuse the deity portraits a
 Everything else is an original SVG drawing made for Prayer Lock and drawn in code (`assets/delight.js`): the diya, the marigold-and-mango-leaf toran, the agal vilakku rows, the peacock feather, the modak, the pulli kolam, the brass thali and katoris, the prasad sketches, the Ram Setu stones and water, the temple doors and the 22-icon line set. None of them depict a deity.
 
 Sounds are listed separately in `assets/sfx/CREDITS.md` (4 CC0 recordings from freesound.org), and in the app under Settings › Image credits.
+
+## Image refresh, 19 Oct 2026
+
+Licences were checked on each Commons page's licence templates. Every file below **replaces** the earlier file of the same name, and the rows above for those files are now superseded. The story photos `diya`, `mala`, `temple-bells`, `family-puja` and `crowd-phones` were deleted because no code referenced them. Ram, Krishna, Ganesha, Ayyappa and `story/morning-tea` are unchanged.
+
+| File(s) | Source page | Author | Licence |
+|---|---|---|---|
+| hanuman, hanuman-hero | https://commons.wikimedia.org/wiki/File:Ravivarmapress.jpg | Ravi Varma Press | Public domain (PD-Art, PD-old) |
+| shiva, shiva-hero | https://commons.wikimedia.org/wiki/File:Popular_print,_album_(BM_2003,1022,0.29).jpg | Unknown printer (print in the British Museum) | Public domain (PD-old) |
+| radha_krishna, radha_krishna-hero | https://commons.wikimedia.org/wiki/File:Popular_print,_album_(BM_2003,1022,0.63_1).jpg | Unknown printer (print in the British Museum) | Public domain (PD-old) |
+| devi, devi-hero | https://commons.wikimedia.org/wiki/File:Durga_slaying_the_Buffalo_Demon_on_a_stand_within_a_torana_s_Wellcome_V0045020.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045020), CC BY 4.0" |
+| murugan, murugan-hero | https://commons.wikimedia.org/wiki/File:Devasenapati.jpg | Print after Raja Ravi Varma | Public domain (PD-India) |
+| venkatesha, venkatesha-hero | https://commons.wikimedia.org/wiki/File:Lord_Balaji_Ashland.jpg | Tshiv | **CC BY-SA 4.0** |
+| vishnu, vishnu-hero | https://commons.wikimedia.org/wiki/File:Vishnu_flanked_by_two_wives_resting_on_Shesa,_the_serpent_on_Wellcome_V0045133.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045133), CC BY 4.0" |
+| lakshmi, lakshmi-hero | https://commons.wikimedia.org/wiki/File:Lakshmi_on_her_lotus_in_the_water_with_elephant._Chromolitho_Wellcome_V0045127.jpg | Chromolithograph; photo by Wellcome Collection | **CC BY 4.0**: "Wellcome Collection (V0045127), CC BY 4.0" |
+| sai, sai-hero | https://commons.wikimedia.org/wiki/File:Shirdi_Sai_close-up.jpg | Unknown photographer, before 1918 | Public domain (PD-old) |
+| saraswati, saraswati-hero | https://commons.wikimedia.org/wiki/File:Saraswati_Print.jpg | Raja Ravi Varma | Public domain (PD-Art, PD-India) |
+| story/ghat-sunrise | https://commons.wikimedia.org/wiki/File:Morning_Aarti_of_the_Ganges_at_sunrise,_Varanasi.jpg | jeminichronicles | **CC BY-SA 2.0** |
+| story/scroll-night | https://www.pexels.com/photo/a-man-lying-down-while-using-the-phone-6943437/ | cottonbro studio | Pexels License |
+| story/temple-morning | https://www.pexels.com/photo/srikanteshwara-swami-temple-nanjangudu-in-nanjagud-in-india-22890480/ | Ram Iyengar | Pexels License |
+| story/young-pray | https://www.pexels.com/photo/man-praying-with-devotional-mark-in-profile-35672087/ | Ventara Films | Pexels License |
+
+Cropping: the face is placed at (50%, 26%) of each 720×960 hero, and the square 480×480 thumbs are cropped around the face. The Devi, Venkatesha and Vishnu heroes were lightly smoothed (Gaussian blur, radius 0.6 to 1.2 px) so they fit under 90 KB.

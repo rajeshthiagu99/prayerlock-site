@@ -112,7 +112,8 @@ body.dark .opt.on{outline:2px solid var(--pri);outline-offset:-2px}
 .input{width:100%;font:inherit;font-size:22px;font-weight:600;padding:14px;border:var(--bw) solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);outline:none}
 .langs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .langs .opt{margin:0;justify-content:center;font-size:21px;padding:14px 6px}
-.gods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.god{overflow-wrap:anywhere;min-width:0}
 .god{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;border:var(--bw) solid transparent;border-radius:var(--r);background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:700;line-height:1.15;cursor:pointer;text-align:center}
 .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--scr);font-size:26px;color:#fff;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15);flex:none}
 .god.on{border-color:var(--line);background:var(--card);box-shadow:var(--sh)}
@@ -126,7 +127,8 @@ body.dark .perm{border-width:1px}
 .perm.ok .n{background:var(--ok);color:#fff}
 .perm b{display:block;font-size:16px;line-height:1.2}
 .perm span.s{display:block;font-size:13px;color:var(--muted);line-height:1.3}
-.perm .go{margin-left:auto;flex:none;padding:8px 14px;border-radius:999px;border:none;background:var(--pri);color:var(--priInk);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.perm>div{min-width:0;flex:1}
+.perm .go{margin-left:auto;flex:0 1 auto;max-width:44%;white-space:normal;line-height:1.15;padding:8px 14px;border-radius:999px;border:none;background:var(--pri);color:var(--priInk);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
 .perm.ok .go{background:none;color:var(--ok);pointer-events:none}
 .perm.wait .go{opacity:.35}
 .trust{display:flex;gap:10px;font-size:13px;color:var(--muted);line-height:1.35;padding:10px 12px;border-radius:var(--r);background:var(--tint);margin-bottom:12px}
@@ -213,13 +215,31 @@ body.dark .tabs{border-top-width:1px}
 .dlg p{font-size:14px;color:#49454F;line-height:1.4;margin-bottom:18px}
 .dlg .acts{display:flex;justify-content:flex-end;gap:8px}
 .dlg .acts button{background:none;border:none;color:#6750A4;font-weight:600;font-size:15px;padding:10px 12px;cursor:pointer}
+/* 0.7.2: stable footer (CTA at the same bottom offset on every onboarding/paywall/exit step), no replayed entry animation on in-place re-renders, payment veil, notification sheet */
+.scr.noanim{animation:none}
+.foot{position:sticky;bottom:0;z-index:4;flex:none;background:var(--bg);margin:0 -22px calc(-1*(env(safe-area-inset-bottom) + 22px));padding:10px 22px calc(env(safe-area-inset-bottom) + 22px);box-shadow:0 -14px 14px -6px var(--bg)}
+.foot>.fine{margin:0 0 8px}
+.foot2{min-height:52px;display:flex;flex-direction:column;align-items:center}
+.foot2 .link{margin:4px auto 0}
+.foot2 .fine{margin:10px 0 0}
+.foot .btn[disabled],body[data-btn=chunky] .foot .btn[disabled],body[data-btn=chunky].dark .foot .btn[disabled]{opacity:1;background:var(--tint);color:var(--muted);border-color:var(--tint);box-shadow:none}
+.payveil{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;animation:up .2s both}
+.payveil>div{background:var(--card);color:var(--ink);border-radius:18px;padding:22px 26px;display:flex;align-items:center;gap:14px;font-weight:700;font-size:17px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--tint);border-top-color:var(--pri);animation:spn .8s linear infinite;flex:none}
+@keyframes spn{to{transform:rotate(360deg)}}
+body.paying .btn,body.paying .link{pointer-events:none}
+.nsheet{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:26px 26px 0 0;border-top:1px solid rgba(233,185,73,.4);padding:26px 22px calc(env(safe-area-inset-bottom) + 22px);box-shadow:0 -20px 50px rgba(0,0,0,.45);animation:up .3s both}
+.nsheet .nic{width:64px;height:64px;border-radius:50%;background:var(--tint);color:var(--pri);display:grid;place-items:center;margin:0 auto 12px}
+.remoff{display:block;font-size:12.5px;font-weight:600;color:#F4A79D;margin-top:2px}
+.remoff u{color:var(--pri);cursor:pointer}
+.pbadge{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--pri);color:var(--priInk);margin-left:6px;vertical-align:middle}
+.prevtag{display:inline-block;margin:6px auto 0;padding:4px 12px;border-radius:999px;background:var(--tint);color:var(--pri);font-size:13px;font-weight:700}
 select.sel{font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--card);border:var(--bw) solid var(--line);border-radius:10px;padding:6px 8px;max-width:52vw;white-space:normal}
 </style>
 </head>
 <body data-theme="peacock" data-font="baloo" data-btn="chunky" class="dark">
 <div id="app"></div>
 <script src="content.js"></script>
-<script src="content-gita.js" onerror="0"></script>
 <script src="i18n.js"></script>
 <script src="i18n-more.js" onerror="0"></script>
 <script src="i18n-fgs.js"></script>
@@ -272,7 +292,7 @@ const L=()=>S.lang||'en';
 const pick=(o,l=L())=>o?(o[l]??o.hi??o.en??Object.values(o)[0]):'';
 const god=()=>C.deities[S.deity]||C.deities[Object.keys(C.deities)[0]];
 const godName=()=>pick(god().honorific)||pick(god().name);
-function t(k,v={}){let s=(I[L()]&&I[L()][k])??I.en[k]??k;v={god:godName(),name:S.name||'',...v};for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s.replace(/^,\s*|\s*,\s*$/g,'').replace(/\s+,/g,',')}
+function t(k,v={}){let s=(I[L()]&&I[L()][k])??I.en[k]??k;v={god:godName(),name:S.name||'',...v};for(const x in v)s=s.split('{'+x+'}').join(v[x]);const lead=/^,\s*/.test(s);s=s.replace(/^,\s*|\s*,\s*$/g,'').replace(/\s+,/g,',');return lead&&s?s[0].toUpperCase()+s.slice(1):s}
 const japa=()=>pick(god().japa);
 function glyph(k){k=k||S.deity;const d=C.deities[k]||god();if(k==='murugan'&&L()==='ta')return 'வேல்';if(['hi','mr','en'].includes(L()))return k==='murugan'?'स्कं':(d.glyph||'ॐ');const nm=pick(d.name).replace(/^(ஸ்ரீ|శ్రీ|ಶ್ರೀ|ശ്രീ|শ্রী|શ્રી|ਸ਼੍ਰੀ)\s*/,'');try{return [...new Intl.Segmenter(L(),{granularity:'grapheme'}).segment(nm)][0].segment}catch(e){return nm[0]}}
 const hm=m=>m>=60?t('u_h',{n:Math.floor(m/60)})+' '+t('u_m',{n:m%60}):t('u_m',{n:m});
@@ -288,20 +308,23 @@ function applyGod(){const b=document.body;b.dataset.theme=S.theme;b.dataset.font
  const gc=god().color||'#D9560B';document.documentElement.style.setProperty('--god',DARK.includes(S.theme)?`color-mix(in srgb, ${gc} 20%, #F6D58E)`:gc);document.documentElement.lang=L()}
 const img=(k,hero)=>`img/deity/${k}${hero?'-hero':''}.webp`;
 const avatar=(k,sz)=>`<span class="av" style="background:${C.deities[k].color};${sz?`width:${sz}px;height:${sz}px;font-size:${sz*.42}px`:''}">${esc(glyph(k))}<img src="${img(k)}" alt="" onerror="this.remove()"></span>`;
-const heroBg=(cls='')=>`<div class="hero ${cls}" style="background-color:var(--god);background-image:url(${img(S.deity,1)}),url(${img(S.deity)})"></div>`;
+const heroBg=(cls='')=>`<div class="hero ${cls}" style="background-color:var(--god);background-position:50% 18%;background-image:url(${img(S.deity,1)}),url(${img(S.deity)})"></div>`;
 const storyBg=n=>`<div class="hero" style="background-image:url(img/story/${n}.webp)"></div>`;
 const HRS=[2,4,6,8];const hrsN=()=>S.realH||HRS[S.hours]||4;const daysN=()=>Math.round(hrsN()*365/24);const savedH=()=>Math.max(0.5,hrsN()-1);
 const planDate=()=>{const d=new Date();d.setDate(d.getDate()+21);return d.toLocaleDateString((L()==='en'?'en':L())+'-IN',{day:'numeric',month:'long'})};
 function petals(n=36){const c=['#F59E0B','#EA580C','#FBBF24','#DC2626','#F97316'];for(let i=0;i<n;i++){const e=document.createElement('i');e.className='petal';e.style.left=Math.random()*100+'vw';e.style.background=c[i%c.length];e.style.setProperty('--dx',(Math.random()*120-60)+'px');e.style.setProperty('--r2',(Math.random()*720)+'deg');e.style.animationDuration=(2.2+Math.random()*1.8)+'s';e.style.animationDelay=(Math.random()*.6)+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),5000)}}
 
 /* ============ pieces ============ */
-const OB=['deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','plan','ovprev','perms','report','apps','prayer','sankalp'];
-function topBar(){const i=OB.indexOf(cur);return `<div class="top"><button class="back" onclick="back()" aria-label="${t('back')}">${ic('back',24)}</button>${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}</div>`}
+const OB=['deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','plan','prayer','sankalp'];
+const SETUP=['ovprev','perms','report','apps'];
+function topBar(){const i=OB.indexOf(cur);return `<div class="top">${cur==='ovprev'?'<span style="width:40px"></span>':`<button class="back" onclick="back()" aria-label="${t('back')}">${ic('back',24)}</button>`}${i>=0?`<div class="bar"><b style="width:${(i+1)/OB.length*100}%"></b></div>`:''}</div>`}
 function ring(n,done,size,meruOn){const beads=Math.min(n,36),R=size/2-12,c=size/2,on=Math.round(done/n*beads),r=beads>30?6:beads>18?7.5:9;
  let s=`<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle class="thr" cx="${c}" cy="${c}" r="${R}"/>`;
  for(let i=0;i<beads;i++){const a=-Math.PI/2+(i+1)/(beads+1)*Math.PI*2;s+=`<circle class="bd ${i<on?'on':''}" cx="${(c+R*Math.cos(a)).toFixed(1)}" cy="${(c+R*Math.sin(a)).toFixed(1)}" r="${r}"/>`}
  return s+`<circle class="meru ${meruOn?'on':''}" cx="${c}" cy="${c-R}" r="${r+3}"/></svg>`}
 function appIcon(a,sz=40){return a.icon?`<img src="${a.icon}" width="${sz}" height="${sz}" alt="">`:`<span class="ai" style="background:${a.col||'#888'};width:${sz}px;height:${sz}px">${esc((a.label||'?')[0])}</span>`}
+/** One footer for onboarding, paywall and exit steps: optional line above the CTA, the CTA, and a fixed-height slot under it, so the CTA sits at the same height on every step. */
+const foot=(cta,sec='',pre='')=>`<div class="foot">${pre}${cta}<div class="foot2">${sec}</div></div>`;
 function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
 const tabs=a=>`<div class="tabs">${[['home','today','◎','tab_today'],['read','read','❁','tab_read'],['journey','journey','▤','tab_journey'],['settings','me','≡','tab_me']].map(([k,i,g,l])=>`<button class="${a===k?'on':''}" onclick="go('${k}')"><i>${window.DL?ic(i,22):g}</i>${t(l)}</button>`).join('')}</div>`;
 
@@ -309,43 +332,45 @@ const tabs=a=>`<div class="tabs">${[['home','today','◎','tab_today'],['read','
 const V={};let cur='';
 V.lang=()=>`<div class="scr"><div style="height:24px"></div>
  <h1>${t('lang_h')}</h1><div style="height:10px"></div>
- <div class="langs">${LANGS.map(l=>`<button class="opt ${L()===l?'on':''}" onclick="S.lang='${l}';save();go('welcome')">${I[l]._name}</button>`).join('')}</div>
+ <div class="langs">${LANGS.map(l=>`<button class="opt ${S.lang===l?'on':''}" onclick="S.lang='${l}';save();go('welcome')">${I[l]._name}</button>`).join('')}</div>
  <div class="grow"></div></div>`;
 V.welcome=()=>`<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center;align-items:center">${godOrder().slice(0,5).map((k,i)=>`<span style="margin:0 -10px;transform:scale(${[0.8,0.92,1.15,0.92,0.8][i]});z-index:${[1,2,3,2,1][i]};border-radius:50%;box-shadow:0 0 0 4px var(--bg)">${avatar(k,96)}</span>`).join('')}</div><div style="height:26px"></div>
  <h1 style="margin-top:24px">${t('wel_h',{god:'🙏'}).replace('🙏',L()==='en'?'God':pick({hi:'भगवान',mr:'देव',gu:'ભગવાન',bn:'ভগবান',pa:'ਪ੍ਰਭੂ',ta:'இறைவன்',te:'దేవుడు',kn:'ದೇವರು',ml:'ദൈവം'}))}</h1>
  <p class="sub">${t('wel_s')}</p><div class="grow"></div>
- <button class="btn" onclick="track('ob_start');go('deity')">${t('begin')}</button></div>`;
+ ${foot(`<button class="btn" onclick="track('ob_start');go('deity')">${t('begin')}</button>`)}</div>`;
 V.deity=()=>`<div class="scr">${topBar()}
  <h1>${t('deity_h')}</h1><p class="sub">${t('deity_s')}</p>
- <div class="gods">${godOrder().map(k=>{const d=C.deities[k];return `<button class="god ${S.deity===k?'on':''}" onclick="S.deity='${k}';save();applyGod();render()">${avatar(k)}${esc(pick(d.name))}</button>`}).join('')}</div>
- <div class="grow"></div><button class="btn stick" ${S.deity?'':'disabled'} onclick="track('ob_deity');go('name')">${t('cont')}</button></div>`;
+ <div class="gods">${godOrder().map(k=>{const d=C.deities[k];return `<button class="god ${S.deity===k?'on':''}" onclick="pickGod('${k}',this)">${avatar(k)}${esc(pick(d.name))}</button>`}).join('')}</div>
+ <div class="grow"></div>${foot(`<button class="btn" id="dg-go" ${S.deity?'':'disabled'} onclick="track('ob_deity');go(S.done?'settings':'name')">${t(S.done?'done':'cont')}</button>`)}</div>`;
+function pickGod(k,el){S.deity=k;save();applyGod();document.querySelectorAll('.gods .god').forEach(b=>b.classList.toggle('on',b===el));const g=document.getElementById('dg-go');if(g)g.disabled=false}
 V.name=()=>`<div class="scr">${topBar()}
  <h1>${t('name_h')}</h1><div style="height:10px"></div>
  <input class="input" id="nm" placeholder="${t('name_ph')}" value="${esc(S.name)}" maxlength="24" oninput="S.name=this.value.trim();save()" onkeydown="if(event.key==='Enter')go('q_role')" autocomplete="off">
- <div class="grow"></div><button class="btn" onclick="go('q_role')">${t('cont')}</button></div>`;
+ <div class="grow"></div>${foot(`<button class="btn" onclick="go('q_role')">${t('cont')}</button>`)}</div>`;
 const one=(key,opts,next)=>`<div class="scr">${topBar()}<h1>${t(key)}</h1><div style="height:8px"></div>
- ${opts.map(([v,l])=>`<button class="opt ${S[key.slice(2,-2)]===v?'on':''}" onclick="S['${key.slice(2,-2)}']=${typeof v==='number'?v:`'${v}'`};save();track('${key}');render();setTimeout(()=>go('${next}'),260)">${l}<span class="chk">${S[key.slice(2,-2)]===v?ic('check',14):''}</span></button>`).join('')}<div class="grow"></div></div>`;
+ ${opts.map(([v,l])=>`<button class="opt ${S[key.slice(2,-2)]===v?'on':''}" onclick="pickOne(this,'${key.slice(2,-2)}',${typeof v==='number'?v:`'${v}'`},'${next}','${key}')">${l}<span class="chk">${S[key.slice(2,-2)]===v?ic('check',14):''}</span></button>`).join('')}<div class="grow"></div></div>`;
+function pickOne(el,f,v,next,key){if(el.parentNode.dataset.picked)return;el.parentNode.dataset.picked=1;S[f]=v;save();track(key);el.parentNode.querySelectorAll('.opt').forEach(o=>{const on=o===el;o.classList.toggle('on',on);const c=o.querySelector('.chk');if(c)c.innerHTML=on?ic('check',14):''});setTimeout(()=>go(next),260)}
 V.q_role=()=>one('q_role_h',['student','college','work','business','home','retired'].map(k=>[k,t('r_'+k)]),'q_want');
 V.q_want=()=>`<div class="scr">${topBar()}<h1>${t('q_want_h')}</h1><p class="sub">${t('q_want_s')}</p>
- ${['peace','focus','family','sleep','bhakti'].map(k=>`<button class="opt ${S.want.includes(k)?'on':''}" onclick="togWant('${k}')">${t('w_'+k)}<span class="chk">${S.want.includes(k)?ic('check',14):''}</span></button>`).join('')}
- <div class="grow"></div><button class="btn" ${S.want.length?'':'disabled'} onclick="track('q_want');go('q_hours')">${t('cont')}</button></div>`;
-function togWant(k){const i=S.want.indexOf(k);i<0?S.want.push(k):S.want.splice(i,1);save();render()}
+ ${['peace','focus','family','sleep','bhakti'].map(k=>`<button class="opt ${S.want.includes(k)?'on':''}" onclick="togWant('${k}',this)">${t('w_'+k)}<span class="chk">${S.want.includes(k)?ic('check',14):''}</span></button>`).join('')}
+ <div class="grow"></div>${foot(`<button class="btn" id="qw-go" ${S.want.length?'':'disabled'} onclick="track('q_want');go('q_hours')">${t('cont')}</button>`)}</div>`;
+function togWant(k,el){const i=S.want.indexOf(k);i<0?S.want.push(k):S.want.splice(i,1);save();if(!el)return render();const on=S.want.includes(k);el.classList.toggle('on',on);el.querySelector('.chk').innerHTML=on?ic('check',14):'';document.getElementById('qw-go').disabled=!S.want.length}
 V.q_hours=()=>one('q_hours_h',[[0,t('hrs',{a:1,b:3})],[1,t('hrs',{a:3,b:5})],[2,t('hrs',{a:5,b:7})],[3,t('hrs_plus',{a:7})]],'q_morn');
 V.q_morn=()=>one('q_morn_h',['phone','pray','bath','tea'].map(k=>[k,t('m_'+k)]),'st1');
 V.st1=()=>`<div class="scr">${storyBg('ghat-sunrise')}${topBar().replace('class="top"','class="top" style="position:absolute;top:calc(env(safe-area-inset-top) + 14px);left:22px;right:22px;z-index:2"')}
- <div class="grow"></div><h1>${t('st1_h')}</h1><p class="sub" style="font-size:18px">${t('st1_s')}</p><div style="height:14px"></div>
- <button class="btn" onclick="go('st2')">${t('cont')}</button></div>`;
+ <div class="grow"></div><h1>${t('st1_h')}</h1><p class="sub" style="font-size:18px">${t('st1_s')}</p>
+ ${foot(`<button class="btn" onclick="go('st2')">${t('cont')}</button>`)}</div>`;
 V.st2=()=>`<div class="scr">${storyBg('scroll-night')}${topBar().replace('class="top"','class="top" style="position:absolute;top:calc(env(safe-area-inset-top) + 14px);left:22px;right:22px;z-index:2"')}
- <div class="grow"></div><div class="big-n">${t('st2_h',{days:daysN()})}</div><h1 style="font-size:24px">${t('st2_s')}</h1><p class="sub">${t('st2_n',{h:hrsN()})}</p><div style="height:14px"></div>
- <button class="btn" onclick="go('st3')">${t('cont')}</button></div>`;
+ <div class="grow"></div><div class="big-n">${t('st2_h',{days:daysN()})}</div><h1 style="font-size:24px">${t('st2_s')}</h1><p class="sub">${t('st2_n',{h:hrsN()})}</p>
+ ${foot(`<button class="btn" onclick="go('st3')">${t('cont')}</button>`)}</div>`;
 V.st3=()=>`<div class="scr c">${topBar()}<div class="grow"></div>${ring(108,108,200)}
  <h1 style="margin-top:22px;font-size:34px">${t('st3_h')}</h1><p class="sub" style="font-size:18px">${t('st3_s')}</p><div class="grow"></div>
- <button class="btn" onclick="go('reading')">${t('cont')}</button></div>`;
+ ${foot(`<button class="btn" onclick="go('reading')">${t('cont')}</button>`)}</div>`;
 V.ovprev=()=>{const a=(APPS||J(PL.apps(),[])).find(x=>DISTRACT.includes(x.pkg))||{label:'Instagram',col:'#D6249F'};const lbl=a.label;
  return `<div class="scr c">${topBar()}<h1>${t('ov_h')}</h1><p class="sub">${t('ov_s')}</p>
  <div class="mini"><div class="mini-in"><div class="lockapp">${appIcon(a,30)}</div><h1 class="c" style="font-size:24px;margin-top:8px">${t('lock_h',{app:esc(lbl)})}</h1>
  <p class="sub" style="font-size:14px">${t('lock_s',{n:S.count})}</p>${ring(S.count,3,170)}<p class="mantra" style="font-size:22px;color:var(--god);margin-top:8px">${esc(japa())}</p><p class="cnt" style="font-size:30px">3 / ${S.count}</p></div></div>
- <div class="grow"></div><button class="btn" onclick="go('perms')">${t('cont')}</button></div>`};
+ <div class="grow"></div>${foot(`<button class="btn" onclick="go('perms')">${t('cont')}</button>`)}</div>`};
 const firstApp=()=>{const a=(APPS||J(PL.apps(),[])).find(x=>S.apps.includes(x.pkg))||(APPS||[]).find(x=>DISTRACT.includes(x.pkg))||{label:'Instagram',col:'#D6249F'};return a};
 V.imp1=()=>{const a=firstApp();const row=(n,ic,txt)=>`<div style="display:flex;align-items:center;gap:14px;margin:14px 0"><span style="width:34px;height:34px;border-radius:50%;background:var(--tint);display:grid;place-items:center;font-weight:800;flex:none">${n}</span><span style="flex:none">${ic}</span><b style="font-size:17px;line-height:1.3">${txt}</b></div>`;
  return `<div class="scr"><div style="height:30px;flex:none"></div><h1>${t('imp_how_h')}</h1><div style="height:10px"></div>
@@ -355,16 +380,16 @@ V.imp1=()=>{const a=firstApp();const row=(n,ic,txt)=>`<div style="display:flex;a
  <div style="width:2px;height:22px;background:var(--tint);margin-left:16px"></div>
  ${row(3,`<span style="width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:22px">${ic('check',26)}</span>`,t('imp_3',{app:esc(a.label),m:S.unlockMin}))}
  <p class="mantra" style="color:var(--god);margin-top:18px">${esc(japa())}</p>
- <div class="grow"></div><button class="btn" onclick="track('imp1');go('imp2')">${t('cont')}</button></div>`};
+ <div class="grow"></div>${foot(`<button class="btn" onclick="track('imp1');go('imp2')">${t('cont')}</button>`)}</div>`};
 V.imp2=()=>`<div class="scr">${storyBg(['ta','te','kn','ml'].includes(L())?'temple-morning':S.morn==='tea'?'morning-tea':'young-pray')}<div class="grow"></div>
  <div class="lbl" style="font-size:15px;color:var(--god)">${t('imp7_h')}</div><h1>${t('imp7_s')}</h1>
- <div class="big-n" style="font-size:52px;margin:8px 0">${t('imp7_n',{h:t('u_h',{n:savedH()*7})})}</div><p class="fine" style="text-align:left;margin:0 0 6px">(${t('u_h',{n:hrsN()})} − ${t('u_h',{n:hrsN()-savedH()})}) × 7</p><div style="height:12px"></div>
- <button class="btn" onclick="track('imp2');go('imp3')">${t('cont')}</button></div>`;
+ <div class="big-n" style="font-size:52px;margin:8px 0">${t('imp7_n',{h:t('u_h',{n:savedH()*7})})}</div><p class="fine" style="text-align:left;margin:0 0 6px">(${t('u_h',{n:hrsN()})} − ${t('u_h',{n:hrsN()-savedH()})}) × 7</p>
+ ${foot(`<button class="btn" onclick="track('imp2');go('imp3')">${t('cont')}</button>`)}</div>`;
 V.imp3=()=>`<div class="scr c"><div style="height:24px;flex:none"></div><div class="lbl" style="font-size:15px;color:var(--god)">${t('imp21_h')}</div><h1>${t('imp21_s')}</h1>
  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:18px 6px">${[...Array(21)].map((_,i)=>`<i style="display:block;aspect-ratio:1;border-radius:50%;background:var(--ok);opacity:0;animation:up .3s ${i*0.06}s forwards"></i>`).join('')}</div>
  <div class="big-n" style="font-size:44px">${t('imp21_n',{n:21*S.count})}</div>
- ${S.want.length?`<div class="lbl" style="margin-top:14px">${t('imp21_w')}</div><div class="chips" style="justify-content:center">${S.want.map(w=>`<span style="padding:6px 12px">${t('w_'+w)}</span>`).join('')}</div>`:''}
- <div class="grow"></div><button class="btn" onclick="track('imp3');go('pay')">${t('cont')}</button></div>`;
+ ${S.want.length?`<div class="lbl" style="margin-top:14px">${t('imp21_w')}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px">${S.want.map(w=>`<span style="padding:6px 12px;border-radius:999px;background:var(--tint);font-weight:700;font-size:14px">${t('w_'+w)}</span>`).join('')}</div>`:''}
+ <div class="grow"></div>${foot(`<button class="btn" onclick="track('imp3');go('pay')">${t('cont')}</button>`)}</div>`;
 const lvl=(key,val,pre)=>`<div style="display:flex;justify-content:space-between;gap:6px;margin:10px 0 4px">${[1,2,3,4,5].map(i=>`<button onclick="ci['${key}']=${i};render()" style="flex:1;border:var(--bw) solid var(--line);border-radius:12px;padding:10px 2px;background:${val===i?'var(--pri)':'var(--card)'};color:${val===i?'var(--priInk)':'var(--ink)'};font:inherit;font-size:12px;font-weight:700;line-height:1.15;cursor:pointer;min-height:58px"><b style="display:block;font-size:20px">${i}</b>${t(pre+i)}</button>`).join('')}</div>`;
 let ci={r:0,m:0};
 V.checkin=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('home')" aria-label="${t('back')}">${ic('back',24)}</button></div>
@@ -389,26 +414,26 @@ function syncWidget(){try{if(!PL.syncWidget)return;const wk=[...Array(7)].map((_
   pill:fest?pick(fe.f.name):'',badge:sk>=21&&done?t('wd_sankalp',{n:sk>=108?108:sk>=51?51:21}):'',deity:S.deity,
   streak:sk,japToday:S.japToday,mantra:japa(),label:t('streak'),japLabel:t('japtoday'),color:god().color||'#D9560B',week:wk,deityImg:S.deity?img(S.deity):'',deityHero:S.deity?img(S.deity,1):''}))}catch(e){}}
 window.openTo=k=>{if(k==='japa'&&S.done&&S.plus){startJapa()}else if(S.plus&&k&&k.startsWith('pp_')&&V[k])go(k)};
-const CREDITS=[['Ram, Devi, Murugan, Saraswati, Lakshmi','Raja Ravi Varma — public domain'],['Hanuman, Shiva, Ganesha, Vishnu','Ravi Varma Press — public domain'],['Krishna, Radha Krishna','after Raja Ravi Varma; Wellcome Collection, CC BY 4.0'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0'],['Venkateswara','Kalyan Kanuri (Flickr), CC BY-SA 2.0'],['Shirdi Sai Baba','photograph c. 1915 — public domain'],['Varanasi Ganga aarti','Chetanbtc, Wikimedia Commons, CC BY-SA 4.0'],['Tiruvannamalai temple','KARTY JazZ, Wikimedia Commons, CC BY-SA 4.0'],['Photos','Unsplash: Dipqi Ghozali, CHIRAG K, Garv Chaplot · Pexels: RDNE Stock project, Yan Krukau, sujithirapara']];
+const CREDITS=[['Ram, Saraswati','Raja Ravi Varma — public domain'],['Hanuman, Ganesha','Ravi Varma Press — public domain'],['Murugan','print after Raja Ravi Varma — public domain'],['Shiva, Radha Krishna','early popular prints — public domain'],['Krishna','after Raja Ravi Varma; Wellcome Collection, CC BY 4.0'],['Devi, Vishnu, Lakshmi','chromolithographs; Wellcome Collection, CC BY 4.0'],['Ayyappa','Chinnareddy435, Wikimedia Commons, CC BY 4.0'],['Venkateswara','Tshiv, Wikimedia Commons, CC BY-SA 4.0'],['Shirdi Sai Baba','photograph before 1918 — public domain'],['Varanasi Ganga aarti at sunrise','jeminichronicles, Wikimedia Commons, CC BY-SA 2.0'],['Photos','Unsplash: VD Photography · Pexels: cottonbro studio, Ram Iyengar, Ventara Films']];
 V.credits=()=>`<div class="scr"><div class="top"><button class="back" onclick="go('settings')" aria-label="${t('back')}">${ic('back',24)}</button></div><h1>${t('credits')}</h1>${[...CREDITS,...(window.DL?DL.credits():[])].map(([a,b])=>`<div class="li" style="cursor:default"><span>${a}<small>${b}</small></span></div>`).join('')}</div>`;
 V.rate=()=>{return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div>
  <h1 style="margin-top:14px">${t('rate_h')}</h1><p class="sub" style="font-size:17px">${t('rate_s')}</p><div class="grow"></div>
- <button class="btn" onclick="askRating()">${t('rate_btn')}</button><button class="link" onclick="S.rateAsked=true;save();track('rating_skipped');go('plan')">${t('notnow')}</button></div>`};
+ ${foot(`<button class="btn" onclick="askRating()">${t('rate_btn')}</button>`,`<button class="link" onclick="S.rateAsked=true;save();track('rating_skipped');go('plan')">${t('notnow')}</button>`)}</div>`};
 function askRating(){S.rateAsked=true;save();track('rating_prompt_shown');let moved=false;const next=()=>{if(moved)return;moved=true;if(cur==='rate')go('plan')};window.onReviewDone=next;try{PL.review?PL.review():next()}catch(e){next()}setTimeout(next,8000)}
 const PLAY_URL='https://play.google.com/store/apps/details?id=com.prayerlock.naamjap';
 const ppStep=(k,body,cta,act,skip)=>`<div class="scr c">${body}<div class="grow"></div><button class="btn" onclick="${act}">${cta}</button><button class="link" onclick="track('post_pw_${k}_skip');${skip}">${t('later')}</button></div>`;
 V.pp_in=()=>{track('post_pw_welcome');setTimeout(()=>petals(24),300);return `<div class="scr c"><div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,180)}</div>
  <h1 style="margin-top:20px">${t('pp_in_h')}</h1><p class="sub" style="font-size:18px">${t('pp_in_s')}</p><div class="grow"></div>
- <button class="btn" onclick="go('pp_wd')">${t('cont')}</button><button class="link" style="visibility:hidden">·</button></div>`};
+ <button class="btn" onclick="S.setupDone?go('pp_wd'):(S.inSetup=true,save(),go('ovprev'))">${t('cont')}</button><button class="link" style="visibility:hidden">·</button></div>`};
 V.pp_wd=()=>{track('post_pw_widget');syncWidget();let src='';try{src=PL.widgetPreview?PL.widgetPreview():''}catch(e){}
  return ppStep('widget',`<div style="height:30px;flex:none"></div><h1>${t('pp_wd_h')}</h1><p class="sub">${t('pp_wd_s')}</p>
  <div style="margin:18px -6px;padding:22px 12px;border-radius:24px;background:linear-gradient(160deg,#2b3a67,#0f1630);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)">${src?`<img src="${src}" style="width:100%;border-radius:18px;display:block;animation:up .5s ease both">`:avatar(S.deity,110)}</div>`,
  t('wd_btn'),"S.widgetAsked=true;save();let ok=false;try{ok=PL.pinWidget()}catch(e){}track('post_pw_widget_add',{ok:!!ok});setTimeout(()=>go('pp_mo'),ok?1200:0)","go('pp_mo')")};
 V.pp_mo=()=>{track('post_pw_morning');const pm=J(PL.perms(),{});const okp=pm.usage&&pm.overlay&&(!pm.popupNeeded||pm.popup);
  return ppStep('morning',`<div style="height:20px;flex:none"></div><div style="display:flex;justify-content:center;margin-bottom:10px">${avatar(S.deity,96)}</div><h1>${t('pp_mo_h')}</h1><p class="sub">${t('pp_mo_s')}</p>
- <input type="time" class="input" style="text-align:center;font-size:34px;margin:16px 0" value="${S.rem.am}" onchange="S.rem.am=this.value;S.notif=S.notif||{};S.notif.am=true;save();pushLock();render()">
+ <input type="time" class="input" style="text-align:center;font-size:34px;margin:16px 0" value="${S.rem.am}" onchange="S.rem.am=this.value;S.notif=S.notif||{};S.notif.am=true;save();pushLock();const b=document.querySelector('.scr .btn');if(b)b.textContent=t('pp_mo_btn',{time:S.rem.am})">
  ${okp?`<div class="trust" style="color:var(--ok);font-weight:700">${ic('check',18)} ${t('test_pass')}</div>`:`<button class="link" onclick="S.afterPay=true;save();go('perms')">${t('perm_link')} ${ic('next',16)}</button>`}`,
- t('pp_mo_btn',{time:S.rem.am}),"pushLock();go('pp_sh')","go('pp_sh')")};
+ t('pp_mo_btn',{time:S.rem.am}),"S.notif=S.notif||{};S.notif.am=true;save();pushLock();remOn(()=>go('pp_sh'))","go('pp_sh')")};
 V.pp_sh=()=>{track('post_pw_share');return ppStep('share',`<div class="grow"></div><div style="display:flex;justify-content:center">${avatar(S.deity,130)}</div><h1 style="margin-top:16px">${t('pp_sh_h')}</h1><p class="sub" style="font-size:17px">${t('pp_sh_s')}</p>`,
  t('pp_sh_btn'),"track('post_pw_share_tap');try{PL.shareWhatsApp?PL.shareWhatsApp(t('share_text',{url:PLAY_URL})):PL.share(t('share_text',{url:PLAY_URL}))}catch(e){}S.ppDone=true;save();setTimeout(()=>go('home'),600)","S.ppDone=true;save();go('home')")};
 V.reading=()=>{setTimeout(()=>{[0,1,2].forEach(i=>setTimeout(()=>{const e=document.getElementById('cr'+i);if(e)e.classList.add('on');vib(10)},500+i*800));setTimeout(()=>{if(cur==='reading')go(S.rateAsked?'plan':'rate')},3200)},50);
@@ -421,10 +446,10 @@ V.plan=()=>{const h=hrsN();return `<div class="scr plan">${topBar()}<h1>${t('pla
  <text x="20" y="22" font-size="20" font-weight="800" fill="#DC2626">${t('u_h',{n:h})}</text><text x="20" y="66" font-size="12" fill="currentColor" opacity=".6">${t('plan_a')}</text>
  <text x="280" y="182" text-anchor="end" font-size="20" font-weight="800" fill="#2F6B2F">${t('u_h',{n:1})}</text><text x="248" y="132" text-anchor="end" font-size="12" fill="currentColor" opacity=".6">${t('plan_b')}</text></svg>
  <p class="sub c" style="font-size:18px;color:var(--ink);font-weight:600">${t('plan_s',{saved:t('u_h',{n:savedH()})})}</p>
- <div class="grow"></div><button class="btn" onclick="track('ob_plan');go('ovprev')">${t('plan_cta')}</button></div>`};
+ <div class="grow"></div>${foot(`<button class="btn" onclick="track('ob_plan');go('prayer')">${t('plan_cta')}</button>`)}</div>`};
 const POPUP_BRANDS=['xiaomi','vivo','oppo','realme','oneplus'];
-function permList(){const p=J(PL.perms(),{});const L=['usage','overlay'];if(p.popupNeeded||POPUP_BRANDS.includes(p.brand))L.push('popup');L.push('battery');if(['xiaomi','vivo','oppo','realme','oneplus'].includes(p.brand)){L.push('autostart');if('autostartOk' in p)p.autostart=p.autostartOk}p.need=L.filter(k=>k!=='battery'&&k!=='autostart');return{p,L}}
-V.perms=()=>{if(!S.agreed)return V.disclose();const {p,L:list}=permList();const first=list.find(k=>!p[k]);const brand=(p.brand||'').replace(/^./,c=>c.toUpperCase());
+function permList(){const p=J(PL.perms(),{});const L=['usage','overlay'];if(p.popupNeeded||POPUP_BRANDS.includes(p.brand))L.push('popup');L.push('notif');L.push('battery');if(['xiaomi','vivo','oppo','realme','oneplus'].includes(p.brand)){L.push('autostart');if('autostartOk' in p)p.autostart=p.autostartOk}p.need=L.filter(k=>k!=='battery'&&k!=='autostart'&&k!=='notif');return{p,L}}
+V.perms=()=>{if(!S.plus){setTimeout(()=>go('pay'));return '<div class="scr"></div>'}if(!S.agreed)return V.disclose();const {p,L:list}=permList();const first=list.find(k=>!p[k]);const brand=(p.brand||'').replace(/^./,c=>c.toUpperCase());
  return `<div class="scr">${topBar()}
  <h1>${t('perm_h')}</h1><p class="sub">${t('perm_s')}</p>
  <div class="trust"><span>${ic('lock',18)}</span><span>${t('trust')}</span></div>
@@ -438,9 +463,9 @@ V.perms=()=>{if(!S.agreed)return V.disclose();const {p,L:list}=permList();const 
   if(st==='pass')return `<div class="trust" style="color:var(--ok);font-weight:700">${ic('check',18)} ${t('test_pass')}</div>`;
   if(st==='fail')return `<div class="banner warn" onclick="askPerm('popup')">${ic('warn',20)} ${t('test_fail')}</div><button class="btn ghost" style="min-height:48px" onclick="testLock()">${t('test_btn')}</button>`;
   return `<button class="btn ghost" style="min-height:48px;margin-bottom:8px" onclick="testLock()">${t('test_btn')}</button>`})()}
- <div class="grow"></div><button class="btn stick" ${p.need.every(k=>p[k])?'':'disabled'} onclick="track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else go('report')">${t('cont')}</button></div>`};
+ <div class="grow"></div><button class="btn stick" ${p.need.every(k=>p[k])?'':'disabled'} onclick="track('ob_perms_done');if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else if(S.inSetup)go('report');else go(S.done?'settings':'home')">${t('cont')}</button></div>`};
 let lastPerm='',testing=false;
-function askPerm(k){track('perm_'+k);lastPerm=k;PL.openPerm(k)}
+function askPerm(k){if(!S.plus)return go('pay');track('perm_'+k);lastPerm=k;PL.openPerm(k)}
 function confirmPerm(ok){try{PL.confirmPerm(lastPerm,!!ok)}catch(e){}const k=lastPerm;lastPerm='';if(!ok)return askPerm(k);render()}
 function testLock(){testing=true;try{PL.testLock()}catch(e){}render()}
 window.plResume=()=>{setTimeout(()=>{try{syncWidget()}catch(e){}},300);if(testing){const st=(J(PL.lockStatus(),{})).selfTest;if(st&&st!=='untested')testing=false}Object.assign(S,J(localStorage.getItem('pl'),{}));lockLook();if(S.japDay!==today()){S.japDay=today();S.japToday=0}if(['perms','settings','home'].includes(cur))render()};
@@ -454,33 +479,35 @@ V.disclose=()=>{track('disclosure_viewed');return `<div class="scr">${topBar()}
  <p class="sub c" style="font-size:14px;text-decoration:underline;cursor:pointer" onclick="PL.openUrl('https://rajeshthiagu99.github.io/prayerlock-site/privacy.html')">${t('privacy')}</p>
  <div class="grow"></div><div class="stick" style="position:sticky;bottom:calc(-1*(env(safe-area-inset-bottom) + 22px));z-index:4;background:var(--bg);margin:0 -22px;padding:10px 22px calc(env(safe-area-inset-bottom) + 22px);flex:none;box-shadow:0 -16px 16px -4px var(--bg)"><button class="btn" id="dc-yes" onclick="dcAgree()">${t('dc_yes')}</button><button class="link" id="dc-no" onclick="dcSkip()">${t('notnow')}</button></div></div>`};
 function dcAgree(){track('disclosure_agreed');S.agreed=true;save();lockText();try{if(!lockOn()){PL.setLockOn(true);track('lock_on')}}catch(e){}render()}
-function dcSkip(){track('disclosure_declined');try{PL.setLockOn(false)}catch(e){}toast(t('dc_skip',dcV()));if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else go(S.done?'settings':'report')}
+function dcSkip(){track('disclosure_declined');try{PL.setLockOn(false)}catch(e){}toast(t('dc_skip',dcV()));if(S.afterPay){S.afterPay=false;save();go(S.ppDone?'home':'pp_mo')}else if(S.inSetup)go('apps');else go(S.done?'settings':'home')}
 function lockOn(){return J(PL.getLock(),{}).on!==false}
 function lockText(){try{PL.lockText(JSON.stringify({t:t('n_title'),x:t('n_text'),off:t('n_off')}))}catch(e){}}lockText();
 function toggleLock(){if(lockOn()){PL.setLockOn(false);track('lock_off');toast(t('lk_off_t'));return render()}
  if(!S.plus)return go('pay');if(!S.agreed)return go('perms');
  PL.setLockOn(true);track('lock_on');pushLock();if(!S.apps.length)return go('apps');const p=J(PL.perms(),{});p.usage&&p.overlay?render():go('perms')}
-V.report=()=>{const u=J(PL.usage(),{totalMin:0,apps:[]});if(!u.totalMin)return `<div class="scr">${topBar()}<div class="grow"></div><div style="display:flex;justify-content:center"><span style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div><h1 class="c" style="margin-top:20px">${esc(japa())}</h1><p class="sub c" style="font-size:18px">${t('rep_s',{days:'0'}).split(/[.।]\s+/).slice(1).join(' ')}</p><div class="grow"></div><button class="btn" onclick="go('apps')">${t('cont')}</button></div>`;if(u.totalMin>=30){S.realH=Math.round(u.totalMin/30)/2;save()}const days=daysN();const g=S.japToday?1:0;
+V.report=()=>{const u=J(PL.usage(),{totalMin:0,apps:[]});if(!u.totalMin)return `<div class="scr">${topBar()}<div class="grow"></div><div style="display:flex;justify-content:center"><span style="width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--god);color:#fff;font-family:var(--scr);font-size:38px">${esc(glyph())}</span></div><h1 class="c" style="margin-top:20px">${esc(japa())}</h1><p class="sub c" style="font-size:18px">${t('rep_s',{days:'0'}).split(/[.।]\s+/).slice(1).join(' ')}</p><div class="grow"></div>${foot(`<button class="btn" onclick="go('apps')">${t('cont')}</button>`)}</div>`;const dm=u.apps.filter(a=>DISTRACT.includes(a.pkg)||S.apps.includes(a.pkg)).reduce((x,a)=>x+(a.min||0),0);if(dm>=30){S.realH=Math.round(dm/30)/2;save()}const days=daysN();const g=S.japToday?1:0;
  return `<div class="scr">${topBar()}
  <h1>${t('rep_h',{name:S.name})}</h1>
  <div class="vs"><div><b>${hm(u.totalMin)}</b><span>${t('rep_phone')}</span></div><div class="god-side"><b>${g}m</b><span>${t('rep_god')}</span></div></div>
  <div class="applist" style="margin-top:6px">${u.apps.slice(0,4).map(a=>{const full=J(PL.apps(),[]).find(x=>x.pkg===a.pkg)||a;return `<div class="row" style="cursor:default">${appIcon(full,32)}<b style="flex:1;font-size:15px">${esc(a.label)}</b><small>${hm(a.min)}</small></div>`}).join('')}</div>
  <p class="sub" style="margin-top:14px;color:var(--ink);font-size:18px;font-weight:600">${t('rep_s',{days})}</p><p class="fine" style="text-align:left">${t('rep_work',{t:t('u_h',{n:hrsN()}),d:days})}</p>
- <div class="grow"></div><button class="btn" onclick="go('apps')">${t('cont')}</button></div>`};
+ <div class="grow"></div>${foot(`<button class="btn" onclick="go('apps')">${t('cont')}</button>`)}</div>`};
 const DISTRACT=['com.instagram.android','com.google.android.youtube','com.facebook.katana','com.snapchat.android','in.mohalla.sharechat','in.mohalla.video','com.eterno.shortvideos','com.dts.freefireth','com.pubg.imobile','in.startv.hotstar','com.netflix.mediaclient','com.twitter.android','com.reddit.frontpage','com.zhiliaoapp.musically','com.ludo.king','com.josh.app','com.roposo.android','com.moj.app'];
 let APPS=null;
-V.apps=()=>{APPS=APPS||J(PL.apps(),[]).sort((x,y)=>(DISTRACT.includes(y.pkg)-DISTRACT.includes(x.pkg))||((y.min||0)-(x.min||0)));if(!S.apps.length&&!S.done){S.apps=APPS.filter(a=>DISTRACT.includes(a.pkg)).slice(0,4).map(a=>a.pkg);if(!S.apps.length)S.apps=APPS.slice(0,2).map(a=>a.pkg)}
+V.apps=()=>{APPS=APPS||J(PL.apps(),[]).sort((x,y)=>(DISTRACT.includes(y.pkg)-DISTRACT.includes(x.pkg))||((y.min||0)-(x.min||0)));if(!S.apps.length&&S.inSetup){S.apps=APPS.filter(a=>DISTRACT.includes(a.pkg)).slice(0,4).map(a=>a.pkg);if(!S.apps.length)S.apps=APPS.slice(0,2).map(a=>a.pkg)}
  return `<div class="scr">${topBar()}
  <h1>${t('apps_h')}</h1><p class="sub">${t('apps_s')}</p>
- <div class="applist">${APPS.slice(0,24).map(a=>`<div class="row ${S.apps.includes(a.pkg)?'on':''}" onclick="togApp('${a.pkg}')">${appIcon(a)}<div style="flex:1"><b>${esc(a.label)}</b><small>${a.min?t('min_y',{m:hm(a.min)}):''}</small></div><span class="chk" style="${S.apps.includes(a.pkg)?'background:var(--pri);border-color:var(--pri)':''}">${S.apps.includes(a.pkg)?ic('check',14):''}</span></div>`).join('')}</div>
- <div style="height:14px;flex:none"></div><button class="btn" style="position:sticky;bottom:0" ${S.apps.length||S.done?'':'disabled'} onclick="track('ob_apps',{n:S.apps.length});go(S.done?'settings':'prayer')">${t(S.done?'done':'cont')}</button></div>`};
-function togApp(p){const i=S.apps.indexOf(p);i<0?S.apps.push(p):S.apps.splice(i,1);const a=(APPS||[]).find(x=>x.pkg===p);if(a)S.labels[p]=a.label;save();render();if(S.done)pushLock()}
+ <div class="applist">${APPS.slice(0,24).map(a=>`<div class="row ${S.apps.includes(a.pkg)?'on':''}" onclick="togApp('${a.pkg}',this)">${appIcon(a)}<div style="flex:1"><b>${esc(a.label)}</b><small>${a.min?t('min_y',{m:hm(a.min)}):''}</small></div><span class="chk" style="${S.apps.includes(a.pkg)?'background:var(--pri);border-color:var(--pri)':''}">${S.apps.includes(a.pkg)?ic('check',14):''}</span></div>`).join('')}</div>
+ <div class="grow"></div>${foot(`<button class="btn" id="ap-go" ${S.apps.length||!S.inSetup?'':'disabled'} onclick="track('ob_apps',{n:S.apps.length});S.inSetup?finishSetup():go('settings')">${t(S.inSetup?'cont':'done')}</button>`)}</div>`};
+function togApp(p,el){const i=S.apps.indexOf(p);i<0?S.apps.push(p):S.apps.splice(i,1);const a=(APPS||[]).find(x=>x.pkg===p);if(a)S.labels[p]=a.label;save();if(S.done)pushLock();if(!el)return render();
+ const on=S.apps.includes(p);el.classList.toggle('on',on);const c=el.querySelector('.chk');c.style.cssText=on?'background:var(--pri);border-color:var(--pri)':'';c.innerHTML=on?ic('check',14):'';const g=document.getElementById('ap-go');if(g)g.disabled=!(S.apps.length||!S.inSetup)}
 V.prayer=()=>`<div class="scr">${topBar()}
  <h1>${t('pr_h')}</h1><div style="height:6px"></div>
- ${['jap','read'].map(k=>`<button class="opt ${S.prayer===k?'on':''}" onclick="S.prayer='${k}';save();render()"><span>${t('pr_'+k)}<small>${t('pr_'+k+'_s')}</small></span><span class="chk">${S.prayer===k?ic('check',14):''}</span></button>`).join('')}
- ${S.prayer==='jap'?`<div class="lbl">${t('count')}</div><div class="seg">${[11,21,108].map(n=>`<button class="${S.count===n?'on':''}" onclick="S.count=${n};save();render()">${n}</button>`).join('')}</div>
- <p class="mantra" style="margin-top:16px;color:var(--god)">${esc(japa())}</p>`:''}
- <div class="grow"></div><button class="btn" onclick="track('ob_prayer',{p:S.prayer,n:S.count});go(S.done?'settings':'sankalp')">${t(S.done?'done':'cont')}</button></div>`;
+ ${['jap','read'].map(k=>`<button class="opt ${S.prayer===k?'on':''}" onclick="pickPrayer('${k}',this)"><span>${t('pr_'+k)}<small>${t('pr_'+k+'_s')}</small></span><span class="chk">${S.prayer===k?ic('check',14):''}</span></button>`).join('')}
+ <div id="pr-cnt" style="${S.prayer==='jap'?'':'display:none'}"><div class="lbl">${t('count')}</div><div class="seg">${[11,21,108].map(n=>`<button class="${S.count===n?'on':''}" onclick="S.count=${n};save();this.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${n}</button>`).join('')}</div>
+ <p class="mantra" style="margin-top:16px;color:var(--god)">${esc(japa())}</p></div>
+ <div class="grow"></div>${foot(`<button class="btn" onclick="track('ob_prayer',{p:S.prayer,n:S.count});go(S.done?'settings':'sankalp')">${t(S.done?'done':'cont')}</button>`)}</div>`;
+function pickPrayer(k,el){S.prayer=k;save();el.parentNode.querySelectorAll('.opt').forEach(o=>{const on=o===el;o.classList.toggle('on',on);o.querySelector('.chk').innerHTML=on?ic('check',14):''});const c=document.getElementById('pr-cnt');if(c)c.style.display=k==='jap'?'':'none'}
 V.sankalp=()=>`<div class="scr c">${topBar()}
  <h1>${t('snk_h')}</h1><p class="mantra" style="font-size:24px;margin-top:8px">${t('snk_t')}</p>
  <div class="grow"></div><div class="hold" id="hold">${ring(36,0,190)}<span>${t('hold')}</span></div>
@@ -492,91 +519,126 @@ function remPayload(){const n=S.notif||{am:true,pm:true,fest:true};const now=new
   pm_t:{title:godName(),body:t('n_pm_b',{n:S.count}),action:t('n_act')},fest,
   title:t('notif_title'),body:t('n_am_b',{n:S.count}),action:t('n_act')}}
 function pushLock(){PL.setLock(JSON.stringify({pkgs:S.plus?S.apps:[],mode:S.mode,unlockMin:S.unlockMin}));PL.reminders(JSON.stringify(remPayload()));syncWidget()}
+/* ---- reminders need POST_NOTIFICATIONS on Android 13+. Asked only when the user turns a reminder on (Settings, or the post-paywall
+   morning step): a short explainer first, then PL.openPerm('notif'). Still denied = the switch shows "Off: notifications blocked · Fix". ---- */
+function notifOk(){try{return J(PL.perms(),{}).notif!==false}catch(e){return true}}
+let nAfter=null;
+function notifSheet(after){nAfter=after||null;const html=`<div class="nsheet c"><div class="nic">${ic('bell',30)}</div><h1 style="font-size:24px">${t('n_ex_h')}</h1><p class="sub">${t('n_ex_s')}</p><div style="height:8px"></div>
+ <button class="btn" onclick="notifAnswer(true)">${t('allow')}</button><button class="link" onclick="notifAnswer(false)">${t('notnow')}</button></div>`;
+ if(window.DL){const o=DL.open(html,'sheetov');o.addEventListener('click',e=>{if(e.target===o)notifAnswer(false)})}else{const d=document.createElement('div');d.id='nsh';d.style.cssText='position:fixed;inset:0;z-index:40;background:rgba(3,15,17,.55)';d.innerHTML=html;document.body.appendChild(d)}}
+function notifAnswer(yes){if(window.DL)DL.close();else{const d=document.getElementById('nsh');if(d)d.remove()}const a=nAfter;nAfter=null;if(yes)notifFix();if(a)a()}
+function notifFix(){try{PL.openPerm('notif')}catch(e){}}
+function remOn(after){if(notifOk())return after&&after();notifSheet(after)}
+function remTog(k,el){S.notif=S.notif||{};const nb=!notifOk(),was=S.notif[k]!==false,shown=was&&!nb;
+ const lbl=el.closest('.li').querySelector('.remoff');
+ if(shown){S.notif[k]=false;save();pushLock();el.classList.remove('on');el.setAttribute('aria-checked','false');if(lbl)lbl.hidden=true;return}
+ S.notif[k]=true;save();pushLock();
+ if(nb){if(lbl)lbl.hidden=false;return notifSheet()}
+ el.classList.add('on');el.setAttribute('aria-checked','true')}
 let titleTaps=0,showCode=false;
 const renew=p=>`<p class="fine" style="margin:6px 0 0">${+p===999?t('renew_base'):t('renew_offer',{p})}</p>`;
-function payClose(){track('paywall_closed');const now=Date.now();if(S.o3until>now)return go('offer3');if(!S.envDone)return go('chose');go('guard')}
+function afterPlus(){if(!S.setupDone){S.inSetup=true;save()}if(!S.ppDone)return go('pp_in');go(S.setupDone?'home':'ovprev')}
+function finishSetup(){S.inSetup=false;S.setupDone=true;save();pushLock();go(S.ppDone?'home':'pp_wd')}
+/* ---- prices: what Play will actually charge this account (PL.prices / onPrices); null until known ---- */
+let PR=null;try{PR=PL.prices?J(PL.prices(),null):null}catch(e){}
+/** Can this account get price p? 999 is the base plan; offers only when Play lists them (unknown = assume yes; Billing refuses a mismatch). */
+const has=p=>+p===999||!PR||!!PR[String(p)];
+const rs=p=>(PR&&PR[String(p)])||('₹'+p);
+window.onPrices=j=>{PR=typeof j==='string'?J(j,PR):(j||PR);if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))render()};
+window.onPriceGone=(p,j)=>{payEnd();if(j)window.onPrices(j);toast(t('price_gone'));render()};
+/* ---- close flow: pay → chose → env → gold → guard → last → offer3 → free Home. Every step has an X and back moves forward.
+   Once offer3 was seen (or Home reached unpaid) S.exitDone is set and the paywall's X goes straight back. ---- */
+const EXIT=['pay','chose','env','gold','guard','last','offer3'];
+let payFrom='';
+function toFree(){S.freeHome=true;S.exitDone=true;save();track('paywall_exit_home');go(payFrom==='settings'?'settings':'home')}
+const stepOk=n=>n==='guard'?has(299):n==='chose'||n==='env'||n==='gold'?has(299)&&!(n!=='gold'&&S.envDone):n==='last'||n==='offer3'?has(199)&&!(n==='last'&&S.spun):true;
+function exitFrom(c){for(let i=EXIT.indexOf(c)+1;i<EXIT.length;i++)if(stepOk(EXIT[i]))return go(EXIT[i]);toFree()}
+function payClose(){track('paywall_closed');if(S.exitDone||!S.done)return toFree();exitFrom('pay')}
+function exitNext(){if(cur==='pay')return payClose();if(cur==='offer3')return toFree();exitFrom(cur)}
+const xBtn=()=>`<button class="x" onclick="event.stopPropagation();exitNext()" aria-label="${t('back')}">${ic('close',18)}</button>`;
 V.pay=()=>{track('paywall_viewed');return `<div class="scr">${heroBg()}
- <button class="x" onclick="payClose()" aria-label="${t('back')}">${ic('close',18)}</button>
+ ${xBtn()}
  <h1 style="margin-top:-30px;position:relative" onclick="if(++titleTaps>=5){showCode=true;render()}">${t('pay2_h',{name:S.name})}</h1>
  <p class="sub" style="color:var(--ink);font-weight:600">${t('pay2_s',{h:hrsN(),date:planDate()})}</p>
  <ul class="feat">${['f1','f2','f3','f4'].map(f=>`<li>${t(f)}</li>`).join('')}</ul>
  ${showCode?`<input class="input" id="rc" placeholder="${t('code_ph')}" style="font-size:16px;margin-bottom:8px"><button class="btn ghost" onclick="tryCode()">${t('ok')}</button>`:''}
  <div class="grow"></div>
- <div class="price"><span class="p">₹999</span> <span class="d">${t('year')}</span><div class="d">${t('perday2',{x:'2.7'})}</div></div>
- ${renew(999)}<div style="height:10px;flex:none"></div>
- <button class="btn stick" onclick="buy('999')">${t('cta')} · ₹999</button>
- <p class="fine">${t('pay_via')} · <u onclick="restore()">${t('restore')}</u></p></div>`};
+ ${foot(`<button class="btn" onclick="buy('999')">${t('cta')} · ${rs(999)}</button>`,`<p class="fine">${t('pay_via')} · <u onclick="restore()">${t('restore')}</u></p>`,`<div class="price" style="padding:10px 16px;box-shadow:none"><span class="p" style="font-size:28px">${rs(999)}</span> <span class="d">${t('year')}</span> <span class="d">· ${t('perday2',{x:'2.7'})}</span></div>${renew(999).replace('margin:6px 0 0','margin:6px 0 10px')}`)}</div>`};
 function hash(s){let h=5381;for(const ch of s.toUpperCase().replace(/[^A-Z0-9]/g,""))h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h}
-function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();pushLock();go(S.ppDone?'home':'pp_in')}else toast(t('code_bad'))}
-V.chose=()=>{track('chose_viewed');setTimeout(()=>{const e=document.getElementById('chs');if(e)e.style.opacity=1},900);setTimeout(()=>{if(cur==='chose')go('env')},3000);
- return `<div class="scr c" onclick="go('env')"><div class="grow"></div><h1>${t('ch_h')}</h1><p class="sub" id="chs" style="opacity:0;transition:opacity .6s;font-size:19px;color:var(--ink)">${t('ch_s')}</p><div class="grow"></div></div>`};
+function tryCode(){const v=(document.getElementById('rc')||{}).value||'';if(REVIEW_HASH&&hash(v)===REVIEW_HASH){S.plus=true;S.review=true;save();pushLock();afterPlus()}else toast(t('code_bad'))}
+V.chose=()=>{track('chose_viewed');setTimeout(()=>{const e=document.getElementById('chs');if(e)e.style.opacity=1},900);setTimeout(()=>{if(cur==='chose')exitFrom('chose')},3000);
+ return `<div class="scr c" onclick="if(cur==='chose')exitFrom('chose')">${xBtn()}<div class="grow"></div><h1>${t('ch_h')}</h1><p class="sub" id="chs" style="opacity:0;transition:opacity .6s;font-size:19px;color:var(--ink)">${t('ch_s')}</p><div class="grow"></div></div>`};
 let envStage=0,envPos=[[0,0],[1,0],[2,0]];
 V.env=()=>{track('gift_viewed');envStage=S.env1?(S.envDone?2:1):0;const W=118,gx=[0,1,2];
  const pos=i=>{const L=[[ 'calc(50% - 59px)',0],['calc(25% - 59px)',170],['calc(75% - 59px)',170]][i];return `left:${L[0]};top:${L[1]}px`};
  const card=(i)=>`<div class="env" id="e${i}" style="${pos(i)}" onclick="openEnv(${i})"><div class="in"><div class="f"><span>${t('env_front')}</span></div><div class="b" id="eb${i}"></div></div></div>`;
- return `<div class="scr c"><div style="height:24px;flex:none"></div><h1 id="eh">${envStage?t('env_got'):t('env_h')}</h1><p class="sub" id="es">${envStage?'':t('env_s')}</p>
+ return `<div class="scr c">${xBtn()}<div style="height:24px;flex:none"></div><h1 id="eh">${envStage?t('env_got'):t('env_h')}</h1><p class="sub" id="es">${envStage?'':t('env_s')}</p>
  <div class="env-grid">${[0,1,2].map(card).join('')}</div>
- <div class="grow"></div><div id="eact"></div><p class="fine">${t('env_note')}</p></div>`};
+ <p class="fine">${t('env_note')}</p><div class="grow"></div><div class="foot" id="eact"><div style="min-height:56px"></div><div class="foot2"></div></div></div>`};
 function openEnv(i){const e=document.getElementById('e'+i);if(!e||e.classList.contains('open'))return;
  let p;if(!S.env1){p=Math.random()<.5?10:40;S.env1=p}else if(!S.envDone){p=70;S.envDone=true}else return;save();
  document.getElementById('eb'+i).innerHTML=`${p}%<small>${t('off_word')}</small>`;e.classList.add('open');vib(30);track('gift_open',{p});
  [0,1,2].filter(j=>j!==i).forEach(j=>{const o=document.getElementById('e'+j);if(o&&!o.classList.contains('open'))o.classList.add('dimmed')});
- setTimeout(()=>{petals(p===70?60:24);document.getElementById('eh').textContent=t('env_got');document.getElementById('es').textContent='';
-  const act=document.getElementById('eact');
-  if(p<70)act.innerHTML=`<button class="btn" onclick="envAgain()">${t('env_again')}</button><button class="link" onclick="buy('${p===10?899:599}')">${t('env_claim',{p})} · ₹${p===10?899:599}</button>${renew(p===10?899:599)}`;
-  else act.innerHTML=`<button class="btn" onclick="buy('299')">${t('env_claim',{p:70})} · ₹299</button>${renew(299)}<button class="link" onclick="go('gold')">${t('notnow')}</button>`},700)}
+ setTimeout(()=>{if(cur!=='env')return;petals(p===70?60:24);document.getElementById('eh').textContent=t('env_got');document.getElementById('es').textContent='';
+  const act=document.getElementById('eact'),cp=p===10?899:599;
+  if(p<70)act.innerHTML=`<button class="btn" onclick="envAgain()">${t('env_again')}</button><div class="foot2">${has(cp)?`<button class="link" style="margin-top:0;min-height:36px" onclick="buy('${cp}')">${t('env_claim',{p})} · ${rs(cp)}</button>${renew(cp)}`:''}</div>`;
+  else act.innerHTML=`${renew(299)}<button class="btn" onclick="buy('299')">${t('env_claim',{p:70})} · ${rs(299)}</button><div class="foot2"><button class="link" onclick="exitFrom('env')">${t('notnow')}</button></div>`},700)}
 function envAgain(){[0,1,2].forEach(j=>{const o=document.getElementById('e'+j);if(!o)return;o.classList.remove('dimmed');if(o.classList.contains('open')){o.style.opacity=.25;o.style.pointerEvents='none'}else{o.classList.add('shake')}});
- document.getElementById('eact').innerHTML='';document.getElementById('eh').textContent=t('env_h');document.getElementById('es').textContent=t('env_s');vib(15)}
-V.gold=()=>{track('gold_viewed');const d=daysN();return `<div class="scr c"><div style="height:20px;flex:none"></div><h1>${t('gold_h')}</h1>
- <div class="vsbar"><div style="height:230px;background:#B3261E">${t('gold_days',{d})}</div><div style="height:46px;background:var(--god)">₹299</div></div>
+ document.getElementById('eact').innerHTML='<div style="min-height:56px"></div><div class="foot2"></div>';document.getElementById('eh').textContent=t('env_h');document.getElementById('es').textContent=t('env_s');vib(15)}
+V.gold=()=>{track('gold_viewed');const d=daysN();return `<div class="scr c">${xBtn()}<div style="height:20px;flex:none"></div><h1>${t('gold_h')}</h1>
+ <div class="vsbar"><div style="height:230px;background:#B3261E">${t('gold_days',{d})}</div><div style="height:46px;background:var(--god)">${rs(299)}</div></div>
  <div style="display:flex;gap:22px;justify-content:center"><p class="vsp" style="width:96px;font-size:13px;color:var(--muted)">${t('gold_reels')}</p><p style="width:96px;font-size:13px;color:var(--muted)">${t('gold_us')}</p></div>
- <div class="grow"></div><button class="btn" onclick="buy('299')">${t('gold_keep')} · ₹299</button>${renew(299)}<button class="link" onclick="go('guard')">${t('notnow')}</button></div>`};
-V.guard=()=>{track('guard_viewed');const can=!S.spun||S.o3until>Date.now();return `<div class="scr c">${heroBg('dim')}
+ <div class="grow"></div>${foot(`<button class="btn" onclick="buy('299')">${t('gold_keep')} · ${rs(299)}</button>`,`<button class="link" onclick="exitFrom('gold')">${t('notnow')}</button>`,renew(299))}</div>`};
+V.guard=()=>{track('guard_viewed');const gp=has(299)?299:999;return `<div class="scr c">${heroBg('dim')}${xBtn()}
  <h1 style="margin-top:-20px;position:relative">${t('guard_h')}</h1><p class="sub" style="font-size:18px;color:var(--ink)">${t('guard_s')}</p>
- <div class="grow"></div><button class="btn" onclick="buy('${S.envDone?299:999}')">${t('start_for',{p:S.envDone?299:999})}</button>${renew(S.envDone?299:999)}
- ${can?`<button class="link" onclick="go(S.spun?'offer3':'last')">${t('guard_no')}</button>`:`<button class="link" onclick="go('pay')">${t('back')}</button>`}</div>`};
+ <div class="grow"></div>${foot(`<button class="btn" onclick="buy('${gp}')">${gp===999?`${t('cta')} · ${rs(999)}`:t('start_for',{p:gp})}</button>`,`<button class="link" onclick="exitFrom('guard')">${stepOk('last')||stepOk('offer3')?t('guard_no'):t('notnow')}</button>`,renew(gp))}</div>`};
 V.last=()=>{track('wheel_viewed');const seg=[40,50,70,80,40,50,70,80];let p='';
  seg.forEach((v,i)=>{const a0=i/8*Math.PI*2-Math.PI/2,a1=(i+1)/8*Math.PI*2-Math.PI/2,am=(a0+a1)/2;
   p+=`<path d="M100 100L${100+95*Math.cos(a0)} ${100+95*Math.sin(a0)}A95 95 0 0 1 ${100+95*Math.cos(a1)} ${100+95*Math.sin(a1)}Z" fill="${v===80?'var(--god)':i%2?'var(--card)':'var(--tint)'}" stroke="var(--line)" stroke-width="1.5"/><text x="${100+62*Math.cos(am)}" y="${100+62*Math.sin(am)}" dominant-baseline="middle" text-anchor="middle" font-weight="800" font-size="17" fill="${v===80?'#fff':'var(--ink)'}" transform="rotate(${am*180/Math.PI+90} ${100+62*Math.cos(am)} ${100+62*Math.sin(am)})">${v}%</text>`});
- return `<div class="scr c"><div style="height:30px;flex:none"></div><h1>${t('last_h')}</h1>
+ return `<div class="scr c">${xBtn()}<div style="height:30px;flex:none"></div><h1>${t('last_h')}</h1>
  <div class="wheel"><svg id="wh" viewBox="0 0 200 200">${p}<circle cx="100" cy="100" r="16" fill="var(--ink)"/></svg></div>
- <p class="fine">${t('last_note')}</p><div class="grow"></div><button class="btn" id="spb" onclick="spin()">${t('spin_btn')}</button></div>`};
+ <p class="fine">${t('last_note')}</p><div class="grow"></div>${foot(`<button class="btn" id="spb" onclick="spin()">${t('spin_btn')}</button>`)}</div>`};
 function spin(){S.spun=true;save();document.getElementById('spb').disabled=true;document.getElementById('wh').style.transform=`rotate(${360*5+202.5}deg)`;vib(20);
- setTimeout(()=>{vib(60);petals(60);S.o3until=Date.now()+15*60e3;save();setTimeout(()=>go('offer3'),900)},3400)}
-V.offer3=()=>{track('offer3_viewed');return `<div class="scr">
- <button class="x" onclick="go('pay')" aria-label="${t('back')}">${ic('close',18)}</button><div style="height:40px;flex:none"></div>
+ setTimeout(()=>{if(cur!=='last')return;vib(60);petals(60);S.o3until=Date.now()+15*60e3;save();setTimeout(()=>{if(cur==='last')go('offer3')},900)},3400)}
+V.offer3=()=>{track('offer3_viewed');if(!(S.o3until>Date.now())){S.o3until=Date.now()+15*60e3}S.exitDone=true;save();return `<div class="scr">
+ ${xBtn()}<div style="height:40px;flex:none"></div>
  <div style="display:flex;justify-content:center">${avatar(S.deity,84)}</div>
  <h1 class="c" style="margin-top:12px">${t('o3_h')}</h1><p class="sub c">${t('o2_s')} ${t('ends')} <span class="timer" id="tm">${fmt(Math.max(0,Math.round((S.o3until-Date.now())/1000)))}</span></p>
- <div class="ticket"><div class="pct">80%</div><div style="font-weight:800;letter-spacing:.06em">${t('off_word')}</div><div style="margin-top:8px"><s style="color:var(--muted)">₹999</s> <b style="font-size:28px">₹199</b> <span class="d">${t('first')}</span></div><div class="d" style="color:var(--muted);font-size:14px">${t('perday',{x:'0.5'})}</div></div>
+ <div class="ticket"><div class="pct">80%</div><div style="font-weight:800;letter-spacing:.06em">${t('off_word')}</div><div style="margin-top:8px"><s style="color:var(--muted)">${rs(999)}</s> <b style="font-size:28px">${rs(199)}</b> <span class="d">${t('first')}</span></div><div class="d" style="color:var(--muted);font-size:14px">${t('perday',{x:'0.5'})}</div></div>
  <ul class="feat" style="margin-top:14px">${['f1','f2','f3'].map(f=>`<li>${t(f)}</li>`).join('')}</ul><div class="grow"></div>
- <div style="height:8px;flex:none"></div>
- <button class="btn" onclick="buy(S.o3until>Date.now()?'199':'999')">${t('o3_cta',{p:199})}</button>${renew(199)}<p class="fine">${t('pay_via')}</p></div>`};
+ ${foot(`<button class="btn" onclick="buy('199')">${t('o3_cta',{p:199})}</button>`,`<p class="fine">${t('pay_via')}</p>`,renew(199))}</div>`};
 const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-setInterval(()=>{if(cur!=='offer3')return;const r=Math.round((S.o3until-Date.now())/1000);const e=document.getElementById('tm');if(e)e.textContent=fmt(Math.max(0,r));if(r<=0)go('pay')},1000);
-function buy(p){if(window.DL)DL.lastPlan=p;if(window.DL&&navigator.onLine===false)return DL.offline();PL.buy(p)}
+/* The 15-minute timer: at zero the offer ends and the user lands on free Home (never back on the paywall). */
+setInterval(()=>{if(cur!=='offer3'||document.body.classList.contains('paying'))return;const r=Math.round((S.o3until-Date.now())/1000);const e=document.getElementById('tm');if(e)e.textContent=fmt(Math.max(0,r));if(r<=0)toFree()},1000);
+/* ---- buying: a "Payment processing…" veil between PL.buy() and onPurchase/onPlus, with a 60 s safety timeout ---- */
+let payTimer=0;
+function payStart(){payEnd();document.body.classList.add('paying');const v=document.createElement('div');v.className='payveil';v.id='payveil';v.innerHTML=`<div><span class="spin"></span>${t('paying')}</div>`;document.body.appendChild(v);payTimer=setTimeout(payEnd,60000)}
+function payEnd(){clearTimeout(payTimer);document.body.classList.remove('paying');const v=document.getElementById('payveil');if(v)v.remove()}
+function buy(p){if(document.body.classList.contains('paying'))return;if(!has(p)){toast(t('price_gone'));return render()}if(window.DL)DL.lastPlan=p;if(window.DL&&navigator.onLine===false)return DL.offline();payStart();try{PL.buy(p)}catch(e){payEnd()}}
 function restore(){if(window.DL&&navigator.onLine===false)return DL.offline();PL.restore()}
-window.onPurchase=(ok,price,err)=>{if(ok){S.plus=true;pushLock();const pm=J(PL.perms(),{});save();go(S.ppDone?'home':'pp_in')}else if(err){if(window.DL&&!/pending/i.test(err))DL.payFail(DL.lastPlan);else toast(err)}};
-window.onPlus=owned=>{if(owned&&!S.plus){S.plus=true;save();pushLock();if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))go(S.ppDone?'home':'pp_in')}};
+window.onPurchase=(ok,price,err)=>{payEnd();if(ok){S.plus=true;pushLock();save();afterPlus()}else if(err){if(window.DL&&!/pending/i.test(err))DL.payFail(DL.lastPlan);else toast(err)}};
+window.onPlus=owned=>{payEnd();if(owned&&!S.plus){S.plus=true;save();pushLock();if(EXIT.includes(cur))afterPlus()}};
 window.plPurchased=j=>window.onPurchase(true,(J(j,{})).price||0,'');
 
 /* ---- home ---- */
 function streak(){let n=0;const d=new Date();if(!S.days.includes(today()))d.setDate(d.getDate()-1);for(;;){const k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();if(S.days.includes(k)){n++;d.setDate(d.getDate()-1)}else break}return n}
 function nextFest(){const now=new Date();now.setHours(0,0,0,0);let best=null;for(const f of (C.festivals||[])){const d=new Date(f.date);const dd=Math.round((d-now)/864e5);if(dd>=0&&dd<=21&&(!best||dd<best.dd))best={f,dd}}return best}
-V.home=()=>{if(window.DL&&DL.dawnDue()){cur='dawn';return V.dawn()}
+V.home=()=>{if(!S.plus&&S.done&&!S.exitDone){S.exitDone=true;S.freeHome=true;save()}if(window.DL&&DL.dawnDue()){cur='dawn';return V.dawn()}
  const h=new Date().getHours(),g=h<12?'gm':h<17?'ga':'ge';const st=J(PL.lockStatus(),{running:true,permsOk:true});const fe=nextFest();
- const done=S.japToday>=S.count;const items=[];const D=window.DL;const bad=!st.running||!st.permsOk||st.popupOk===false||st.selfTest==='fail';
+ const done=S.japToday>=S.count;const items=[],crit=[];const D=window.DL;const bad=S.plus&&(!st.running||!st.permsOk||st.popupOk===false||st.selfTest==='fail');
+ if(!S.plus)crit.push(`<div class="banner" onclick="track('home_unlock_card');go('pay')">${ic('lock',20)} ${t('unlock_card')}<span style="margin-left:auto">${ic('next',18)}</span></div>`);
  const fs=D?DL.fest(fe):null;let fixed='';if(S.fixing&&!bad){S.fixing=0;save();if(D){fixed=DL.fixed();setTimeout(()=>DL.hap('done'),200)}}
- if(bad)items.push(D?DL.lockCard(st):`<div class="banner warn" onclick="go('perms')">${ic('warn',20)} ${t('lock_warn')}</div>`);
+ if(bad)crit.push(D?DL.lockCard(st):`<div class="banner warn" onclick="go('perms')">${ic('warn',20)} ${t('lock_warn')}</div>`);
  if(fe&&!fs)items.push(`<div class="banner">${fe.dd===0?t('fest_today',{f:esc(pick(fe.f.name))}):t('fest',{f:esc(pick(fe.f.name)),d:fe.dd})}</div>`);
  if(D&&DL.bedDue())items.push(`<div class="banner" onclick="DL.bed()">${ic('lotus',20)} ${t('dl_bed_e')}<span style="margin-left:auto">${ic('next',18)}</span></div>`);
  if(D&&DL.deskDue()&&!done)items.push(`<div class="banner" onclick="DL.desk()">${ic('timer',20)} ${t('dl_off_chip')}<span style="margin-left:auto">${ic('next',18)}</span></div>`);
  if(!(S.checks||{})[today()])items.push(`<div class="banner" onclick="openCheckin()">${ic('lotus',20)} ${t('ci_btn')}<span style="margin-left:auto">${ic('next',18)}</span></div>`);
  if(PL.pinWidget&&!S.widgetAsked)items.push(`<div class="banner" onclick="S.widgetAsked=true;save();try{PL.pinWidget()}catch(e){};render()">${ic('widget',20)} ${t('wd_h')}<span style="margin-left:auto;font-size:13px;display:flex;align-items:center;gap:2px">${t('wd_btn')} ${ic('next',16)}</span></div>`);
- items.push(`<div class="li" onclick="go('apps')" style="border:none">${ic('lock',20)} ${t('locked_n',{n:S.apps.length})}<span class="r">${ic('next',18)}</span></div>`);
+ if(S.plus)items.push(`<div class="li" onclick="go('apps')" style="border:none">${ic('lock',20)} ${t('locked_n',{n:S.apps.length})}<span class="r">${ic('next',18)}</span></div>`);
  const festDay=!!(fe&&fe.dd===0);
  return `<div class="scr tabbed">${fs?fs.head:''}${fixed}
  <p class="sub" style="margin:6px 0 2px;font-size:17px">${t(g,{name:S.name})}</p>
- ${D?DL.dayLine(festDay):''}${fs?fs.banner:''}
+ ${crit.join('')}${D?DL.dayLine(festDay):''}${fs?fs.banner:''}
  <div class="card c" style="padding:18px 16px 16px;position:relative">${fs&&fs.feather?fs.feather:''}
   <div style="position:relative;width:200px;height:200px;margin:0 auto" onclick="startJapa()">${ring(S.count,Math.min(S.japToday,S.count),200,done)}
    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">${D?DL.press(70):avatar(S.deity,70)}<b style="font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums">${Math.min(S.japToday,S.count)}/${S.count}</b></div></div>
@@ -613,16 +675,17 @@ V.settings=()=>{const sel=(id,opts,val,on)=>`<select class="sel" onchange="${on}
  ${S.plus?`<p class="sub">${ic('check',18)} ${t('plus_on')}</p>`:''}
  <div class="li">${t('st_lang')}<span class="r">${sel('l',LANGS.map(l=>[l,I[l]._name]),L(),"S.lang=this.value;save();applyGod();render();pushLock();lockText()")}</span></div>
  <div class="li" onclick="go('deity')">${t('st_deity')}<span class="r">${esc(pick(god().name))} ${ic('next',18)}</span></div>
- <div class="li" onclick="go('apps')">${t('st_apps')}<span class="r">${S.apps.length} ${ic('next',18)}</span></div>
+ <div class="li" onclick="go(S.plus?'apps':'pay')">${t('st_apps')}${S.plus?'':'<span class="pbadge">Plus</span>'}<span class="r">${S.plus?S.apps.length:''} ${ic('next',18)}</span></div>
  <div class="li" onclick="go('prayer')">${t('st_prayer')}<span class="r">${S.prayer==='jap'?t('pr_jap')+' · '+S.count:t('pr_read')} ${ic('next',18)}</span></div>
- <div class="li">${t('st_mode')}<span class="r">${sel('m',[['every',t('mode_every')],['morning',t('mode_morning')],['sandhya',t('mode_sandhya')]],S.mode,"S.mode=this.value;save();pushLock()")}</span></div>
- <div class="li">${t('st_unlock')}<span class="r">${sel('u',[5,10,15,30,60].map(m=>[m,t('min',{m})]),S.unlockMin,"S.unlockMin=+this.value;save();pushLock()")}</span></div>
+ ${S.plus?'':`<div class="li" onclick="go('pay')">${t('st_mode')}<span class="pbadge">Plus</span><span class="r">${ic('next',18)}</span></div>`}
+ <div class="li" style="${S.plus?'':'display:none'}">${t('st_mode')}<span class="r">${sel('m',[['every',t('mode_every')],['morning',t('mode_morning')],['sandhya',t('mode_sandhya')]],S.mode,"S.mode=this.value;save();pushLock()")}</span></div>
+ <div class="li" style="${S.plus?'':'display:none'}">${t('st_unlock')}<span class="r">${sel('u',[5,10,15,30,60].map(m=>[m,t('min',{m})]),S.unlockMin,"S.unlockMin=+this.value;save();pushLock()")}</span></div>
  ${window.DL?DL.settings():''}
  <h3>${t('st_n_h')}</h3>
- ${[['am','st_n_am','am'],['pm','st_n_pm','pm'],['fest','st_n_fest','']].map(([k,l,tm])=>`<div class="li">${t(l)}<span class="r" style="display:flex;gap:8px;align-items:center">${tm?`<input type="time" class="sel" value="${S.rem[tm]||'19:00'}" onchange="S.rem['${tm}']=this.value;save();pushLock()">`:''}<input type="checkbox" style="width:22px;height:22px;accent-color:var(--pri)" ${(S.notif||{})[k]!==false?'checked':''} onchange="S.notif=S.notif||{};S.notif['${k}']=this.checked;save();pushLock()"></span></div>`).join('')}
+ ${(()=>{const nb=!notifOk();return [['am','st_n_am','am'],['pm','st_n_pm','pm'],['fest','st_n_fest','']].map(([k,l,tm])=>{const on=(S.notif||{})[k]!==false;return `<div class="li" style="cursor:default"><span style="min-width:0">${t(l)}<small class="remoff" ${on&&nb?'':'hidden'}>${t('n_blocked')} · <u onclick="event.stopPropagation();notifFix()">${t('n_fix')}</u></small></span><span class="r" style="display:flex;gap:8px;align-items:center">${tm?`<input type="time" class="sel" value="${S.rem[tm]||'19:00'}" onchange="S.rem['${tm}']=this.value;save();pushLock()">`:''}<button class="tg ${on&&!nb?'on':''}" role="switch" aria-checked="${on&&!nb}" onclick="remTog('${k}',this)"><i></i></button></span></div>`}).join('')})()}
  <div class="li" id="lk-row" onclick="toggleLock()" style="cursor:pointer">${ic('lock',20)} ${t('lk_row')}<span class="r">${(o=>`<span role="switch" aria-checked="${o}" style="display:inline-block;position:relative;width:52px;height:32px;border-radius:16px;vertical-align:middle;background:${o?'var(--pri)':'#CFC6BA'};transition:.2s"><span style="position:absolute;top:4px;left:${o?24:4}px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:.2s"></span></span>`)(S.plus&&lockOn())}</span></div>
- <div class="li" onclick="go('perms')">${ic('lock',20)} ${t('st_perms')}<span class="r">${ic('next',18)}</span></div>
- <div class="li" onclick="lockPkg=S.apps[0]||'';lockLabel=S.labels[lockPkg]||'Instagram';mala=0;go('lock')">${t('st_lockprev')}<span class="r">${ic('next',18)}</span></div>
+ ${S.plus?`<div class="li" onclick="go('perms')">${ic('lock',20)} ${t('st_perms')}<span class="r">${ic('next',18)}</span></div>`:''}
+ <div class="li" onclick="startPreview()">${t('st_lockprev')}<span class="r">${ic('next',18)}</span></div>
  <div class="li" onclick="restore()">${t('st_restore')}<span class="r">${ic('next',18)}</span></div>
  <div class="li" onclick="PL.openUrl('https://rajeshthiagu99.github.io/prayerlock-site/privacy.html')">${t('privacy')}<span class="r">${ic('next',18)}</span></div>
  ${S.plus?`<div class="li" onclick="PL.openUrl('https://play.google.com/store/account/subscriptions?package=com.prayerlock.naamjap&sku=plus_yearly')">${t('mng_sub')}<span class="r">${ic('next',18)}</span></div>`:''}
@@ -630,10 +693,12 @@ V.settings=()=>{const sel=(id,opts,val,on)=>`<select class="sel" onchange="${on}
  </div>${tabs('settings')}`};
 
 /* ---- lock + japa ---- */
-let mala=0,lockPkg=LOCK||'',readWait=0;try{const gl=J(PL.getLock(),{});if(gl.unlockMin)S.unlockMin=gl.unlockMin}catch(e){}
+let mala=0,lockPkg=LOCK||'',readWait=0,previewing=false;
+/** Settings › Preview the lock screen: a demo. Never calls PL.unlocked/PL.prayed, never counts beads or opens an unlock window; finishing returns to Settings. */
+function startPreview(){previewing=true;lockPkg=S.apps[0]||'com.instagram.android';lockLabel=S.labels[lockPkg]||'Instagram';mala=0;go('lock')}try{const gl=J(PL.getLock(),{});if(gl.unlockMin)S.unlockMin=gl.unlockMin}catch(e){}
 function lockReading(){const sd=shlokaOfDay();if(sd)return sd.verses?sd.verses[0]:sd;const ids=(god().texts||[]).filter(i=>C.texts[i]);if(!ids.length)return{dev:japa()};const tx=C.texts[ids[Math.floor(Date.now()/864e5)%ids.length]];const vs=tx.verses||[];return vs[Math.floor(Date.now()/36e5)%Math.max(vs.length,1)]||{dev:japa()}}
-function lockHead(done){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `<div class="lockapp">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${done?t('mala_done'):t('lock_h',{app:esc(lockLabel)})}</h1>`}
-V.lock=()=>{track('lock_shown');if(S.prayer==='read'){const v=lockReading();readWait=8;setTimeout(tickRead,1000);
+function lockHead(done){const a=(APPS||J(PL.apps(),[])).find(x=>x.pkg===lockPkg)||{label:lockLabel,pkg:lockPkg};lockLabel=lockLabel||a.label;return `${previewing?`<div class="c"><span class="prevtag">${t('prev_lbl')}</span></div>`:''}<div class="lockapp" style="${previewing?'margin-top:8px':''}">${appIcon(a,36)}</div><h1 class="c" style="margin-top:10px">${done?t('mala_done'):t('lock_h',{app:esc(lockLabel)})}</h1>`}
+V.lock=()=>{if(!previewing)track('lock_shown');if(S.prayer==='read'){const v=lockReading();readWait=8;setTimeout(tickRead,1000);
  return `<div class="scr c"><div style="height:20px;flex:none"></div>${lockHead()}<p class="sub">${t('lock_read')}</p>
  <div class="grow"></div><p class="verse">${esc(verseText(v))}</p>${v.meaning?`<p class="mean">${esc(pick(v.meaning))}</p>`:''}<div class="grow"></div>
  <button class="btn" id="rd" disabled onclick="finish()">${t('wait_s',{s:readWait})}</button>
@@ -648,24 +713,29 @@ function japaView(isLock){const done=mala>=S.count;const D=window.DL;
  <p class="cnt" id="ct">${mala} / ${S.count}</p><div id="dmsg"></div><div class="grow"></div>
  ${done?(isLock?`<button class="btn" onclick="finish()">${t('open',{app:esc(lockLabel)})}</button>`:(D?'<div style="height:64px;flex:none"></div>':`<button class="btn" onclick="go('home')">${t('jai')}</button>`)):`<p class="fine" style="margin-bottom:6px">${t('tap')}</p>`}
  ${isLock&&!done?`<button class="link" onclick="event.stopPropagation();leave()">${t('goback')}</button>`:''}</div>`}
-function bead(){if(mala>=S.count)return;mala++;S.japToday++;S.japTotal++;S.japHist=S.japHist||{};S.japHist[today()]=(S.japHist[today()]||0)+1;save();
+function bead(){if(mala>=S.count)return;mala++;if(!previewing){S.japToday++;S.japTotal++;S.japHist=S.japHist||{};S.japHist[today()]=(S.japHist[today()]||0)+1;save()}
  const D=window.DL;
- if(mala>=S.count){if(D){DL.hap('meru');DL.play('manjira');DL.markFest()}else{try{PL.haptic('done',80)}catch(e){}}markPrayed();render();
+ if(mala>=S.count){if(D){DL.hap('meru');DL.play('manjira');if(!previewing)DL.markFest()}else{try{PL.haptic('done',80)}catch(e){}}if(!previewing)markPrayed();render();
   if(D)setTimeout(()=>{if(cur==='lock')DL.unlock();else if(cur==='japa')DL.complete()},380);return}
  if(D)DL.hap('tick');else vib(12);document.getElementById('rg').innerHTML=ring(S.count,mala,250);const c=document.getElementById('ct');c.textContent=mala+' / '+S.count;c.classList.remove('pulse');void c.offsetWidth;c.classList.add('pulse')}
 function tickRead(){if(cur!=='lock')return;readWait--;const b=document.getElementById('rd');if(!b)return;if(readWait<=0){b.disabled=false;b.textContent=t('read_done')}else{b.textContent=t('wait_s',{s:readWait});setTimeout(tickRead,1000)}}
 function markPrayed(){setTimeout(syncWidget,50);try{PL.markDone&&PL.markDone()}catch(e){}if(!S.days.includes(today())){S.days.push(today());S.days=S.days.slice(-400)}save();track('prayer_done',{p:S.prayer,n:S.count});if(!lockPkg)PL.prayed()}
-function finish(){if(S.prayer==='read')markPrayed();track('unlocked');if(lockPkg)PL.unlocked(lockPkg);else go('home')}
-function leave(){track('lock_left');PL.goHome()}
+function finish(){if(previewing){go('settings');toast(t('prev_done'));return}if(S.prayer==='read')markPrayed();track('unlocked');if(lockPkg)PL.unlocked(lockPkg);else go('home')}
+function leave(){if(previewing)return go('settings');track('lock_left');PL.goHome()}
 
 /* ============ router ============ */
-const FLOW=['lang','welcome','deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','reading','rate','plan','ovprev','perms','report','apps','prayer','sankalp','imp1','imp2','imp3','pay'];
-function go(s){if(window.DL){DL.clearFx();while(DL.isOpen())DL.close()}cur=s;if(FLOW.includes(s)&&!S.done){S.step=s;save()}render();try{document.querySelector('.scr').scrollTop=0}catch(e){}}
-function back(){if(cur==='plan')return go('st3');if(S.done&&['deity','apps','prayer','perms'].includes(cur))return go('settings');const i=FLOW.indexOf(cur);if(i>0)go(FLOW[i-1])}
-window.goBack=()=>{if(window.DL&&DL.back())return true;if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa','journey','checkin','dawn','aarti'].includes(cur)){go('home');return true}if(cur==='credits'){go('settings');return true}if(cur.startsWith('pp_'))return true;if(cur==='reader'){go('read');return true}if(['pay','chose','env','gold','guard','last','offer3'].includes(cur))return false;back();return true};
-function render(){applyGod();document.getElementById('app').innerHTML=V[cur]();bindHold();if(window.DL)DL.bind();const n=document.getElementById('nm');if(n&&!S.name)setTimeout(()=>n.focus(),300)}
+const FLOW=['lang','welcome','deity','name','q_role','q_want','q_hours','q_morn','st1','st2','st3','reading','rate','plan','prayer','sankalp','imp1','imp2','imp3','pay'];
+function go(s){if(window.DL){DL.clearFx();while(DL.isOpen())DL.close()}document.querySelectorAll('.petal').forEach(e=>e.remove());if(s!=='lock')previewing=false;if(s==='pay'&&cur!=='pay')payFrom=cur;cur=s;if(FLOW.includes(s)&&!S.done){S.step=s;save()}render();try{document.querySelector('.scr').scrollTop=0}catch(e){}}
+function back(){if(cur==='plan')return go('st3');
+ if(cur==='perms'&&S.afterPay){S.afterPay=false;save();return go('pp_mo')}
+ if(S.inSetup&&SETUP.includes(cur)){const i=SETUP.indexOf(cur);return i>0?go(SETUP[i-1]):undefined}
+ if(S.done&&['deity','apps','prayer','perms'].includes(cur))return go('settings');const i=FLOW.indexOf(cur);if(i>0)go(FLOW[i-1])}
+window.goBack=()=>{if(document.body.classList.contains('paying'))return true;if(window.DL&&DL.back())return true;if(previewing&&cur==='lock'){go('settings');return true}if(LOCK)return false;if(['home'].includes(cur))return false;if(['read','settings','japa','journey','checkin','dawn','aarti'].includes(cur)){go('home');return true}if(cur==='credits'){go('settings');return true}if(cur.startsWith('pp_'))return true;if(cur==='reader'){go('read');return true}if(EXIT.includes(cur)){exitNext();return true}back();return true};
+let lastScr='';
+/** Re-rendering the same screen keeps its scroll position and does not replay the entry animation. */
+function render(){applyGod();const same=lastScr===cur,old=same&&document.querySelector('#app .scr'),top=old?old.scrollTop:0;lastScr=cur;document.getElementById('app').innerHTML=V[cur]();if(same){const n=document.querySelector('#app .scr');if(n){n.classList.add('noanim');n.scrollTop=top}}bindHold();if(window.DL)DL.bind();const n=document.getElementById('nm');if(n&&!S.name)setTimeout(()=>n.focus(),300)}
 function bindHold(){const h=document.getElementById('hold');if(!h)return;let st=0,raf=0;
- const fill=()=>{if(!st)return;const p=Math.min((performance.now()-st)/2000,1);h.querySelector('svg').outerHTML=ring(36,36*p,190);if(p>=1){st=0;try{PL.haptic('done',90)}catch(e){}S.done=true;kidsDefault();save();pushLock();try{if(!J(PL.perms(),{}).notif)PL.openPerm('notif')}catch(e){}track('onboarding_completed');setTimeout(()=>go(S.plus?'home':'imp1'),350);return}raf=requestAnimationFrame(fill)};
+ const fill=()=>{if(!st)return;const p=Math.min((performance.now()-st)/2000,1);h.querySelector('svg').outerHTML=ring(36,36*p,190);if(p>=1){st=0;try{PL.haptic('done',90)}catch(e){}S.done=true;kidsDefault();save();pushLock();track('onboarding_completed');setTimeout(()=>go(S.plus?'home':'imp1'),350);return}raf=requestAnimationFrame(fill)};
  h.addEventListener('pointerdown',e=>{e.preventDefault();st=performance.now();vib(10);raf=requestAnimationFrame(fill)});
  const up=()=>{if(!st)return;st=0;cancelAnimationFrame(raf);const s=h.querySelector('svg');if(s)s.outerHTML=ring(36,0,190)};
  h.addEventListener('pointerup',up);h.addEventListener('pointerleave',up);h.addEventListener('pointercancel',up)}
@@ -698,7 +768,9 @@ document.addEventListener('pointerdown',e=>{const b=e.target.closest('button,[ro
  const jumpTo=q.get('s');if(jumpTo){if(!S.lang)S.lang=q.get('lang')||'hi';if(!S.deity)S.deity=q.get('god')||godOrder()[0];if(jumpTo==='lock'){lockPkg='com.instagram.android';lockLabel='Instagram'}return go(jumpTo)}
  if(S.done)try{pushLock()}catch(e){}
  if(!S.done)return go(S.step||'lang');
- go(S.plus?'home':'pay');
+ if(S.plus&&S.agreed&&!S.setupDone){S.setupDone=true;save()}
+ if(S.plus&&S.inSetup)return go('ovprev');
+ go('home');
 })();
 </script>
 </body>

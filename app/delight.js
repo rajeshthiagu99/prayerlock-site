@@ -417,7 +417,7 @@ DL.doAarti=()=>{const a=document.getElementById('arch'),btn=document.getElementB
  a.classList.add('aarti-on');btn.disabled=true;lite.style.opacity=1;DL.play('ghanta',1);DL.hap('swell',2000);let n=0;
  const trk=setInterval(()=>{const r=th.getBoundingClientRect(),ar=a.getBoundingClientRect();lite.style.setProperty('--lx',(r.left+r.width/2-ar.left-18)+'px');lite.style.setProperty('--ly',(r.top-ar.top-10)+'px')},60);
  const loop=setInterval(()=>{if(cur!=='aarti'){clearInterval(loop);clearInterval(trk);return}n++;if(n<3){DL.play('ghanta',1);DL.hap('swell',2000)}else{clearInterval(loop);setTimeout(()=>{clearInterval(trk);a.classList.remove('aarti-on');lite.style.opacity=0;shower(24,innerHeight-160);DL.hap('done');
-  const nx=(document.getElementById('anext')||{}).textContent||'';document.getElementById('asub').innerHTML=`<span style="font-family:var(--scr);font-size:21px;color:var(--pri)">${esc(DL.aartiLine())}</span>${nx?'<br>'+esc(nx):''}`;
+  const nx=(document.getElementById('anext')||{}).textContent||'';const as=document.getElementById('asub');if(!as||cur!=='aarti')return;as.innerHTML=`<span style="font-family:var(--scr);font-size:21px;color:var(--pri)">${esc(DL.aartiLine())}</span>${nx?'<br>'+esc(nx):''}`;
   btn.disabled=false;btn.textContent=DL.btn()||t('jai');btn.onclick=()=>{clearFx();go('home')}},2400)}},2400)};
 
 /* ---------------- prasad thali (Journey) ---------------- */
@@ -469,16 +469,15 @@ function deskBead(el){if(!dstart||dm>=27)return;dm++;S.japToday++;S.japTotal++;S
  DL.hap('tick');document.getElementById('drg').innerHTML=ring(27,dm,220);const c=document.getElementById('dct');c.textContent=dm+' / 27'}
 
 /* ---------------- Settings › Sounds and touch ---------------- */
-const tg=(on,act)=>`<button class="tg ${on?'on':''}" role="switch" aria-checked="${!!on}" onclick="${act};render()"><i></i></button>`;
+const tg=(on,act)=>`<button class="tg ${on?'on':''}" role="switch" aria-checked="${!!on}" onclick="${act};this.classList.toggle('on');this.setAttribute('aria-checked',this.classList.contains('on'))"><i></i></button>`;
 DL.settings=()=>{const ds=S.doneSnd||'shankh';
  return `<p class="lbl2">${t('dl_st_sec')}</p><div class="card dlist">
  <div class="drow">${ic('bell')}<div><b>${t('dl_st_temple')}</b><small>${t('dl_st_temple_s')}</small></div>${tg(S.snd!==false,"S.snd=S.snd===false;save();if(S.snd)DL.play('bell',1)")}</div>
- <div class="drow col">${ic('shankh')}<div><b>${t('dl_st_done')}</b><div class="dseg">${[['shankh','dl_st_shankh'],['bell','dl_st_bell'],['off','dl_st_none']].map(([k,l])=>`<button class="${ds===k?'on':''}" onclick="S.doneSnd='${k}';save();DL.play('${k}',1);render()">${t(l)}</button>`).join('')}</div></div></div>
+ <div class="drow col">${ic('shankh')}<div><b>${t('dl_st_done')}</b><div class="dseg">${[['shankh','dl_st_shankh'],['bell','dl_st_bell'],['off','dl_st_none']].map(([k,l])=>`<button class="${ds===k?'on':''}" onclick="S.doneSnd='${k}';save();DL.play('${k}',1);this.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${t(l)}</button>`).join('')}</div></div></div>
  <div class="drow">${ic('vibrate')}<div><b>${t('dl_st_hap')}</b><small>${t('dl_st_hap_s')}</small></div>${tg(S.hap!==false,"S.hap=S.hap===false;save();DL.hap('meru')")}</div>
  <div class="drow">${ic('lotus')}<div><b>${t('dl_st_kids')}</b><small>${t('dl_st_kids_s')}</small></div>${tg(!!S.kids,'S.kids=!S.kids;save()')}</div>
  <div class="drow tapr" role="button" onclick="DL.desk()">${ic('timer')}<div><b>${t('dl_off_e')}</b><small>${t('dl_off_h')}</small></div>${ic('next',18,'color:var(--muted)')}</div>
- </div><p class="fine" style="text-align:left;margin-top:8px">${t('dl_st_silent')}</p>
- <p class="lbl2">${t('dl_st_icons')}</p><div class="icgrid">${Object.keys(IC).map(k=>`<div>${ic(k,24)}</div>`).join('')}</div>`};
+ </div><p class="fine" style="text-align:left;margin-top:8px">${t('dl_st_silent')}</p>`};
 DL.credits=()=>[[t('dl_cr_snd'),'freesound.org: pbimal (bell), LoopUdu (ghanta), rsn267 (shankh), MirkoMeter84 (manjira) · CC0'],[t('dl_cr_dates'),t('dl_cr_dates_s')]];
 
 /* ---------------- browser renders (design/stringtest.html, ?dl=...) ---------------- */
